@@ -33,17 +33,92 @@
     <LangVersion>7.3</LangVersion>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Azure.ActiveDirectory.GraphClient">
+      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.Azure.ActiveDirectory.GraphClient.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Edm, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.Data.Edm.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.OData, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.Data.OData.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Data.Services.Client, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.Data.Services.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory">
+      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms">
+      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Online.SharePoint.Client.Tenant">
+      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.Online.SharePoint.Client.Tenant.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Online.SharePoint.Migration">
+      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.Online.SharePoint.Migration.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Online.SharePoint.PowerShell">
+      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.Online.SharePoint.PowerShell.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Online.SharePoint.PowerShell.ResourceManager">
+      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.Online.SharePoint.PowerShell.ResourceManager.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Online.SharePoint.PowerShell.ResourceManager.Intl">
+      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.Online.SharePoint.PowerShell.ResourceManager.Intl.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.SharePoint.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SharePoint.Client.Runtime, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.SharePoint.Client.Runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage, Version=4.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.WindowsAzure.Storage.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAzure.Storage.DataMovement">
+      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.WindowsAzure.Storage.DataMovement.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Ookii.Dialogs">
+      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Ookii.Dialogs.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
+    <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\System.Management.Automation.dll</HintPath>
+    </Reference>
     <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Backend\CmdletContext.cs" />
+    <Compile Include="Backend\CmdletPipeBind.cs" />
+    <Compile Include="Context\Context.cs" />
+    <Compile Include="Context\Logins.cs" />
+    <Compile Include="Backend\CredentialCmdletPipeBind.cs" />
+    <Compile Include="Backend\OAuthSession.cs" />
+    <Compile Include="Backend\OfficeVersion.cs" />
+    <Compile Include="Backend\SPOService.cs" />
+    <Compile Include="Backend\SPOServiceHelper.cs" />
+    <Compile Include="HelpingCmdlets\GetRoleDefinitions.cs" />
+    <Compile Include="HelpingCmdlets\LoginSharePoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Assemblies\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
