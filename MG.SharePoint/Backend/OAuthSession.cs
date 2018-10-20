@@ -25,10 +25,8 @@ namespace MG.SharePoint
         private string resourceUrl;
 
         // Methods
-        public OAuthSession(string crossTenantAuthenticationURL)
-        {
+        public OAuthSession(string crossTenantAuthenticationURL) => 
             this.crossTenantAuthenticationURL = crossTenantAuthenticationURL;
-        }
 
         private void EnsureValidAuthToken()
         {
@@ -107,17 +105,7 @@ namespace MG.SharePoint
         }
 
         // Properties
-        internal string TenantId
-        {
-            get
-            {
-                if (this.authResult != null)
-                {
-                    return this.authResult.TenantId;
-                }
-                return null;
-            }
-        }
+        internal string TenantId => this.authResult != null ? this.authResult.TenantId : null;
 
         internal string UserId =>  this.authResult?.UserInfo.UniqueId;
 

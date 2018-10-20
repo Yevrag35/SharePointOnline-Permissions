@@ -106,7 +106,7 @@
     <Compile Include="Context\Logins.cs" />
     <Compile Include="Backend\CredentialCmdletPipeBind.cs" />
     <Compile Include="Backend\OAuthSession.cs" />
-    <Compile Include="Backend\OfficeVersion.cs" />
+    <None Include="Backend\OfficeVersion.cs" />
     <Compile Include="Backend\SPOService.cs" />
     <Compile Include="Backend\SPOServiceHelper.cs" />
     <Compile Include="HelpingCmdlets\GetRoleDefinitions.cs" />
