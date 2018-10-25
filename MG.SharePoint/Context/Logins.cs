@@ -11,10 +11,10 @@ namespace MG.SharePoint
         private const string subFormat = baseFormat + "/{1}";
 
         #region Login Methods
-        public static Web Login(string tenantName, string destUrl) =>
+        public static bool Login(string tenantName, string destUrl) =>
             Login(tenantName, destUrl, PromptBehavior.Auto);
 
-        public static Web Login(string tenantName, string destUrl, PromptBehavior behavior)
+        public static bool Login(string tenantName, string destUrl, PromptBehavior behavior)
         {
             var baseLogin = string.Format(baseFormat, tenantName);
             var destSite = new Uri(string.Format(subFormat, tenantName, destUrl));
@@ -25,12 +25,12 @@ namespace MG.SharePoint
             }
             catch
             {
-                return null;
+                return false;
             }
-            return SP1.Web;
+            return Connected;
         }
 
-        public static Web Login(string tenantName, string destUrl, PSCredential credential)
+        public static bool Login(string tenantName, string destUrl, PSCredential credential)
         {
             var baseLogin = string.Format(baseFormat, tenantName);
             var destSite = new Uri(string.Format(subFormat, tenantName, destUrl));
@@ -41,9 +41,9 @@ namespace MG.SharePoint
             }
             catch
             {
-                return null;
+                return false;
             }
-            return SP1.Web;
+            return Connected;
         }
         #endregion
     }

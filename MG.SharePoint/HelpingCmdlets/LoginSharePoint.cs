@@ -6,7 +6,7 @@ using System.Management.Automation;
 namespace MG.SharePoint.HelpingCmdlets
 {
     [Cmdlet("Login", "SharePoint", DefaultParameterSetName = "ByAzureLogin")]
-    [OutputType(typeof(Web))]
+    [OutputType(typeof(bool))]
     [CmdletBinding(PositionalBinding = false)]
     public class LoginSharePoint : PSCmdlet
     {
@@ -28,12 +28,12 @@ namespace MG.SharePoint.HelpingCmdlets
             switch (ParameterSetName)
             {
                 case "ByAzureLogin":
-                    Web web1 = CTX.Login(TenantName, DestinationSite, PromptBehavior);
-                    WriteObject(web1);
+                    bool res1 = CTX.Login(TenantName, DestinationSite, PromptBehavior);
+                    WriteObject(res1);
                     break;
                 default:
-                    Web web2 = CTX.Login(TenantName, DestinationSite, Credential);
-                    WriteObject(web2);
+                    bool res2 = CTX.Login(TenantName, DestinationSite, Credential);
+                    WriteObject(res2);
                     break;
             }
         }

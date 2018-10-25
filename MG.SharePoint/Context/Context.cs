@@ -10,30 +10,26 @@ namespace MG.SharePoint
         internal static ClientContext SP2 { get; set; }
         public static bool Connected => SP1 != null;
 
-        #region Load and Execute
-        public static void lae() => SP1.ExecuteQuery();
+        #region Load and Execute (LAE)
+        public static void Lae() => SP1.ExecuteQuery();
 
-        public static void lae(ClientObject obj, bool andExecute = true) =>
-            lae(new ClientObject[1] { obj }, andExecute);
+        public static void Lae<T>(T obj, bool andExecute = true, params Expression<Func<T, object>>[] retrievals)
+            where T : ClientObject =>
+            Lae(new T[1] { obj }, andExecute, retrievals);
 
-        public static void lae(ClientObject[] objs, bool andExecute = true)
+        public static void Lae<T>(T[] objs, bool andExecute = true, params Expression<Func<T, object>>[] retrievals)
+            where T : ClientObject
         {
             for (int i = 0; i < objs.Length; i++)
             {
                 var obj = objs[i];
                 if (obj != null)
                 {
-                    SP1.Load(obj);
+                    SP1.Load(obj, retrievals);
                     if (andExecute)
                         SP1.ExecuteQuery();
                 }
             }
-        }
-        public static void lae<T>(T obj, bool andExecute, params Expression<Func<T, object>>[] retrievals) where T : ClientObject
-        {
-            SP1.Load(obj, retrievals);
-            if (andExecute)
-                SP1.ExecuteQuery();
         }
 
         #endregion

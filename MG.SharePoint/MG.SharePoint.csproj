@@ -34,68 +34,68 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Azure.ActiveDirectory.GraphClient">
-      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.Azure.ActiveDirectory.GraphClient.dll</HintPath>
+      <HintPath>Assemblies\Microsoft.Azure.ActiveDirectory.GraphClient.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Data.Edm, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.Data.Edm.dll</HintPath>
+      <HintPath>Assemblies\Microsoft.Data.Edm.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Data.OData, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.Data.OData.dll</HintPath>
+      <HintPath>Assemblies\Microsoft.Data.OData.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Data.Services.Client, Version=5.6.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.Data.Services.Client.dll</HintPath>
+      <HintPath>Assemblies\Microsoft.Data.Services.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory">
-      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
+      <HintPath>Assemblies\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms">
-      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll</HintPath>
+      <HintPath>Assemblies\Microsoft.IdentityModel.Clients.ActiveDirectory.WindowsForms.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Online.SharePoint.Client.Tenant">
-      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.Online.SharePoint.Client.Tenant.dll</HintPath>
+      <HintPath>Assemblies\Microsoft.Online.SharePoint.Client.Tenant.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Online.SharePoint.Migration">
-      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.Online.SharePoint.Migration.dll</HintPath>
+      <HintPath>Assemblies\Microsoft.Online.SharePoint.Migration.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Online.SharePoint.PowerShell">
-      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.Online.SharePoint.PowerShell.dll</HintPath>
+      <HintPath>Assemblies\Microsoft.Online.SharePoint.PowerShell.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Online.SharePoint.PowerShell.ResourceManager">
-      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.Online.SharePoint.PowerShell.ResourceManager.dll</HintPath>
+      <HintPath>Assemblies\Microsoft.Online.SharePoint.PowerShell.ResourceManager.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Online.SharePoint.PowerShell.ResourceManager.Intl">
-      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.Online.SharePoint.PowerShell.ResourceManager.Intl.dll</HintPath>
+      <HintPath>Assemblies\Microsoft.Online.SharePoint.PowerShell.ResourceManager.Intl.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.SharePoint.Client, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.SharePoint.Client.dll</HintPath>
+      <HintPath>Assemblies\Microsoft.SharePoint.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.SharePoint.Client.Runtime, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.SharePoint.Client.Runtime.dll</HintPath>
+      <HintPath>Assemblies\Microsoft.SharePoint.Client.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage, Version=4.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.WindowsAzure.Storage.dll</HintPath>
+      <HintPath>Assemblies\Microsoft.WindowsAzure.Storage.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.WindowsAzure.Storage.DataMovement">
-      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Microsoft.WindowsAzure.Storage.DataMovement.dll</HintPath>
+      <HintPath>Assemblies\Microsoft.WindowsAzure.Storage.DataMovement.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Ookii.Dialogs">
-      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\Ookii.Dialogs.dll</HintPath>
+      <HintPath>Assemblies\Ookii.Dialogs.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint\Assemblies\System.Management.Automation.dll</HintPath>
+      <HintPath>Assemblies\System.Management.Automation.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http" />
   </ItemGroup>
@@ -109,8 +109,10 @@
     <Compile Include="Backend\OfficeVersion.cs" />
     <Compile Include="Backend\SPOService.cs" />
     <Compile Include="Backend\SPOServiceHelper.cs" />
+    <Compile Include="Extensions\ClientObjectExtensions.cs" />
     <Compile Include="HelpingCmdlets\LoginSharePoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SPObjects\ISPObject.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assemblies\" />
