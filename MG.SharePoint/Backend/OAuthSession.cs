@@ -21,7 +21,7 @@ namespace MG.SharePoint
         private const int REFRESH_BEFORE_EXPIRATION_SECONDS = 30;
         private string crossTenantAuthenticationURL;
         private AuthenticationContext authContext;
-        private AuthenticationResult authResult;
+        public AuthenticationResult authResult;
         private string resourceUrl;
 
         // Methods
@@ -60,7 +60,7 @@ namespace MG.SharePoint
             return (this.authResult.AccessTokenType + " " + this.authResult.AccessToken);
         }
 
-        internal string GetAuthToken()
+        public string GetAuthToken()
         {
             this.EnsureValidAuthToken();
             return this.authResult.AccessToken;
@@ -68,7 +68,7 @@ namespace MG.SharePoint
 
         private void RefreshAuthSession(string refreshToken)
         {
-            this.authResult = this.AuthContext.AcquireTokenByRefreshToken(refreshToken, "9bc3ab49-b65d-410a-85ad-de819febfddc");
+            this.authResult = this.AuthContext.AcquireTokenByRefreshToken(refreshToken, CLIENT_ID);
         }
 
         internal void SignIn(string resourceUrl, PromptBehavior behavior)
@@ -77,8 +77,23 @@ namespace MG.SharePoint
             this.resourceUrl = null;
             try
             {
-                this.authResult = this.AuthContext.AcquireToken(resourceUrl, "9bc3ab49-b65d-410a-85ad-de819febfddc", 
+                this.authResult = this.AuthContext.AcquireToken(resourceUrl, CLIENT_ID, 
                     new Uri("https://oauth.spops.microsoft.com"), behavior);
+                this.resourceUrl = resourceUrl;
+            }
+            catch (AdalException)
+            {
+                throw new AuthenticationException(StringResourceManager.GetResourceString("OAuthCouldntSignIn", new object[] { resourceUrl }));
+            }
+        }
+
+        internal void SignIn(string resourceUrl, ClientCredential clientCreds)
+        {
+            this.authResult = null;
+            this.resourceUrl = null;
+            try
+            {
+                this.authResult = this.AuthContext.AcquireToken(resourceUrl, clientCreds);
                 this.resourceUrl = resourceUrl;
             }
             catch (AdalException)
@@ -94,7 +109,7 @@ namespace MG.SharePoint
             var credential = new UserCredential(credentials.UserName, credentials.Password);
             try
             {
-                this.authResult = this.AuthContext.AcquireToken(resourceUrl, "9bc3ab49-b65d-410a-85ad-de819febfddc", credential);
+                this.authResult = this.AuthContext.AcquireToken(resourceUrl, CLIENT_ID, credential);
                 this.resourceUrl = resourceUrl;
             }
             catch (AdalException)
@@ -105,13 +120,13 @@ namespace MG.SharePoint
         }
 
         // Properties
-        internal string TenantId => this.authResult != null ? this.authResult.TenantId : null;
+        public string TenantId => this.authResult != null ? this.authResult.TenantId : null;
 
-        internal string UserId =>  this.authResult?.UserInfo.UniqueId;
+        public string UserId =>  this.authResult?.UserInfo.UniqueId;
 
-        internal string UserDisplayableId => this.authResult?.UserInfo.DisplayableId;
+        public string UserDisplayableId => this.authResult?.UserInfo.DisplayableId;
 
-        private AuthenticationContext AuthContext
+        public AuthenticationContext AuthContext
         {
             get
             {

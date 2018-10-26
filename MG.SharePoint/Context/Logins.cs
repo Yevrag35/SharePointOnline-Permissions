@@ -30,6 +30,22 @@ namespace MG.SharePoint
             return Connected;
         }
 
+        public static bool Login(string tenantName, string destUrl, Guid tenantId, ClientCredential clientCreds)
+        {
+            var baseLogin = string.Format(baseFormat, tenantName);
+            var destSite = new Uri(string.Format(subFormat, tenantName, destUrl));
+            try
+            {
+                var service = SPOServiceHelper.InstantiateSPOService(destSite, baseLogin, tenantId, clientCreds);
+                SP1 = service.Context;
+            }
+            catch
+            {
+                return false;
+            }
+            return Connected;
+        }
+
         public static bool Login(string tenantName, string destUrl, PSCredential credential)
         {
             var baseLogin = string.Format(baseFormat, tenantName);

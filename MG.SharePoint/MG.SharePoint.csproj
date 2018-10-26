@@ -119,6 +119,7 @@
     <Compile Include="SPObjects\ISPObject.cs" />
     <Compile Include="SPObjects\SPFolder.cs" />
     <Compile Include="SPObjects\SPPermission.cs" />
+    <Compile Include="SPObjects\SPPermissionCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assemblies\" />

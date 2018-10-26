@@ -92,7 +92,7 @@ namespace MG.SharePoint
                 this.m_powerShellHost = this.Host;
         }
 
-        internal OAuthSession OAuthSession { get; set; }
+        public OAuthSession OAuthSession { get; set; }
 
         internal bool ServerSupportsGroupIdFilter =>
             (base.ServerVersion >= new Version(0x10, 0, 0x1e1c, 0x4b0));

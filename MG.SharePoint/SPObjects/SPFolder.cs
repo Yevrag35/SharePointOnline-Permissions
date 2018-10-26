@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MG.SharePoint
 {
@@ -14,7 +15,7 @@ namespace MG.SharePoint
         private protected string _sru => _fol.ServerRelativeUrl;
         private protected int? _filec => _fol.Files.AreItemsAvailable ? _fol.Files.Count : (int?)null;
         private protected int? _folc => _fol.Folders.AreItemsAvailable ? _fol.Folders.Count : (int?)null;
-        private protected SPPermission[] _perms;
+        private protected SPPermissionCollection _perms;
         private protected bool? _hup;
         private protected string _par;
 
@@ -26,7 +27,7 @@ namespace MG.SharePoint
         public string ServerRelativeUrl => _sru;
         public bool? HasUniquePermissions => _hup;
         public string Parent => _par;
-        public SPPermission[] Permissions => _perms;
+        public SPPermissionCollection Permissions => _perms;
         public int? FileCount => _filec;
         public int? FolderCount => _folc;
 
@@ -91,23 +92,11 @@ namespace MG.SharePoint
         #endregion
 
         #region Permission Methods
-        public SPPermission[] GetPermissions()
+        public SPPermissionCollection GetPermissions()
         {
-            CTX.Lae(_fol.ListItemAllFields, true,
-                f => f.RoleAssignments.Include(
-                    ass => ass.Member, ass => ass.RoleDefinitionBindings.Include(
-                        d => d.Name, d => d.Description
-                    )
-                )
-            );
-            var spPerms = new SPPermission[_fol.ListItemAllFields.RoleAssignments.Count];
-            for (int i = 0; i < _fol.ListItemAllFields.RoleAssignments.Count; i++)
-            {
-                SPPermission ass = _fol.ListItemAllFields.RoleAssignments[i];
-                spPerms[i] = ass;
-            }
-            _perms = spPerms;
-            return spPerms;
+            SPPermissionCollection permCol = _fol.ListItemAllFields.RoleAssignments;
+            _perms = permCol;
+            return permCol;
         }
 
         public bool BreakInheritance(bool copyRoleAssignments, bool clearSubscopes = true)
@@ -146,8 +135,60 @@ namespace MG.SharePoint
             return result;
         }
 
-        public void AddFolderPermission(BindingCollection)
+        public void AddFolderPermission(SPBindingCollection bindingCol, bool forceBreak = false)
+        {
+            if (HasUniquePermissions.HasValue && !HasUniquePermissions.Value)
+            {
+                if (!forceBreak)
+                    throw new NoForceBreakException(_fol.UniqueId);
+                else
+                    _fol.ListItemAllFields.BreakRoleInheritance(true, true);
+            }
+            else if (!HasUniquePermissions.HasValue)
+                throw new InvalidOperationException("This object's permissions cannot be modified!");
 
+            var list = new List<RoleAssignment>(bindingCol.Count);
+            for (int i = 0; i < bindingCol.Count; i++)
+            {
+                var binding = bindingCol[i];
+                var bCol = new RoleDefinitionBindingCollection(CTX.SP1)
+                {
+                    binding.Definition
+                };
+                list.Add(_fol.ListItemAllFields.RoleAssignments.Add(
+                    binding.Principal, bCol));
+                foreach (var ass in list)
+                {
+                    CTX.Lae(ass, false);
+                }
+                _fol.Update();
+                CTX.Lae();
+            }
+            if (_perms != null)
+                _perms.AddRange(list);
+            else
+                this.GetPermissions();
+        }
+
+        public void AddFolderPermission(SPBinding binding, bool forceBreak = false) =>
+            AddFolderPermission(new SPBindingCollection(binding), forceBreak);
+
+        public void AddFolderPermission(Principal principal, RoleDefinition roleDef, bool forceBreak = false) =>
+            AddFolderPermission(new SPBindingCollection(principal, roleDef), forceBreak);
+
+        public void AddFolderPermission(string logonName, string roleDefinition, bool forceBreak = false)
+        {
+            var user = CTX.SP1.Web.EnsureUser(logonName);
+            CTX.Lae(user);
+            var allRoles = CTX.SP1.Web.RoleDefinitions;
+            CTX.Lae(allRoles, true,
+                ar => ar.Include(
+                    r => r.Name
+                )
+            );
+            var roleDef = allRoles.Where(x => string.Equals(x.Name, roleDefinition, StringComparison.OrdinalIgnoreCase)).Single();
+            AddFolderPermission(new SPBindingCollection(user, roleDef), forceBreak);
+        }
         #endregion
 
         #region Operators

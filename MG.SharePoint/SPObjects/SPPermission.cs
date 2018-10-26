@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MG.SharePoint
 {
-    public class SPPermission : ISPObject
+    public class SPPermission : ICloneable, ISPObject
     {
         private protected readonly string _memTit;
         private protected readonly int _memLog;
@@ -42,5 +42,11 @@ namespace MG.SharePoint
             new SPPermission(ass);
 
         public object ShowOriginal() => _roleAss;
+
+        public object Clone()
+        {
+            SPPermission perm = this.ShowOriginal() as RoleAssignment;
+            return perm;
+        }
     }
 }

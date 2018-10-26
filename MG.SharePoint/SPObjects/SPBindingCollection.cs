@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace MG.SharePoint
@@ -22,7 +23,7 @@ namespace MG.SharePoint
         {
         }
         public SPBindingCollection(SPBinding spBind)
-            : this(((IEnumerable)spBind).Cast<SPBinding>().ToArray())
+            : this(((IEnumerable<SPBinding>)spBind).Cast<SPBinding>().ToArray())
         {
         }
         public SPBindingCollection(IEnumerable<SPBinding> items) => 
@@ -32,6 +33,11 @@ namespace MG.SharePoint
 
         #region IList and ICollection Methods
         SPBinding IList<SPBinding>.this[int index]
+        {
+            get => _list[index];
+            set => _list[index] = value;
+        }
+        public SPBinding this[int index]
         {
             get => _list[index];
             set => _list[index] = value;
@@ -114,6 +120,23 @@ namespace MG.SharePoint
 
         public bool TrueForAll(Predicate<SPBinding> match) =>
             _list.TrueForAll(match);
+
+        public bool Exists(Predicate<SPBinding> match) =>
+            _list.Exists(match);
+
+        public ReadOnlyCollection<SPBinding> AsReadOnly() =>
+            _list.AsReadOnly();
+
+        public void Sort() => _list.Sort();
+
+        public void Sort(Comparison<SPBinding> comparison) => 
+            _list.Sort(comparison);
+
+        public void Sort(IComparer<SPBinding> comparer) =>
+            _list.Sort(comparer);
+
+        public void RemoveAll(Predicate<SPBinding> match) =>
+            _list.RemoveAll(match);
 
         #endregion
     }

@@ -34,6 +34,7 @@ namespace MG.SharePoint
         private const string GERMANY_AUTH_URL = "https://login.microsoftonline.de/common";
         private const string CHINA_AUTH_URL = "https://login.chinacloudapi.cn/common";
         internal static string HEADER_SHAREPOINT_VERSION = "MicrosoftSharePointTeamServices";
+        private const string TENANT_TEMP = "https://login.microsoftonline.com/{0}";
 
         //private static readonly string loginUrl = "https://dgrsystems.sharepoint.com";
 
@@ -58,12 +59,15 @@ namespace MG.SharePoint
             return "https://login.microsoftonline.com/common";
         }
 
+        internal static SPOService InstantiateSPOService(Uri url, string loginUrl, Guid tenantId, ClientCredential clientCreds) =>
+            InstantiateSPOService(url, loginUrl, null, null, string.Format(TENANT_TEMP, tenantId.ToString()), PromptBehavior.Always, clientCreds);
+
         internal static SPOService InstantiateSPOService(Uri url, string loginUrl,PSCredential credentials, PSHost host, 
             PromptBehavior behavior) =>
-            InstantiateSPOService(url, loginUrl, credentials, host, COMMON_AUTH_URL, behavior);
+            InstantiateSPOService(url, loginUrl, credentials, host, COMMON_AUTH_URL, behavior, null);
 
         internal static SPOService InstantiateSPOService(Uri url, string loginUrl, PSCredential credentials, PSHost host, 
-            string authenticationUrl, PromptBehavior behavior)
+            string authenticationUrl, PromptBehavior behavior, ClientCredential clientCreds)
         {
             if (!IsValidServerVersion(url))
             {
@@ -80,10 +84,16 @@ namespace MG.SharePoint
                 flag2 = Convert.ToUInt32(key.GetValue("ForceOAuth", 1)) != 0;
             }
             var context = new CmdLetContext(url.ToString(), host, null); // this is where the site "/Clients" is set.
-            if (credentials == null)
+            if (credentials == null && clientCreds == null)
             {
                 var session = new OAuthSession(authenticationUrl);
                 session.SignIn(loginUrl, behavior);                      // the login Url is the base site though.
+                context.OAuthSession = session;
+            }
+            else if (clientCreds != null)
+            {
+                var session = new OAuthSession(authenticationUrl);
+                session.SignIn(loginUrl, clientCreds);
                 context.OAuthSession = session;
             }
             else if (flag2)
