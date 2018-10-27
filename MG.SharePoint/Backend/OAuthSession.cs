@@ -16,16 +16,17 @@ namespace MG.SharePoint
     public class OAuthSession
     {
         // Fields
-        private const string CLIENT_ID = "9bc3ab49-b65d-410a-85ad-de819febfddc";
-        private const string REDIRECT_URI = "https://oauth.spops.microsoft.com";
+        private const string DEFAULT_CLIENT_ID = "9bc3ab49-b65d-410a-85ad-de819febfddc";
+        private const string DEFAULT_REDIRECT_URI = "https://oauth.spops.microsoft.com";
         private const int REFRESH_BEFORE_EXPIRATION_SECONDS = 30;
-        private string crossTenantAuthenticationURL;
+        private protected const string DEFAULT_AUTHORITY = "https://login.microsoftonline.com/common/oauth2/token";
+        private protected string crossTenantAuthenticationURL;
         private AuthenticationContext authContext;
         public AuthenticationResult authResult;
         private string resourceUrl;
 
         // Methods
-        public OAuthSession(string crossTenantAuthenticationURL) => 
+        public OAuthSession(string crossTenantAuthenticationURL = DEFAULT_AUTHORITY) => 
             this.crossTenantAuthenticationURL = crossTenantAuthenticationURL;
 
         private void EnsureValidAuthToken()
@@ -68,17 +69,17 @@ namespace MG.SharePoint
 
         private void RefreshAuthSession(string refreshToken)
         {
-            this.authResult = this.AuthContext.AcquireTokenByRefreshToken(refreshToken, CLIENT_ID);
+            this.authResult = this.AuthContext.AcquireTokenByRefreshToken(refreshToken, DEFAULT_CLIENT_ID);
         }
 
-        internal void SignIn(string resourceUrl, PromptBehavior behavior)
+        public void SignIn(string resourceUrl, PromptBehavior behavior, string clientId = DEFAULT_CLIENT_ID, string redirectUri = DEFAULT_REDIRECT_URI)
         {
             this.authResult = null;
             this.resourceUrl = null;
             try
             {
-                this.authResult = this.AuthContext.AcquireToken(resourceUrl, CLIENT_ID, 
-                    new Uri("https://oauth.spops.microsoft.com"), behavior);
+                this.authResult = this.AuthContext.AcquireToken(resourceUrl, clientId, 
+                    new Uri(redirectUri), behavior);
                 this.resourceUrl = resourceUrl;
             }
             catch (AdalException)
@@ -87,29 +88,14 @@ namespace MG.SharePoint
             }
         }
 
-        internal void SignIn(string resourceUrl, ClientCredential clientCreds)
-        {
-            this.authResult = null;
-            this.resourceUrl = null;
-            try
-            {
-                this.authResult = this.AuthContext.AcquireToken(resourceUrl, clientCreds);
-                this.resourceUrl = resourceUrl;
-            }
-            catch (AdalException)
-            {
-                throw new AuthenticationException(StringResourceManager.GetResourceString("OAuthCouldntSignIn", new object[] { resourceUrl }));
-            }
-        }
-
-        internal void SignIn(string resourceUrl, PSCredential credentials)
+        public void SignIn(string resourceUrl, PSCredential credentials, string clientId = DEFAULT_CLIENT_ID)
         {
             this.authResult = null;
             this.resourceUrl = null;
             var credential = new UserCredential(credentials.UserName, credentials.Password);
             try
             {
-                this.authResult = this.AuthContext.AcquireToken(resourceUrl, CLIENT_ID, credential);
+                this.authResult = this.AuthContext.AcquireToken(resourceUrl, clientId, credential);
                 this.resourceUrl = resourceUrl;
             }
             catch (AdalException)

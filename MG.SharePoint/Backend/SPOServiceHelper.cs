@@ -25,7 +25,7 @@ namespace MG.SharePoint
         China
     }
 
-    public class SPOServiceHelper
+    public class SPOServiceHelper : IServiceHelper
     {
         // Fields
         private const string COMMON_AUTH_URL = "https://login.microsoftonline.com/common";
@@ -33,13 +33,13 @@ namespace MG.SharePoint
         private const string ITAR_AUTH_URL = "https://login.microsoftonline.us/common";
         private const string GERMANY_AUTH_URL = "https://login.microsoftonline.de/common";
         private const string CHINA_AUTH_URL = "https://login.chinacloudapi.cn/common";
-        internal static string HEADER_SHAREPOINT_VERSION = "MicrosoftSharePointTeamServices";
+        internal string HEADER_SHAREPOINT_VERSION = "MicrosoftSharePointTeamServices";
         private const string TENANT_TEMP = "https://login.microsoftonline.com/{0}";
 
-        //private static readonly string loginUrl = "https://dgrsystems.sharepoint.com";
+        public SPOServiceHelper() { }
 
         // Methods
-        private static string ConvertAuthenticationLocation2Url(AADCrossTenantAuthenticationLocation region, Uri url)
+        private string ConvertAuthenticationLocation2Url(AADCrossTenantAuthenticationLocation region, Uri url)
         {
             switch (region)
             {
@@ -52,22 +52,16 @@ namespace MG.SharePoint
                 case AADCrossTenantAuthenticationLocation.China:
                     return "https://login.chinacloudapi.cn/common";
             }
-            if (url.Host.ToLower().EndsWith("spoppe.com"))
-            {
-                return "https://login.windows-ppe.net/common";
-            }
-            return "https://login.microsoftonline.com/common";
+            return url.Host.ToLower().EndsWith("spoppe.com")
+                ? "https://login.windows-ppe.net/common"
+                : "https://login.microsoftonline.com/common";
         }
 
-        internal static SPOService InstantiateSPOService(Uri url, string loginUrl, Guid tenantId, ClientCredential clientCreds) =>
-            InstantiateSPOService(url, loginUrl, null, null, string.Format(TENANT_TEMP, tenantId.ToString()), PromptBehavior.Always, clientCreds);
+        public SPOService InstantiateSPOService(Uri url, string loginUrl,PSCredential credentials, PromptBehavior? behavior) =>
+            InstantiateSPOService(url, loginUrl, credentials, COMMON_AUTH_URL, behavior);
 
-        internal static SPOService InstantiateSPOService(Uri url, string loginUrl,PSCredential credentials, PSHost host, 
-            PromptBehavior behavior) =>
-            InstantiateSPOService(url, loginUrl, credentials, host, COMMON_AUTH_URL, behavior, null);
-
-        internal static SPOService InstantiateSPOService(Uri url, string loginUrl, PSCredential credentials, PSHost host, 
-            string authenticationUrl, PromptBehavior behavior, ClientCredential clientCreds)
+        public SPOService InstantiateSPOService(Uri url, string loginUrl, PSCredential credentials, 
+            string authenticationUrl, PromptBehavior? behavior)
         {
             if (!IsValidServerVersion(url))
             {
@@ -75,34 +69,14 @@ namespace MG.SharePoint
                     "ValidateServerVersionInvalidVersion", 
                     new object[0]));
             }
-            bool flag = true;
-            bool flag2 = false;
-            RegistryKey key = Registry.CurrentUser.OpenSubKey(@"SOFTWARE\Microsoft\SPO\CMDLETS\");
-            if (key != null)
-            {
-                flag = Convert.ToUInt32(key.GetValue("UseOrgID", 1)) != 0;
-                flag2 = Convert.ToUInt32(key.GetValue("ForceOAuth", 1)) != 0;
-            }
-            var context = new CmdLetContext(url.ToString(), host, null); // this is where the site "/Clients" is set.
-            if (credentials == null && clientCreds == null)
+            var context = new CmdLetContext(url.ToString(), null, null); // this is where the site "sites/Clients" is set.
+            if (credentials == null)
             {
                 var session = new OAuthSession(authenticationUrl);
-                session.SignIn(loginUrl, behavior);                      // the login Url is the base site though.
+                session.SignIn(loginUrl, behavior.Value);                      // the login Url is the base site though.
                 context.OAuthSession = session;
             }
-            else if (clientCreds != null)
-            {
-                var session = new OAuthSession(authenticationUrl);
-                session.SignIn(loginUrl, clientCreds);
-                context.OAuthSession = session;
-            }
-            else if (flag2)
-            {
-                var session2 = new OAuthSession(authenticationUrl);
-                session2.SignIn(loginUrl, credentials);
-                context.OAuthSession = session2;
-            }
-            else if (flag)
+            else
             {
                 var credentials2 = new SharePointOnlineCredentials(credentials.UserName, credentials.Password);
                 context.Credentials = credentials2;
@@ -110,7 +84,7 @@ namespace MG.SharePoint
             return new SPOService(context);
         }
 
-        internal static bool IsTenantAdminSite(CmdLetContext context)
+        internal bool IsTenantAdminSite(CmdLetContext context)
         {
             try
             {
@@ -124,7 +98,7 @@ namespace MG.SharePoint
             }
         }
 
-        internal static bool IsValidServerVersion(Uri url)
+        internal bool IsValidServerVersion(Uri url)
         {
             using (var client = new WebClient())
             {

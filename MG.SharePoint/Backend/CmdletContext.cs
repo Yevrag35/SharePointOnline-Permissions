@@ -25,7 +25,7 @@ namespace MG.SharePoint
         private PSHost m_powerShellHost;
 
         // Methods
-        internal CmdLetContext(string webFullUrl, CmdLetContext rootContext) : base(webFullUrl)
+        public CmdLetContext(string webFullUrl, CmdLetContext rootContext) : base(webFullUrl)
         {
             base.ClientTag = GetClientTag();
             ApplicationName = GetUserAgent();
@@ -33,7 +33,7 @@ namespace MG.SharePoint
             base.ExecutingWebRequest += new EventHandler<WebRequestEventArgs>(this.CmdLetContext_ExecutingWebRequest);
         }
 
-        internal CmdLetContext(string webFullUrl, PSHost host, string clientTag) : base(webFullUrl)
+        public CmdLetContext(string webFullUrl, PSHost host, string clientTag) : base(webFullUrl)
         {
             this.Host = host;
             base.ClientTag = GetClientTag();
@@ -42,7 +42,7 @@ namespace MG.SharePoint
             base.ExecutingWebRequest += new EventHandler<WebRequestEventArgs>(this.CmdLetContext_ExecutingWebRequest);
         }
 
-        internal CmdLetContext(Uri webFullUrl, PSHost host, string clientTag) : base(webFullUrl)
+        public CmdLetContext(Uri webFullUrl, PSHost host, string clientTag) : base(webFullUrl)
         {
             this.Host = host;
             base.ClientTag = GetClientTag() + (clientTag ?? "");
@@ -95,6 +95,6 @@ namespace MG.SharePoint
         public OAuthSession OAuthSession { get; set; }
 
         internal bool ServerSupportsGroupIdFilter =>
-            (base.ServerVersion >= new Version(0x10, 0, 0x1e1c, 0x4b0));
+            base.ServerVersion >= new Version(0x10, 0, 0x1e1c, 0x4b0);
     }
 }
