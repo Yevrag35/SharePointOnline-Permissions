@@ -117,7 +117,9 @@
     <Compile Include="SPObjects\SPBinding.cs" />
     <Compile Include="SPObjects\SPBindingCollection.cs" />
     <Compile Include="SPObjects\ISPObject.cs" />
-    <Compile Include="SPObjects\SPFolder.cs" />
+    <Compile Include="SPObjects\SPFolder\SPFolder-AddFolder.cs" />
+    <Compile Include="SPObjects\SPFolder\SPFolder-Permissions.cs" />
+    <Compile Include="SPObjects\SPFolder\SPFolder.cs" />
     <Compile Include="SPObjects\SPPermission.cs" />
     <Compile Include="SPObjects\SPPermissionCollection.cs" />
   </ItemGroup>

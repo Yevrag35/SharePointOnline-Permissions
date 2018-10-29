@@ -61,7 +61,7 @@ namespace MG.SharePoint
             InstantiateSPOService(url, loginUrl, credentials, COMMON_AUTH_URL, behavior);
 
         public SPOService InstantiateSPOService(Uri url, string loginUrl, PSCredential credentials, 
-            string authenticationUrl, PromptBehavior? behavior)
+            string authenticationUrl = COMMON_AUTH_URL, PromptBehavior? behavior = null)
         {
             if (!IsValidServerVersion(url))
             {

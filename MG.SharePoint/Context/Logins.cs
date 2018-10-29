@@ -9,6 +9,7 @@ namespace MG.SharePoint
     {
         private const string baseFormat = "https://{0}.sharepoint.com";
         private const string subFormat = baseFormat + "/{1}";
+        private const string COMMON_AUTH_URL = "https://login.microsoftonline.com/common";
 
         public static IServiceHelper Helper;
 
@@ -25,7 +26,7 @@ namespace MG.SharePoint
             var destSite = new Uri(string.Format(subFormat, tenantName, destUrl));
             try
             {
-                var service = Helper.InstantiateSPOService(destSite, baseLogin, null, null, behavior);
+                var service = Helper.InstantiateSPOService(destSite, baseLogin, null, COMMON_AUTH_URL, behavior);
                 SP1 = service.Context;
             }
             catch

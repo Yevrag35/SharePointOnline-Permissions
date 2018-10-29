@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace MG.SharePoint
@@ -12,6 +13,22 @@ namespace MG.SharePoint
         public string Name { get; }
         public Principal Principal { get; }
         public RoleDefinition Definition { get; }
+
+        public SPBinding(string principal, string roleDefinition)
+        {
+            var prin = CTX.SP1.Web.EnsureUser(principal);
+            CTX.Lae(prin);
+            var roleDefs = CTX.SP1.Web.RoleDefinitions;
+            CTX.Lae(roleDefs, true, rds => rds.Include(
+                def => def.Name
+            ));
+            var theRole = roleDefs.Single(x => string.Equals(roleDefinition, x.Name, StringComparison.OrdinalIgnoreCase));
+            CTX.Lae(theRole);
+            Principal = prin;
+            Definition = theRole;
+            Name = string.IsNullOrEmpty(prin.Email) ? 
+                prin.Title : prin.Email;
+        }
 
         public SPBinding(Principal prin, RoleDefinition def)
         {
