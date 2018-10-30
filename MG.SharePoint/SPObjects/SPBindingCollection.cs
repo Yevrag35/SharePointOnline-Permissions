@@ -29,6 +29,20 @@ namespace MG.SharePoint
         public SPBindingCollection(IEnumerable<SPBinding> items) => 
             _list = new List<SPBinding>(items);
 
+        public SPBindingCollection(IDictionary bindingHashtable)
+        {
+            var keys = bindingHashtable.Keys.Cast<string>().ToArray();
+            var bindings = new SPBinding[keys.Length];
+            for (int i = 0; i < keys.Length; i++)
+            {
+                var key = keys[i];
+                var prin = Convert.ToString(key);
+                var role = Convert.ToString(bindingHashtable[key]);
+                bindings[i] = new SPBinding(prin, role);
+            }
+            _list = new List<SPBinding>(bindings);
+        }
+
         #endregion
 
         #region IList and ICollection Methods
