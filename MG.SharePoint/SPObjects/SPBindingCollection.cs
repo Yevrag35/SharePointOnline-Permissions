@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace MG.SharePoint
 {
-    public class SPBindingCollection : IList<SPBinding>, ICollection, ICloneable
+    public class SPBindingCollection : IList<SPBinding>, ICollection, ICloneable, IPermissionResolver
     {
         private protected List<SPBinding> _list;
 
@@ -29,19 +29,8 @@ namespace MG.SharePoint
         public SPBindingCollection(IEnumerable<SPBinding> items) => 
             _list = new List<SPBinding>(items);
 
-        public SPBindingCollection(IDictionary bindingHashtable)
-        {
-            var keys = bindingHashtable.Keys.Cast<string>().ToArray();
-            var bindings = new SPBinding[keys.Length];
-            for (int i = 0; i < keys.Length; i++)
-            {
-                var key = keys[i];
-                var prin = Convert.ToString(key);
-                var role = Convert.ToString(bindingHashtable[key]);
-                bindings[i] = new SPBinding(prin, role);
-            }
-            _list = new List<SPBinding>(bindings);
-        }
+        public SPBindingCollection(IDictionary bindingHashtable) => 
+            _list = new List<SPBinding>(ResolvePermissions(bindingHashtable));
 
         #endregion
 
@@ -74,12 +63,52 @@ namespace MG.SharePoint
         public void AddRange(IEnumerable<SPBinding> items) =>
             _list.AddRange(items);
 
+        public void AddRange(IDictionary permissions) =>
+            _list.AddRange(ResolvePermissions(permissions));
+
         public void Clear() => _list.Clear();
 
         public bool Contains(SPBinding item) => _list.Contains(item);
 
         public bool Contains(Principal prin, RoleDefinition roleDef) =>
             this.Contains(new SPBinding(prin, roleDef));
+
+        public bool ContainsPrincipal(string principal)
+        {
+            bool result = false;
+            for (int i = 0; i < _list.Count; i++)
+            {
+                var item = _list[i];
+                if (string.Equals(principal, item.Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    result = true;
+                    break;
+                }
+            }
+            return result;
+        }
+
+        public bool ContainsRole(string roleDefinitionName)
+        {
+            bool result = false;
+            for (int i = 0; i < _list.Count; i++)
+            {
+                var item = _list[i];
+                if (string.Equals(item.Definition.Name, roleDefinitionName, StringComparison.OrdinalIgnoreCase))
+                {
+                    result = true;
+                    break;
+                }
+            }
+            return result;
+        }
+
+        public bool ContainsRole(RoleDefinition roleDef)
+        {
+            if (!roleDef.IsPropertyReady(x => x.Name))
+                CTX.Lae(roleDef, true, r => r.Name);
+            return ContainsRole(roleDef.Name);
+        }
 
         public void CopyTo(Array array, int index)
         {
@@ -128,8 +157,24 @@ namespace MG.SharePoint
 
         #endregion
 
+        #region IPermissionResolver Method
+        public IEnumerable<SPBinding> ResolvePermissions(IDictionary bindingHashtable)
+        {
+            var keys = bindingHashtable.Keys.Cast<string>().ToArray();
+            var bindings = new SPBinding[keys.Length];
+            for (int i = 0; i < keys.Length; i++)
+            {
+                var key = keys[i];
+                var prin = Convert.ToString(key);
+                var role = Convert.ToString(bindingHashtable[key]);
+                bindings[i] = new SPBinding(prin, role);
+            }
+            return bindings;
+        }
+        #endregion
+
         #region Other 'List' Methods
-        public SPBinding[] ToArray() =>
+    public SPBinding[] ToArray() =>
             _list.ToArray();
 
         public bool TrueForAll(Predicate<SPBinding> match) =>
@@ -151,6 +196,32 @@ namespace MG.SharePoint
 
         public void RemoveAll(Predicate<SPBinding> match) =>
             _list.RemoveAll(match);
+
+        // Remove duplicate entries on construction and adding
+        private IEnumerable<SPBinding> RemoveDuplicates(IEnumerable<SPBinding> bindings)
+        {
+            var names = new string[_list.Count];
+            for (int n = 0; n < _list.Count; n++)
+            {
+                names[n] = _list[n].Name;
+            }
+            for (int i = _list.Count - 1; i >=0; i--)
+            {
+                bool dup = false;
+                bool found = false;
+                var item = _list[i];
+                foreach (string name in names)
+                {
+                    if (name == item.Name && !found)
+                    {
+                        found = true;
+                    }
+                    else if (name == item.Name && found &&
+                        )
+                        
+                }
+            }
+        }
 
         #endregion
     }

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace MG.SharePoint
 {
-    public partial class SPFolder : ISPObject
+    public partial class SPFolder : ISPObject, IPermissionResolver
     {
         #region Permission Methods
         public SPPermissionCollection GetPermissions()
@@ -107,29 +107,34 @@ namespace MG.SharePoint
             AddFolderPermission(new SPBindingCollection(user, roleDef), forceBreak);
         }
 
-        public void AddFolderPermission(IDictionary permissionsHash, bool forceBreak = false)       // @{ "Role" = "Principal"; "Role" = @("Principal", "Principal") }
+        public void AddFolderPermission(IDictionary permissionsHash, bool forceBreak = false) =>       // @{ "Role" = "Principal"; "Role" = @("Principal", "Principal") }
+            AddFolderPermission(new SPBindingCollection(ResolvePermissions(permissionsHash)), forceBreak);
+
+        #endregion
+
+        public IEnumerable<SPBinding> ResolvePermissions(IDictionary permissions)
         {
-            var keys = permissionsHash.Keys.Cast<string>().ToArray();
+            var keys = permissions.Keys.Cast<string>().ToArray();
             var bindingCol = new SPBindingCollection();
             for (int i = 0; i < keys.Length; i++)
             {
                 var key = keys[i];
-                var prins = permissionsHash[key];
+                var prins = permissions[key];
                 var role = Convert.ToString(key);
                 string[] allPrins;
                 if (!prins.GetType().IsArray)
-                    allPrins = new string[1] { Convert.ToString(prins) };
+                    bindingCol.Add(new SPBinding(Convert.ToString(prins), role));
                 else
-                    allPrins = ((IEnumerable)prins).Cast<string>().ToArray();
-
-                for (int p = 0; p < allPrins.Length; p++)
                 {
-                    var prin = allPrins[p];
-                    bindingCol.Add(new SPBinding(prin, role));
+                    allPrins = ((IEnumerable)prins).Cast<string>().ToArray();
+                    for (int p = 0; p < allPrins.Length; p++)
+                    {
+                        var prin = allPrins[p];
+                        bindingCol.Add(new SPBinding(prin, role));
+                    }
                 }
             }
-            AddFolderPermission(bindingCol, forceBreak);
+            return bindingCol;
         }
-        #endregion
     }
 }
