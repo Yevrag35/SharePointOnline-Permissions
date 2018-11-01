@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace MG.SharePoint
 {
-    public class SPBindingCollection : IList<SPBinding>, ICollection, ICloneable, IPermissionResolver
+    public class SPBindingCollection : IList<SPBinding>, ICollection, ICloneable, ISPPermissionResolver
     {
         private protected List<SPBinding> _list;
 
@@ -174,7 +174,7 @@ namespace MG.SharePoint
         #endregion
 
         #region Other 'List' Methods
-    public SPBinding[] ToArray() =>
+        public SPBinding[] ToArray() =>
             _list.ToArray();
 
         public bool TrueForAll(Predicate<SPBinding> match) =>

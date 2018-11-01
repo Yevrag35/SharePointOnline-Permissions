@@ -9,8 +9,8 @@ namespace MG.SharePoint
 {
     public static partial class CTX
     {
-        public static ClientContext SP1 { get; set; }
-        internal static ClientContext SP2 { get; set; }
+        public static CmdLetContext SP1 { get; set; }
+        internal static CmdLetContext SP2 { get; set; }
         public static bool Connected => SP1 != null;
 
         #region Load and Execute (LAE)

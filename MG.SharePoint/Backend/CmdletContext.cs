@@ -25,6 +25,8 @@ namespace MG.SharePoint
         private PSHost m_powerShellHost;
 
         // Methods
+        static CmdLetContext() { }
+
         public CmdLetContext(string webFullUrl, CmdLetContext rootContext) : base(webFullUrl)
         {
             base.ClientTag = GetClientTag();

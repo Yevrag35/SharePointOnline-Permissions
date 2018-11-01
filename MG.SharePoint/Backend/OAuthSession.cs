@@ -29,7 +29,7 @@ namespace MG.SharePoint
         public OAuthSession(string crossTenantAuthenticationURL = DEFAULT_AUTHORITY) => 
             this.crossTenantAuthenticationURL = crossTenantAuthenticationURL;
 
-        private void EnsureValidAuthToken()
+        public void EnsureValidAuthToken(string clientId = DEFAULT_CLIENT_ID)
         {
             if (this.authResult == null)
             {
@@ -41,7 +41,7 @@ namespace MG.SharePoint
                 {
                     try
                     {
-                        this.RefreshAuthSession(this.authResult.RefreshToken);
+                        this.RefreshAuthSession(this.authResult.RefreshToken, clientId);
                         return;
                     }
                     catch (AdalException)
@@ -67,9 +67,9 @@ namespace MG.SharePoint
             return this.authResult.AccessToken;
         }
 
-        private void RefreshAuthSession(string refreshToken)
+        internal void RefreshAuthSession(string refreshToken, string clientId = DEFAULT_CLIENT_ID)
         {
-            this.authResult = this.AuthContext.AcquireTokenByRefreshToken(refreshToken, DEFAULT_CLIENT_ID);
+            this.authResult = this.AuthContext.AcquireTokenByRefreshToken(refreshToken, clientId);
         }
 
         public void SignIn(string resourceUrl, PromptBehavior behavior, string clientId = DEFAULT_CLIENT_ID, string redirectUri = DEFAULT_REDIRECT_URI)

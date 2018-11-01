@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace MG.SharePoint
 {
-    public partial class SPFolder : ISPObject
+    public partial class SPFolder : ISPObject, ISPPermissions
     {
         #region Private Fields
         private protected Folder _fol;

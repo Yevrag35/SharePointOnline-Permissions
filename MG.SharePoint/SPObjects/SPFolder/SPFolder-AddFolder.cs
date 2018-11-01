@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace MG.SharePoint
 {
-    public partial class SPFolder : ISPObject, IPermissionResolver
+    public partial class SPFolder : ISPObject, ISPPermissions
     {
         #region Add SubFolders
         public void AddSubFolder(string folderName) =>
@@ -27,7 +27,7 @@ namespace MG.SharePoint
         public SPFolder AddSubFolder(string folderName, SPBindingCollection bindingCol)
         {
             SPFolder newFolder = CTX.SP1.Web.Folders.Add(_fol.ServerRelativeUrl + "/" + folderName);
-            newFolder.AddFolderPermission(bindingCol, true);
+            newFolder.AddPermission(bindingCol, true);
             return newFolder;
         }
 

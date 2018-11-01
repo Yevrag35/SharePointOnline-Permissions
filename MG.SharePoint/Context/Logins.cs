@@ -13,6 +13,40 @@ namespace MG.SharePoint
 
         public static IServiceHelper Helper;
 
+        #region Re-Login Method
+
+        public static void NewClientContext(string serverRelativeUrl)
+        {
+            if (SP1 == null)
+                throw new InvalidOperationException("You need to login first.");
+
+            var currentUrl = new Uri(SP1.Url, UriKind.Absolute);
+            var uri = currentUrl.PathAndQuery;
+            if (string.IsNullOrEmpty(serverRelativeUrl))
+                serverRelativeUrl = "/";
+            else if (!serverRelativeUrl.StartsWith("/"))
+                serverRelativeUrl = "/" + serverRelativeUrl;
+
+            if (string.Equals(serverRelativeUrl, uri, StringComparison.OrdinalIgnoreCase))
+                throw new ArgumentException("The current context is already what is specified.");
+
+            var spo = NewContext(serverRelativeUrl);
+            SP1 = spo.Context;
+        }
+
+        private static SPOService NewContext(string incoming)
+        {
+            if (incoming == "/")
+                incoming = string.Empty;
+
+            var wholeThing = new Uri(SP1.Url, UriKind.Absolute);
+            var hostOnly = wholeThing.Scheme + "//" + wholeThing.Host;
+            var service = Helper.SwitchContext(hostOnly + incoming, SP1);
+            return service;
+        }
+
+        #endregion
+
         #region Login Methods
         public static bool Login(string tenantName, string destUrl) =>
             Login(tenantName, destUrl, PromptBehavior.Auto);

@@ -57,6 +57,24 @@ namespace MG.SharePoint
                 : "https://login.microsoftonline.com/common";
         }
 
+        public SPOService SwitchContext(string newWebUrl, CmdLetContext currentContext)
+        {
+            if (!newWebUrl.EndsWith("/"))
+                newWebUrl = newWebUrl + "/";
+
+            OAuthSession oauth = currentContext.OAuthSession;
+            var newContext = new CmdLetContext(newWebUrl, null, null);
+            if (currentContext.Credentials == null)
+            {
+                newContext.OAuthSession = oauth;
+                newContext.OAuthSession.EnsureValidAuthToken();
+            }
+            else
+                newContext.Credentials = currentContext.Credentials;
+
+            return new SPOService(newContext);
+        }
+
         public SPOService InstantiateSPOService(Uri url, string loginUrl,PSCredential credentials, PromptBehavior? behavior) =>
             InstantiateSPOService(url, loginUrl, credentials, COMMON_AUTH_URL, behavior);
 

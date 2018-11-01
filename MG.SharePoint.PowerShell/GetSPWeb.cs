@@ -5,15 +5,15 @@ using System.Management.Automation;
 namespace MG.SharePoint.PowerShell
 {
     [Cmdlet(VerbsCommon.Get, "SPWeb")]
-    [OutputType(typeof(Web))]
+    [OutputType(typeof(SPWeb))]
     public class GetSPWeb : PSCmdlet
     {
-        private protected bool _noex;
+        private protected bool _withPerms;
         [Parameter(Mandatory = false)]
-        public SwitchParameter NoExecute
+        public SwitchParameter LoadPermissions
         {
-            get => _noex;
-            set => _noex = value;
+            get => _withPerms;
+            set => _withPerms = value;
         }
 
         protected override void BeginProcessing()
@@ -26,11 +26,10 @@ namespace MG.SharePoint.PowerShell
         protected override void ProcessRecord()
         {
             base.ProcessRecord();
-            Web web = CTX.SP1.Web;
-            if (!_noex)
-            {
-                CTX.Lae(web, true);
-            }
+            var web = new SPWeb();
+            if (_withPerms)
+                web.GetPermissions();
+
             WriteObject(web, false);
         }
     }

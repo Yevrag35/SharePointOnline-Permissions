@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace MG.SharePoint
 {
-    public interface IPermissionResolver
+    public interface ISPPermissionResolver
     {
         IEnumerable<SPBinding> ResolvePermissions(IDictionary permissionTable);
     }

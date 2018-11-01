@@ -8,6 +8,7 @@ namespace MG.SharePoint
 {
     public interface IServiceHelper
     {
+        SPOService SwitchContext(string url, CmdLetContext parentContext);
         SPOService InstantiateSPOService(Uri destinationUrl, string loginUrl, PSCredential credential, string authenticationUrl, PromptBehavior? behavior);
     }
 }

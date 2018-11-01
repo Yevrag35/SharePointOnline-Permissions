@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace MG.SharePoint
 {
-    public partial class SPFolder : ISPObject, IPermissionResolver, ISPHasPermissions
+    public partial class SPFolder : ISPObject, ISPPermissions
     {
         public SPPermissionCollection Permissions { get; internal set; }
 
@@ -54,7 +54,7 @@ namespace MG.SharePoint
             return result;
         }
 
-        public void AddFolderPermission(SPBindingCollection bindingCol, bool forceBreak = false)
+        public void AddPermission(SPBindingCollection bindingCol, bool forceBreak = false)
         {
             if (HasUniquePermissions.HasValue && !HasUniquePermissions.Value)
             {
@@ -89,13 +89,13 @@ namespace MG.SharePoint
                 this.GetPermissions();
         }
 
-        public void AddFolderPermission(SPBinding binding, bool forceBreak = false) =>
-            AddFolderPermission(new SPBindingCollection(binding), forceBreak);
+        public void AddPermission(SPBinding binding, bool forceBreak = false) =>
+            AddPermission(new SPBindingCollection(binding), forceBreak);
 
-        public void AddFolderPermission(Principal principal, RoleDefinition roleDef, bool forceBreak = false) =>
-            AddFolderPermission(new SPBindingCollection(principal, roleDef), forceBreak);
+        public void AddPermission(Principal principal, RoleDefinition roleDef, bool forceBreak = false) =>
+            AddPermission(new SPBindingCollection(principal, roleDef), forceBreak);
 
-        public void AddFolderPermission(string logonName, string roleDefinition, bool forceBreak = false)
+        public void AddPermission(string logonName, string roleDefinition, bool forceBreak = false)
         {
             var user = CTX.SP1.Web.EnsureUser(logonName);
             CTX.Lae(user);
@@ -106,11 +106,11 @@ namespace MG.SharePoint
                 )
             );
             var roleDef = allRoles.Where(x => string.Equals(x.Name, roleDefinition, StringComparison.OrdinalIgnoreCase)).Single();
-            AddFolderPermission(new SPBindingCollection(user, roleDef), forceBreak);
+            AddPermission(new SPBindingCollection(user, roleDef), forceBreak);
         }
 
-        public void AddFolderPermission(IDictionary permissionsHash, bool forceBreak = false) =>       // @{ "Role" = "Principal"; "Role" = @("Principal", "Principal") }
-            AddFolderPermission(new SPBindingCollection(ResolvePermissions(permissionsHash)), forceBreak);
+        public void AddPermission(IDictionary permissionsHash, bool forceBreak = false) =>       // @{ "Role" = "Principal"; "Role" = @("Principal", "Principal") }
+            AddPermission(new SPBindingCollection(ResolvePermissions(permissionsHash)), forceBreak);
 
         #endregion
 
