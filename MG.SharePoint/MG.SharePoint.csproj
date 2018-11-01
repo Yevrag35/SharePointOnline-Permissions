@@ -12,6 +12,8 @@
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -31,6 +33,15 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <LangVersion>7.3</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Combine-Release|AnyCPU'">
+    <OutputPath>bin\Combine-Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>7.3</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.Azure.ActiveDirectory.GraphClient">
@@ -77,21 +88,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Assemblies\Microsoft.SharePoint.Client.Runtime.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Storage, Version=4.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Assemblies\Microsoft.WindowsAzure.Storage.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.WindowsAzure.Storage.DataMovement">
-      <HintPath>Assemblies\Microsoft.WindowsAzure.Storage.DataMovement.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=11.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.11.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="Ookii.Dialogs">
-      <HintPath>Assemblies\Ookii.Dialogs.dll</HintPath>
-    </Reference>
-    <Reference Include="SpecialDictionary">
-      <HintPath>Assemblies\SpecialDictionary.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -118,6 +116,7 @@
     <Compile Include="Extensions\ClientObjectExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SPObjects\IPermissionResolver.cs" />
+    <Compile Include="SPObjects\ISPHasPermissions.cs" />
     <Compile Include="SPObjects\SPBinding.cs" />
     <Compile Include="SPObjects\SPBindingCollection.cs" />
     <Compile Include="SPObjects\ISPObject.cs" />
@@ -126,6 +125,8 @@
     <Compile Include="SPObjects\SPFolder\SPFolder.cs" />
     <Compile Include="SPObjects\SPPermission.cs" />
     <Compile Include="SPObjects\SPPermissionCollection.cs" />
+    <Compile Include="SPObjects\SPWeb\SPWeb-Permissions.cs" />
+    <Compile Include="SPObjects\SPWeb\SPWeb.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assemblies\" />
@@ -135,4 +136,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>
+    </PostBuildEvent>
+  </PropertyGroup>
 </Project>

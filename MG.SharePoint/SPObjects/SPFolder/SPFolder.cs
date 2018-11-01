@@ -15,7 +15,7 @@ namespace MG.SharePoint
         private protected string _sru => _fol.ServerRelativeUrl;
         private protected int? _filec => _fol.Files.AreItemsAvailable ? _fol.Files.Count : (int?)null;
         private protected int? _folc => _fol.Folders.AreItemsAvailable ? _fol.Folders.Count : (int?)null;
-        private protected SPPermissionCollection _perms;
+        
         private protected bool? _hup;
         private protected string _par;
 
@@ -27,7 +27,7 @@ namespace MG.SharePoint
         public string ServerRelativeUrl => _sru;
         public bool? HasUniquePermissions => _hup;
         public string Parent => _par;
-        public SPPermissionCollection Permissions => _perms;
+        
         public int? FileCount => _filec;
         public int? FolderCount => _folc;
 

@@ -6,14 +6,16 @@ using System.Linq;
 
 namespace MG.SharePoint
 {
-    public partial class SPFolder : ISPObject, IPermissionResolver
+    public partial class SPFolder : ISPObject, IPermissionResolver, ISPHasPermissions
     {
+        public SPPermissionCollection Permissions { get; internal set; }
+
         #region Permission Methods
+
         public SPPermissionCollection GetPermissions()
         {
-            SPPermissionCollection permCol = _fol.ListItemAllFields.RoleAssignments;
-            _perms = permCol;
-            return permCol;
+            Permissions = _fol.ListItemAllFields.RoleAssignments;
+            return Permissions;
         }
 
         public bool BreakInheritance(bool copyRoleAssignments, bool clearSubscopes = true)
@@ -81,8 +83,8 @@ namespace MG.SharePoint
                 _fol.Update();
                 CTX.Lae();
             }
-            if (_perms != null)
-                _perms.AddRange(list);
+            if (Permissions != null)
+                Permissions.AddRange(list);
             else
                 this.GetPermissions();
         }

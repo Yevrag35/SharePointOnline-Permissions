@@ -198,30 +198,30 @@ namespace MG.SharePoint
             _list.RemoveAll(match);
 
         // Remove duplicate entries on construction and adding
-        private IEnumerable<SPBinding> RemoveDuplicates(IEnumerable<SPBinding> bindings)
-        {
-            var names = new string[_list.Count];
-            for (int n = 0; n < _list.Count; n++)
-            {
-                names[n] = _list[n].Name;
-            }
-            for (int i = _list.Count - 1; i >=0; i--)
-            {
-                bool dup = false;
-                bool found = false;
-                var item = _list[i];
-                foreach (string name in names)
-                {
-                    if (name == item.Name && !found)
-                    {
-                        found = true;
-                    }
-                    else if (name == item.Name && found &&
-                        )
+        //private IEnumerable<SPBinding> RemoveDuplicates(IEnumerable<SPBinding> bindings)
+        //{
+        //    var names = new string[_list.Count];
+        //    for (int n = 0; n < _list.Count; n++)
+        //    {
+        //        names[n] = _list[n].Name;
+        //    }
+        //    for (int i = _list.Count - 1; i >=0; i--)
+        //    {
+        //        bool dup = false;
+        //        bool found = false;
+        //        var item = _list[i];
+        //        foreach (string name in names)
+        //        {
+        //            if (name == item.Name && !found)
+        //            {
+        //                found = true;
+        //            }
+        //            else if (name == item.Name && found &&
+        //                )
                         
-                }
-            }
-        }
+        //        }
+        //    }
+        //}
 
         #endregion
     }
