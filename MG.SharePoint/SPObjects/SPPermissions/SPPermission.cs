@@ -19,6 +19,11 @@ namespace MG.SharePoint
         #region Constructors
         internal SPPermission(RoleAssignment ass)
         {
+            if (ass.IsPropertyReady(a => a.Member.Title))
+            {
+                CTX.Lae(ass, true, a => a.Member.Title,
+                    a => a.Member.Id, a => a.RoleDefinitionBindings);
+            }
             _memTit = ass.Member.Title;
             _memLog = ass.Member.Id;
             _perms = ParseBindings(ass.RoleDefinitionBindings);

@@ -108,7 +108,11 @@ namespace MG.SharePoint
                     )
                 );
             }
-            var roleDef = CTX.allRoles.Where(x => string.Equals(x.Name, roleDefinition, StringComparison.OrdinalIgnoreCase)).Single();
+            try
+            {
+                var roleDef = CTX.allRoles.Where(x => string.Equals(x.Name, roleDefinition, StringComparison.OrdinalIgnoreCase)).Single();
+            }
+            catch
             AddPermission(new SPBindingCollection(user, roleDef), forceBreak);
         }
 

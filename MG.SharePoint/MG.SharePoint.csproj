@@ -115,18 +115,19 @@
     <Compile Include="Exceptions\Exceptions.cs" />
     <Compile Include="Extensions\ClientObjectExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SPObjects\PermissionInterfaces\ISPPermissionResolver.cs" />
-    <Compile Include="SPObjects\PermissionInterfaces\ISPPermissions.cs" />
-    <Compile Include="SPObjects\SPBinding.cs" />
-    <Compile Include="SPObjects\SPBindingCollection.cs" />
+    <Compile Include="SPObjects\SPPermissions\ISPPermissionResolver.cs" />
+    <Compile Include="SPObjects\SPPermissions\ISPPermissions.cs" />
+    <Compile Include="SPObjects\SPBindings\SPBinding.cs" />
+    <Compile Include="SPObjects\SPBindings\SPBindingCollection.cs" />
     <Compile Include="SPObjects\ISPObject.cs" />
     <Compile Include="SPObjects\SPFolder\SPFolder-AddFolder.cs" />
     <Compile Include="SPObjects\SPFolder\SPFolder-Permissions.cs" />
     <Compile Include="SPObjects\SPFolder\SPFolder.cs" />
     <Compile Include="SPObjects\SPList\SPList-Permissions.cs" />
     <Compile Include="SPObjects\SPList\SPList.cs" />
-    <Compile Include="SPObjects\SPPermission.cs" />
-    <Compile Include="SPObjects\SPPermissionCollection.cs" />
+    <Compile Include="SPObjects\SPList\SPListCollection.cs" />
+    <Compile Include="SPObjects\SPPermissions\SPPermission.cs" />
+    <Compile Include="SPObjects\SPPermissions\SPPermissionCollection.cs" />
     <Compile Include="SPObjects\SPWeb\SPWeb-Permissions.cs" />
     <Compile Include="SPObjects\SPWeb\SPWeb.cs" />
   </ItemGroup>

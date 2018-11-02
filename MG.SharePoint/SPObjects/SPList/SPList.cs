@@ -26,6 +26,24 @@ namespace MG.SharePoint
             _hup = _list.IsPropertyAvailable("HasUniqueRoleAssignments") ?
                 (bool?)_list.HasUniqueRoleAssignments : null;
         }
+        internal SPList(List list)
+        {
+            if (!list.IsPropertyReady(l => l.Title))
+            {
+                CTX.Lae(list, true, 
+                    l => l.Title, 
+                    l => l.Id, 
+                    l => l.HasUniqueRoleAssignments, 
+                    l => l.Created);
+            }
+            _list = list;
+            _hup = _list.IsPropertyAvailable("HasUniqueRoleAssignments") ?
+                (bool?)_list.HasUniqueRoleAssignments : null;
+        }
+
         public object ShowOriginal() => _list;
+
+        public static implicit operator SPList(List realList) =>
+            new SPList(realList);
     }
 }
