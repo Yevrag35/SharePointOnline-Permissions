@@ -99,13 +99,16 @@ namespace MG.SharePoint
         {
             var user = CTX.SP1.Web.EnsureUser(logonName);
             CTX.Lae(user);
-            var allRoles = CTX.SP1.Web.RoleDefinitions;
-            CTX.Lae(allRoles, true,
-                ar => ar.Include(
-                    r => r.Name
-                )
-            );
-            var roleDef = allRoles.Where(x => string.Equals(x.Name, roleDefinition, StringComparison.OrdinalIgnoreCase)).Single();
+            if (CTX.allRoles == null)
+            {
+                CTX.allRoles = CTX.SP1.Web.RoleDefinitions;
+                CTX.Lae(CTX.allRoles, true,
+                    ar => ar.Include(
+                        r => r.Name
+                    )
+                );
+            }
+            var roleDef = CTX.allRoles.Where(x => string.Equals(x.Name, roleDefinition, StringComparison.OrdinalIgnoreCase)).Single();
             AddPermission(new SPBindingCollection(user, roleDef), forceBreak);
         }
 

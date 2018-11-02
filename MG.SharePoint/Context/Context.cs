@@ -13,6 +13,8 @@ namespace MG.SharePoint
         internal static CmdLetContext SP2 { get; set; }
         public static bool Connected => SP1 != null;
 
+        internal static RoleDefinitionCollection allRoles { get; set; }
+
         #region Load and Execute (LAE)
         public static void Lae() => SP1.ExecuteQuery();
 
