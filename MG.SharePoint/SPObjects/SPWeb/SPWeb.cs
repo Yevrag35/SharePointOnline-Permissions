@@ -1,4 +1,5 @@
-﻿using Microsoft.SharePoint.Client;
+﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Microsoft.SharePoint.Client;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,8 +18,18 @@ namespace MG.SharePoint
         public DateTime Created => _web.Created;
         public bool? HasUniquePermissions => _hup;
 
-        public SPWeb()
+        public SPWeb() : this("/")
         {
+        }
+
+        public SPWeb(string relativeUrl)
+        {
+            if (relativeUrl.StartsWith("/") && relativeUrl.)
+                relativeUrl = string.Join("/", relativeUrl.Split(
+                    new string[1] { "/" }, StringSplitOptions.RemoveEmptyEntries).ToArray());
+
+            CTX.Login(CTX.SpecifiedTenantName, relativeUrl, PromptBehavior.Auto);
+
             var tempWeb = CTX.SP1.Web;
             CTX.Lae(tempWeb, true, w => w.Id, w => w.Title,
                 w => w.HasUniqueRoleAssignments, w => w.Created,

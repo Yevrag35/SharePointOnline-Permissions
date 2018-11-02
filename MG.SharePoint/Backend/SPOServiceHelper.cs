@@ -90,8 +90,18 @@ namespace MG.SharePoint
             var context = new CmdLetContext(url.ToString(), null, null); // this is where the site "sites/Clients" is set.
             if (credentials == null)
             {
-                var session = new OAuthSession(authenticationUrl);
-                session.SignIn(loginUrl, behavior.Value);                      // the login Url is the base site though.
+                OAuthSession session;
+                if (CTX.SP1 == null)
+                {
+                    session = new OAuthSession(authenticationUrl);
+                    session.SignIn(loginUrl, behavior.Value);                      // the login Url is the base site though.
+                }
+                else
+                {
+                    CTX.SP1.OAuthSession.EnsureValidAuthToken();
+                    session = CTX.SP1.OAuthSession;
+                }
+                
                 context.OAuthSession = session;
             }
             else
