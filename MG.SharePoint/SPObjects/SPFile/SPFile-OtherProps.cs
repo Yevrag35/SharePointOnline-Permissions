@@ -22,7 +22,7 @@ namespace MG.SharePoint
         public string LinkingUri { get; internal set; }
         public string LinkingUrl { get; internal set; }
         public Guid? ListId { get; internal set; }
-        public ListItem ListItemAllFields { get; internal set; }
+        public SPListItem ListItemAllFields { get; internal set; }
         public User LockedByUser { get; internal set; }
         public int? MajorVersion { get; internal set; }
         public int? MinorVersion { get; internal set; }

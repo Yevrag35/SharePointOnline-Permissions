@@ -76,15 +76,15 @@ namespace MG.SharePoint
                 case "File":
                     return typeof(SPFile);
 
-                //case "FileCollection":
-                //    return typeof(SPFileCollection);      // Working on it...
-                    
+                case "FileCollection":
+                    return typeof(SPFileCollection);
+
                 case "ListItem":
                     return typeof(SPListItem);
 
-                //case "WebCollection":
-                //    return typeof(SPWebCollection);       // Working on it...
-                    
+                case "WebCollection":
+                    return typeof(SPWebCollection);
+
                 default:
                     return null;
             }

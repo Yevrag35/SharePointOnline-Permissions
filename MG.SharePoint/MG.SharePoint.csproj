@@ -119,6 +119,7 @@
     <Compile Include="SPObjects\SPFile\SPFile-Permissions.cs" />
     <Compile Include="SPObjects\SPFile\SPFile.cs" />
     <Compile Include="SPObjects\SPFolder\SPFolder-OtherProps.cs" />
+    <Compile Include="SPObjects\SPFolder\SPFolderCollection.cs" />
     <Compile Include="SPObjects\SPListItem\SPListItem-OtherProps.cs" />
     <Compile Include="SPObjects\SPListItem\SPListItem-Permissions.cs" />
     <Compile Include="SPObjects\SPListItem\SPListItem.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="SPObjects\SPList\SPListCollection.cs" />
     <Compile Include="SPObjects\SPPermissions\SPPermission.cs" />
     <Compile Include="SPObjects\SPPermissions\SPPermissionCollection.cs" />
+    <Compile Include="SPObjects\SPWeb\SPWebCollection.cs" />
     <Compile Include="SPObjects\SPWeb\SPWeb-List.cs" />
     <Compile Include="SPObjects\SPWeb\SPWeb-OtherProps.cs" />
     <Compile Include="SPObjects\SPWeb\SPWeb-Permissions.cs" />
@@ -150,6 +152,7 @@
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
+    <Compile Include="SPObjects\SPFile\SPFileCollection.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

@@ -30,15 +30,12 @@ namespace MG.SharePoint
         }
         internal SPList(List list)
         {
-            if (!list.IsPropertyReady(l => l.Title))
-            {
-                CTX.Lae(list, true, 
-                    l => l.Title, 
-                    l => l.Id, 
-                    l => l.HasUniqueRoleAssignments, 
-                    l => l.Created,
-                    l => l.ItemCount);
-            }
+            CTX.Lae(list, true, 
+                l => l.Title, 
+                l => l.Id, 
+                l => l.HasUniqueRoleAssignments, 
+                l => l.Created,
+                l => l.ItemCount);
             _list = list;
             _hup = _list.IsPropertyAvailable("HasUniqueRoleAssignments") ?
                 (bool?)_list.HasUniqueRoleAssignments : null;

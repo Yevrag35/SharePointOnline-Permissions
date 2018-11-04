@@ -7,31 +7,31 @@ using System.Linq;
 
 namespace MG.SharePoint
 {
-    public class SPListCollection : IList<SPList>, ICollection
+    public class SPWebCollection : IList<SPWeb>, ICollection
     {
-        private protected List<SPList> _col;
+        private protected List<SPWeb> _col;
 
         #region Constructors
-        public SPListCollection()
+        public SPWebCollection()
         {
-            _col = new List<SPList>();
+            _col = new List<SPWeb>();
             IsReadOnly = false;
         }
 
-        public SPListCollection(int capacity)
+        public SPWebCollection(int capacity)
         {
-            _col = new List<SPList>(capacity);
-            IsReadOnly = false;
-        }
-            
-        public SPListCollection(IEnumerable<SPList> lists)
-        {
-            _col = new List<SPList>(lists);
+            _col = new List<SPWeb>(capacity);
             IsReadOnly = false;
         }
 
-        public SPListCollection(SPList list)
-            : this(((IEnumerable)list).Cast<SPList>())
+        public SPWebCollection(IEnumerable<SPWeb> lists)
+        {
+            _col = new List<SPWeb>(lists);
+            IsReadOnly = false;
+        }
+
+        public SPWebCollection(SPWeb list)
+            : this(((IEnumerable)list).Cast<SPWeb>())
         {
         }
 
@@ -39,7 +39,7 @@ namespace MG.SharePoint
 
         #region IList and ICollection Methods
 
-        public SPList this[int index]
+        public SPWeb this[int index]
         {
             get => _col[index];
             set
@@ -54,7 +54,7 @@ namespace MG.SharePoint
         public object SyncRoot => ((ICollection)_col).SyncRoot;
         public bool IsSynchronized => ((ICollection)_col).IsSynchronized;
 
-        public void Add(SPList item)
+        public void Add(SPWeb item)
         {
             if (!IsReadOnly)
                 _col.Add(item);
@@ -70,9 +70,9 @@ namespace MG.SharePoint
                 throw new ReadOnlyCollectionException();
         }
 
-        public bool Contains(SPList item) => _col.Contains(item);
+        public bool Contains(SPWeb item) => _col.Contains(item);
 
-        public void CopyTo(SPList[] array, int arrayIndex)
+        public void CopyTo(SPWeb[] array, int arrayIndex)
         {
             if (!IsReadOnly)
                 _col.CopyTo(array, arrayIndex);
@@ -87,11 +87,11 @@ namespace MG.SharePoint
                 throw new ReadOnlyCollectionException();
         }
 
-        public IEnumerator<SPList> GetEnumerator() => _col.GetEnumerator();
+        public IEnumerator<SPWeb> GetEnumerator() => _col.GetEnumerator();
 
-        public int IndexOf(SPList item) => _col.IndexOf(item);
+        public int IndexOf(SPWeb item) => _col.IndexOf(item);
 
-        public void Insert(int index, SPList item)
+        public void Insert(int index, SPWeb item)
         {
             if (!IsReadOnly)
                 _col.Insert(index, item);
@@ -99,7 +99,7 @@ namespace MG.SharePoint
                 throw new ReadOnlyCollectionException();
         }
 
-        public bool Remove(SPList item)
+        public bool Remove(SPWeb item)
         {
             if (!IsReadOnly)
                 return _col.Remove(item);
@@ -120,29 +120,29 @@ namespace MG.SharePoint
         #endregion
 
         #region Other 'List' Methods
-        public SPList[] ToArray() =>
+        public SPWeb[] ToArray() =>
             _col.ToArray();
 
-        public void AddRange(IEnumerable<SPList> lists) =>
+        public void AddRange(IEnumerable<SPWeb> lists) =>
             _col.AddRange(lists);
 
-        public bool TrueForAll(Predicate<SPList> match) =>
+        public bool TrueForAll(Predicate<SPWeb> match) =>
             _col.TrueForAll(match);
 
-        public bool Exists(Predicate<SPList> match) =>
+        public bool Exists(Predicate<SPWeb> match) =>
             _col.Exists(match);
 
-        public ReadOnlyCollection<SPList> AsReadOnly() =>
+        public ReadOnlyCollection<SPWeb> AsReadOnly() =>
             _col.AsReadOnly();
 
         public void Sort() => _col.Sort();
-        public void Sort(Comparison<SPList> comparison) =>
+        public void Sort(Comparison<SPWeb> comparison) =>
             _col.Sort(comparison);
 
-        public void Sort(IComparer<SPList> comparer) =>
+        public void Sort(IComparer<SPWeb> comparer) =>
             _col.Sort(comparer);
 
-        public void RemoveAll(Predicate<SPList> match)
+        public void RemoveAll(Predicate<SPWeb> match)
         {
             if (!IsReadOnly)
                 _col.RemoveAll(match);
@@ -153,15 +153,15 @@ namespace MG.SharePoint
         #endregion
 
         #region Dictionary Indexing
-        public SPList this[string listName]
+        public SPWeb this[string webTitle]
         {
             get
             {
-                SPList foundya = null;
+                SPWeb foundya = null;
                 for (int i = 0; i < _col.Count; i++)
                 {
                     var l = _col[i];
-                    if (string.Equals(l.Name, listName, StringComparison.InvariantCultureIgnoreCase))
+                    if (string.Equals(l.Name, webTitle, StringComparison.InvariantCultureIgnoreCase))
                     {
                         foundya = l;
                         break;
@@ -174,23 +174,16 @@ namespace MG.SharePoint
         #endregion
 
         #region Operators
-
-        public static explicit operator SPListCollection(ListCollection listCol)
+        public static explicit operator SPWebCollection(WebCollection webCol)
         {
-            //CTX.Lae(listCol, true,
-            //    lCol => lCol.Include(
-            //        l => l.Title, l => l.HasUniqueRoleAssignments,
-            //        l => l.Id, l => l.ItemCount, l => l.Created
-            //    )
-            //);
-            var spListCol = new SPListCollection(listCol.Count);
-            for (int i = 0; i < listCol.Count; i++)
+            var spWeb = new SPWebCollection(webCol.Count);
+            for (int i = 0; i < webCol.Count; i++)
             {
-                var list = listCol[i];
-                spListCol.Add((SPList)list);              
+                var web = webCol[i];
+                spWeb.Add((SPWeb)web);
             }
-            spListCol.IsReadOnly = true;
-            return spListCol;
+            spWeb.IsReadOnly = true;
+            return spWeb;
         }
 
         #endregion

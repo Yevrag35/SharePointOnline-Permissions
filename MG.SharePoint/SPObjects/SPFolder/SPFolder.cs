@@ -25,9 +25,9 @@ namespace MG.SharePoint
         public override object Id => _id;
         public string ServerRelativeUrl => _sru;
         public bool? HasUniquePermissions => _hup;
-        
-        public int? FileCount => _filec;
-        public int? FolderCount => _folc;
+
+        public int? FileCount => (int?)Files.Count;
+        public int? FolderCount => (int?)Folders.Count;
 
         #endregion
 

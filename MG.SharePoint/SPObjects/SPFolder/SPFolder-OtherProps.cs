@@ -11,12 +11,12 @@ namespace MG.SharePoint
         #region Other Properties
         public IList<ContentTypeId> ContentTypeOrder { get; internal set; }
         public bool? Exists { get; internal set; }
-        public FileCollection Files { get; internal set; }
-        public FolderCollection Folders { get; internal set; }
+        public SPFileCollection Files { get; internal set; }
+        public SPFolderCollection Folders { get; internal set; }
         public bool? IsWOPIEnabled { get; internal set; }
         public int? ItemCount { get; internal set; }
-        public ListItem ListItemAllFields { get; internal set; }
-        public Folder ParentFolder { get; set; }
+        public SPListItem ListItemAllFields { get; internal set; }
+        public SPFolder ParentFolder { get; set; }
         public string ProgID { get; internal set; }
         public PropertyValues Properties { get; internal set; }
         public ResourcePath ServerRelativePath { get; internal set; }

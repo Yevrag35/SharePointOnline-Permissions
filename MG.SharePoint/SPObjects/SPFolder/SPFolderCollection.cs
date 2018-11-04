@@ -153,7 +153,7 @@ namespace MG.SharePoint
         #endregion
 
         #region Dictionary Indexing
-        public SPFolder this[string listItemName]
+        public SPFolder this[string folderName]
         {
             get
             {
@@ -161,7 +161,7 @@ namespace MG.SharePoint
                 for (int i = 0; i < _col.Count; i++)
                 {
                     var l = _col[i];
-                    if (string.Equals(l.Name, listItemName, StringComparison.InvariantCultureIgnoreCase))
+                    if (string.Equals(l.Name, folderName, StringComparison.InvariantCultureIgnoreCase))
                     {
                         foundya = l;
                         break;
@@ -176,11 +176,6 @@ namespace MG.SharePoint
         #region Operators
         public static explicit operator SPFolderCollection(FolderCollection folCol)
         {
-            //CTX.Lae(folCol, true,
-            //    col => col.Include(
-            //        f => f.
-            //    )
-            //);
             var spList = new SPFolderCollection(folCol.Count);
             for (int i = 0; i < folCol.Count; i++)
             {
