@@ -1,17 +1,9 @@
-﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
-using Microsoft.Online.SharePoint.PowerShell.Resources;
-using Microsoft.SharePoint.Client;
-using Microsoft.SharePoint.Client.Utilities;
+﻿using Microsoft.SharePoint.Client;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.Globalization;
-using System.Linq;
-using System.Management.Automation;
 using System.Management.Automation.Host;
 using System.Net;
+using System.Reflection;
 
 namespace MG.SharePoint
 {
@@ -69,6 +61,12 @@ namespace MG.SharePoint
                     new object[] { GetVersionString() });
             }
             return s_clientTag;
+        }
+
+        internal void AddObjectPath(ObjectPath path)
+        {
+            MethodInfo mi = typeof(ClientRuntimeContext).GetMethod("AddObjectPath", BindingFlags.NonPublic | BindingFlags.Instance);
+            mi.Invoke(this, new object[1] { path });
         }
 
         internal static string GetUserAgent()

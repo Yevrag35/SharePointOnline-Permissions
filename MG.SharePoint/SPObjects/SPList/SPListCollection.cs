@@ -177,12 +177,6 @@ namespace MG.SharePoint
 
         public static explicit operator SPListCollection(ListCollection listCol)
         {
-            //CTX.Lae(listCol, true,
-            //    lCol => lCol.Include(
-            //        l => l.Title, l => l.HasUniqueRoleAssignments,
-            //        l => l.Id, l => l.ItemCount, l => l.Created
-            //    )
-            //);
             var spListCol = new SPListCollection(listCol.Count);
             for (int i = 0; i < listCol.Count; i++)
             {

@@ -102,7 +102,7 @@ namespace MG.SharePoint
         public bool? UIVersionConfigurationEnabled { get; internal set; }
         public string Url { get; internal set; }
         public UserCustomActionCollection UserCustomActions { get; internal set; }
-        public WebCollection Webs { get; internal set; }
+        public SPWebCollection Webs { get; internal set; }
         public string WebTemplate { get; internal set; }
         public string WelcomePage { get; internal set; }
         public WorkflowAssociationCollection WorkflowAssociations { get; internal set; }

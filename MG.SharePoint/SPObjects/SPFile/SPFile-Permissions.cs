@@ -28,6 +28,7 @@ namespace MG.SharePoint
             try
             {
                 CTX.Lae();
+                _hup = true;
             }
             catch
             {
@@ -46,6 +47,7 @@ namespace MG.SharePoint
             try
             {
                 CTX.Lae();
+                _hup = false;
             }
             catch
             {

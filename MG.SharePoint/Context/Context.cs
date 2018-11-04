@@ -26,11 +26,6 @@ namespace MG.SharePoint
         #region Load and Execute (LAE)
         public static void Lae() => SP1.ExecuteQuery();
 
-        ////public static void Lae(ClientObject obj, bool andExecute = true) =>
-        ////    Lae(obj, andExecute, null);
-        //public static void Lae(IEnumerable<ClientObject> objs, bool andExecute = true) =>
-        //    Lae(objs, andExecute, null);
-
         public static void Lae<T>(T obj, bool andExecute = true, params Expression<Func<T, object>>[] retrievals)
             where T : ClientObject =>
             Lae(new T[1] { obj }, andExecute, retrievals);

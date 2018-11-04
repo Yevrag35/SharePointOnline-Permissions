@@ -7,9 +7,16 @@ using System.Linq;
 
 namespace MG.SharePoint
 {
-    public class SPFileCollection : IList<SPFile>, ICollection
+    public partial class SPFileCollection : IList<SPFile>, ICollection
     {
         private protected List<SPFile> _col;
+        internal protected FileCollection Original;     // Just used for its methods
+
+        public string FolderPath =>
+            _col.Count > 0 ?
+                _col[0].ServerRelativeUrl.Substring(
+                    0, _col[0].ServerRelativeUrl.LastIndexOf("/")) :
+                null;
 
         #region Constructors
         public SPFileCollection()
@@ -174,13 +181,14 @@ namespace MG.SharePoint
         #endregion
 
         #region Operators
-        public static explicit operator SPFileCollection(FileCollection folCol)
+        public static explicit operator SPFileCollection(FileCollection fileCol)
         {
-            var spList = new SPFileCollection(folCol.Count);
-            for (int i = 0; i < folCol.Count; i++)
+            var spList = new SPFileCollection(fileCol.Count);
+            spList.Original = fileCol;
+            for (int i = 0; i < fileCol.Count; i++)
             {
-                var fol = folCol[i];
-                spList.Add((SPFile)fol);
+                var file = fileCol[i];
+                spList.Add((SPFile)file);
             }
             return spList;
         }

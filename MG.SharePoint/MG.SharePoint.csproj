@@ -118,7 +118,9 @@
     <Compile Include="SPObjects\SPFile\SPFile-OtherProps.cs" />
     <Compile Include="SPObjects\SPFile\SPFile-Permissions.cs" />
     <Compile Include="SPObjects\SPFile\SPFile.cs" />
+    <Compile Include="SPObjects\SPFile\SPFileCollection-Upload.cs" />
     <Compile Include="SPObjects\SPFolder\SPFolder-OtherProps.cs" />
+    <Compile Include="SPObjects\SPFolder\SPFolder-Upload.cs" />
     <Compile Include="SPObjects\SPFolder\SPFolderCollection.cs" />
     <Compile Include="SPObjects\SPListItem\SPListItem-OtherProps.cs" />
     <Compile Include="SPObjects\SPListItem\SPListItem-Permissions.cs" />
