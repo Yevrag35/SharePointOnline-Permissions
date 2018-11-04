@@ -45,5 +45,8 @@ namespace MG.SharePoint
 
         public static explicit operator SPList(List realList) =>
             new SPList(realList);
+
+        public static explicit operator SPList(string listName) =>
+            new SPList(listName);
     }
 }

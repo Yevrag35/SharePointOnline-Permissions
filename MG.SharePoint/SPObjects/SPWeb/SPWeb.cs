@@ -54,5 +54,8 @@ namespace MG.SharePoint
 
         public static explicit operator SPWeb(Web w) =>
             new SPWeb(w);
+
+        public static explicit operator SPWeb(string relativeUrl) =>
+            new SPWeb(relativeUrl);
     }
 }
