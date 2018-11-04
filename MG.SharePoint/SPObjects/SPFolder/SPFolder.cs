@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace MG.SharePoint
 {
-    public partial class SPFolder : ISPObject, ISPPermissions
+    public partial class SPFolder : SPObject, ISPPermissions
     {
         #region Private Fields
         private protected Folder _fol;
@@ -17,16 +17,14 @@ namespace MG.SharePoint
         private protected int? _folc => _fol.Folders.AreItemsAvailable ? _fol.Folders.Count : (int?)null;
         
         private protected bool? _hup;
-        private protected string _par;
 
         #endregion
 
         #region Public Fields
-        public string Name => _name;
-        public object Id => _id;
+        public override string Name => _name;
+        public override object Id => _id;
         public string ServerRelativeUrl => _sru;
         public bool? HasUniquePermissions => _hup;
-        public string Parent => _par;
         
         public int? FileCount => _filec;
         public int? FolderCount => _folc;
@@ -46,8 +44,6 @@ namespace MG.SharePoint
         {
             CTX.Lae(fol, true, f => f.Name, f => f.UniqueId, f => f.ParentFolder.Name,
                 f => f.ServerRelativeUrl, f => f.ListItemAllFields.HasUniqueRoleAssignments);
-            if (!string.IsNullOrEmpty(fol.ParentFolder.Name))
-                _par = fol.ParentFolder.Name;
 
             _hup = !fol.ListItemAllFields.IsPropertyAvailable("HasUniqueRoleAssignments") ? 
                 null : (bool?)fol.ListItemAllFields.HasUniqueRoleAssignments;
@@ -58,7 +54,7 @@ namespace MG.SharePoint
         #endregion
 
         #region Methods
-        public object ShowOriginal() => _fol;
+        public override object ShowOriginal() => _fol;
 
         #endregion
 

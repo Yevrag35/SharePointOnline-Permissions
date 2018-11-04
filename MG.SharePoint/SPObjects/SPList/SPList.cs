@@ -6,13 +6,15 @@ using System.Linq;
 
 namespace MG.SharePoint
 {
-    public partial class SPList : ISPPermissions
+    public partial class SPList : SPObject, ISPPermissions
     {
         private protected List _list;
         private protected bool? _hup;
 
-        public string Name => _list.Title;
-        public object Id => _list.Id;
+        public override string Name => _list.Title;
+        public override object Id => _list.Id;
+        public SPListItemCollection Items { get; internal set; }
+        public int? ItemCount { get; internal set; }
         public DateTime Created => _list.Created;
         public bool? HasUniquePermissions => _hup;
 
@@ -34,14 +36,15 @@ namespace MG.SharePoint
                     l => l.Title, 
                     l => l.Id, 
                     l => l.HasUniqueRoleAssignments, 
-                    l => l.Created);
+                    l => l.Created,
+                    l => l.ItemCount);
             }
             _list = list;
             _hup = _list.IsPropertyAvailable("HasUniqueRoleAssignments") ?
                 (bool?)_list.HasUniqueRoleAssignments : null;
         }
 
-        public object ShowOriginal() => _list;
+        public override object ShowOriginal() => _list;
 
         public static implicit operator SPList(List realList) =>
             new SPList(realList);

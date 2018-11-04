@@ -6,25 +6,24 @@ using System.Linq;
 
 namespace MG.SharePoint
 {
-    public partial class SPWeb : SPObject, ISPPermissions
+    public partial class SPListItem : SPObject, ISPPermissions
     {
         #region ISPPermissions
-        public SPPermissionCollection Permissions { get; internal set; }
 
         public SPPermissionCollection GetPermissions()
         {
-            Permissions = _web.RoleAssignments;
+            Permissions = _li.RoleAssignments;
             return Permissions;
         }
 
         #region AddPermission
         public void AddPermission(string principal, string roleDefinition, bool forceBreak = false)
         {
-            var user = _web.EnsureUser(principal);
+            var user = CTX.SP1.Web.EnsureUser(principal);
             CTX.Lae(user);
             if (CTX.allRoles == null)
             {
-                CTX.allRoles = _web.RoleDefinitions;
+                CTX.allRoles = CTX.SP1.Web.RoleDefinitions;
                 CTX.Lae(CTX.allRoles, true,
                     ar => ar.Include(
                         r => r.Name
@@ -50,9 +49,9 @@ namespace MG.SharePoint
             if (HasUniquePermissions.HasValue && !HasUniquePermissions.Value)
             {
                 if (!forceBreak)
-                    throw new NoForceBreakException(_web.Id);
+                    throw new NoForceBreakException(Guid.Empty);
                 else
-                    _web.BreakRoleInheritance(true, true);
+                    _li.BreakRoleInheritance(true, true);
             }
             else if (!HasUniquePermissions.HasValue)
                 throw new InvalidOperationException("This object's permissions cannot be modified!");
@@ -65,13 +64,13 @@ namespace MG.SharePoint
                 {
                     binding.Definition
                 };
-                list.Add(_web.RoleAssignments.Add(
+                list.Add(_li.RoleAssignments.Add(
                     binding.Principal, bCol));
                 foreach (var ass in list)
                 {
                     CTX.Lae(ass, false);
                 }
-                _web.Update();
+                _li.Update();
                 CTX.Lae();
             }
             if (Permissions == null)

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace MG.SharePoint
 {
-    public partial class SPFolder : ISPObject, ISPPermissions
+    public partial class SPFolder : SPObject, ISPPermissions
     {
         #region Add SubFolders
         public void AddSubFolder(string folderName) =>

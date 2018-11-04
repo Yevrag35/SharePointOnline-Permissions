@@ -8,7 +8,7 @@ namespace MG.SharePoint
     public static partial class CTX
     {
         private const string baseFormat = "https://{0}.sharepoint.com";
-        private const string subFormat = baseFormat + "/{1}";
+        private const string subFormat = baseFormat + "{1}";
         private const string COMMON_AUTH_URL = "https://login.microsoftonline.com/common";
 
         public static IServiceHelper Helper;
@@ -56,6 +56,12 @@ namespace MG.SharePoint
             if (Helper == null)
                 Helper = new SPOServiceHelper();
 
+            if (string.IsNullOrEmpty(tenantName) && !string.IsNullOrEmpty(SpecifiedTenantName))
+                tenantName = SpecifiedTenantName;
+
+            if (!destUrl.StartsWith("/"))
+                destUrl = "/" + destUrl;
+
             var baseLogin = string.Format(baseFormat, tenantName);
             var destSite = new Uri(string.Format(subFormat, tenantName, destUrl));
             try
@@ -67,6 +73,7 @@ namespace MG.SharePoint
             {
                 return false;
             }
+            SpecifiedTenantName = tenantName;
             return Connected;
         }
 
@@ -86,6 +93,7 @@ namespace MG.SharePoint
             {
                 return false;
             }
+            SpecifiedTenantName = tenantName;
             return Connected;
         }
         #endregion

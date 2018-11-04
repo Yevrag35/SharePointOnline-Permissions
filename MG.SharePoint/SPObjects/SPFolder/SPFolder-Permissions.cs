@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace MG.SharePoint
 {
-    public partial class SPFolder : ISPObject, ISPPermissions
+    public partial class SPFolder : SPObject, ISPPermissions
     {
         public SPPermissionCollection Permissions { get; internal set; }
 
@@ -108,11 +108,15 @@ namespace MG.SharePoint
                     )
                 );
             }
+            RoleDefinition roleDef;
             try
             {
-                var roleDef = CTX.allRoles.Where(x => string.Equals(x.Name, roleDefinition, StringComparison.OrdinalIgnoreCase)).Single();
+                roleDef = CTX.allRoles.Single(x => string.Equals(x.Name, roleDefinition, StringComparison.OrdinalIgnoreCase));
             }
-            catch
+            catch (InvalidOperationException)
+            {
+                throw new ArgumentException(roleDefinition + " is not the name of a valid Role Definition in this site collection.");
+            }
             AddPermission(new SPBindingCollection(user, roleDef), forceBreak);
         }
 

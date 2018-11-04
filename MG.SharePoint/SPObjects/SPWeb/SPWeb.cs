@@ -7,13 +7,14 @@ using System.Linq;
 
 namespace MG.SharePoint
 {
-    public partial class SPWeb : ISPPermissions
+    public partial class SPWeb : SPObject, ISPPermissions
     {
         private protected Web _web;
         private protected bool? _hup;
 
-        public string Name => _web.Title;
-        public object Id => _web.Id;
+        public override string Name => _web.Title;
+        public override object Id => _web.Id;
+        public SPListCollection Lists { get; internal set; }
         public string RelativeUrl => _web.ServerRelativeUrl;
         public DateTime Created => _web.Created;
         public bool? HasUniquePermissions => _hup;
@@ -24,7 +25,7 @@ namespace MG.SharePoint
 
         public SPWeb(string relativeUrl)
         {
-            if (relativeUrl.StartsWith("/") && relativeUrl.)
+            if (relativeUrl.StartsWith("/") && relativeUrl != "/")
                 relativeUrl = string.Join("/", relativeUrl.Split(
                     new string[1] { "/" }, StringSplitOptions.RemoveEmptyEntries).ToArray());
 
@@ -39,6 +40,6 @@ namespace MG.SharePoint
                 (bool?)_web.HasUniqueRoleAssignments : null;
         }
 
-        public object ShowOriginal() => _web;
+        public override object ShowOriginal() => _web;
     }
 }
