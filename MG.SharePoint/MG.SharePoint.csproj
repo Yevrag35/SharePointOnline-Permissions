@@ -115,6 +115,9 @@
     <Compile Include="Exceptions\Exceptions.cs" />
     <Compile Include="Extensions\ClientObjectExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SPObjects\SPFile\SPFile-OtherProps.cs" />
+    <Compile Include="SPObjects\SPFile\SPFile-Permissions.cs" />
+    <Compile Include="SPObjects\SPFile\SPFile.cs" />
     <Compile Include="SPObjects\SPFolder\SPFolder-OtherProps.cs" />
     <Compile Include="SPObjects\SPListItem\SPListItem-OtherProps.cs" />
     <Compile Include="SPObjects\SPListItem\SPListItem-Permissions.cs" />
@@ -125,8 +128,8 @@
     <Compile Include="SPObjects\SPObject.cs" />
     <Compile Include="SPObjects\SPPermissions\ISPPermissionResolver.cs" />
     <Compile Include="SPObjects\SPPermissions\ISPPermissions.cs" />
-    <Compile Include="SPObjects\SPBindings\SPBinding.cs" />
-    <Compile Include="SPObjects\SPBindings\SPBindingCollection.cs" />
+    <Compile Include="SPObjects\SPBinding\SPBinding.cs" />
+    <Compile Include="SPObjects\SPBinding\SPBindingCollection.cs" />
     <Compile Include="SPObjects\ISPObject.cs" />
     <Compile Include="SPObjects\SPFolder\SPFolder-AddFolder.cs" />
     <Compile Include="SPObjects\SPFolder\SPFolder-Permissions.cs" />

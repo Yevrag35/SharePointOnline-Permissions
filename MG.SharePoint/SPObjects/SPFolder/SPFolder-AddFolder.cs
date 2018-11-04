@@ -26,7 +26,7 @@ namespace MG.SharePoint
 
         public SPFolder AddSubFolder(string folderName, SPBindingCollection bindingCol)
         {
-            SPFolder newFolder = CTX.SP1.Web.Folders.Add(_fol.ServerRelativeUrl + "/" + folderName);
+            var newFolder = (SPFolder)CTX.SP1.Web.Folders.Add(_fol.ServerRelativeUrl + "/" + folderName);
             newFolder.AddPermission(bindingCol, true);
             return newFolder;
         }

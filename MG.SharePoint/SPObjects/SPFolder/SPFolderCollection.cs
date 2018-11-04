@@ -7,31 +7,31 @@ using System.Linq;
 
 namespace MG.SharePoint
 {
-    public class SPListCollection : IList<SPList>, ICollection
+    public class SPFolderCollection : IList<SPFolder>, ICollection
     {
-        private protected List<SPList> _col;
+        private protected List<SPFolder> _col;
 
         #region Constructors
-        public SPListCollection()
+        public SPFolderCollection()
         {
-            _col = new List<SPList>();
+            _col = new List<SPFolder>();
             IsReadOnly = false;
         }
 
-        public SPListCollection(int capacity)
+        public SPFolderCollection(int capacity)
         {
-            _col = new List<SPList>(capacity);
-            IsReadOnly = false;
-        }
-            
-        public SPListCollection(IEnumerable<SPList> lists)
-        {
-            _col = new List<SPList>(lists);
+            _col = new List<SPFolder>(capacity);
             IsReadOnly = false;
         }
 
-        public SPListCollection(SPList list)
-            : this(((IEnumerable)list).Cast<SPList>())
+        public SPFolderCollection(IEnumerable<SPFolder> lists)
+        {
+            _col = new List<SPFolder>(lists);
+            IsReadOnly = false;
+        }
+
+        public SPFolderCollection(SPFolder list)
+            : this(((IEnumerable)list).Cast<SPFolder>())
         {
         }
 
@@ -39,7 +39,7 @@ namespace MG.SharePoint
 
         #region IList and ICollection Methods
 
-        public SPList this[int index]
+        public SPFolder this[int index]
         {
             get => _col[index];
             set
@@ -54,7 +54,7 @@ namespace MG.SharePoint
         public object SyncRoot => ((ICollection)_col).SyncRoot;
         public bool IsSynchronized => ((ICollection)_col).IsSynchronized;
 
-        public void Add(SPList item)
+        public void Add(SPFolder item)
         {
             if (!IsReadOnly)
                 _col.Add(item);
@@ -70,9 +70,9 @@ namespace MG.SharePoint
                 throw new ReadOnlyCollectionException();
         }
 
-        public bool Contains(SPList item) => _col.Contains(item);
+        public bool Contains(SPFolder item) => _col.Contains(item);
 
-        public void CopyTo(SPList[] array, int arrayIndex)
+        public void CopyTo(SPFolder[] array, int arrayIndex)
         {
             if (!IsReadOnly)
                 _col.CopyTo(array, arrayIndex);
@@ -87,11 +87,11 @@ namespace MG.SharePoint
                 throw new ReadOnlyCollectionException();
         }
 
-        public IEnumerator<SPList> GetEnumerator() => _col.GetEnumerator();
+        public IEnumerator<SPFolder> GetEnumerator() => _col.GetEnumerator();
 
-        public int IndexOf(SPList item) => _col.IndexOf(item);
+        public int IndexOf(SPFolder item) => _col.IndexOf(item);
 
-        public void Insert(int index, SPList item)
+        public void Insert(int index, SPFolder item)
         {
             if (!IsReadOnly)
                 _col.Insert(index, item);
@@ -99,7 +99,7 @@ namespace MG.SharePoint
                 throw new ReadOnlyCollectionException();
         }
 
-        public bool Remove(SPList item)
+        public bool Remove(SPFolder item)
         {
             if (!IsReadOnly)
                 return _col.Remove(item);
@@ -120,29 +120,29 @@ namespace MG.SharePoint
         #endregion
 
         #region Other 'List' Methods
-        public SPList[] ToArray() =>
+        public SPFolder[] ToArray() =>
             _col.ToArray();
 
-        public void AddRange(IEnumerable<SPList> lists) =>
+        public void AddRange(IEnumerable<SPFolder> lists) =>
             _col.AddRange(lists);
 
-        public bool TrueForAll(Predicate<SPList> match) =>
+        public bool TrueForAll(Predicate<SPFolder> match) =>
             _col.TrueForAll(match);
 
-        public bool Exists(Predicate<SPList> match) =>
+        public bool Exists(Predicate<SPFolder> match) =>
             _col.Exists(match);
 
-        public ReadOnlyCollection<SPList> AsReadOnly() =>
+        public ReadOnlyCollection<SPFolder> AsReadOnly() =>
             _col.AsReadOnly();
 
         public void Sort() => _col.Sort();
-        public void Sort(Comparison<SPList> comparison) =>
+        public void Sort(Comparison<SPFolder> comparison) =>
             _col.Sort(comparison);
 
-        public void Sort(IComparer<SPList> comparer) =>
+        public void Sort(IComparer<SPFolder> comparer) =>
             _col.Sort(comparer);
 
-        public void RemoveAll(Predicate<SPList> match)
+        public void RemoveAll(Predicate<SPFolder> match)
         {
             if (!IsReadOnly)
                 _col.RemoveAll(match);
@@ -153,15 +153,15 @@ namespace MG.SharePoint
         #endregion
 
         #region Dictionary Indexing
-        public SPList this[string listName]
+        public SPFolder this[string listItemName]
         {
             get
             {
-                SPList foundya = null;
+                SPFolder foundya = null;
                 for (int i = 0; i < _col.Count; i++)
                 {
                     var l = _col[i];
-                    if (string.Equals(l.Name, listName, StringComparison.InvariantCultureIgnoreCase))
+                    if (string.Equals(l.Name, listItemName, StringComparison.InvariantCultureIgnoreCase))
                     {
                         foundya = l;
                         break;
@@ -174,23 +174,20 @@ namespace MG.SharePoint
         #endregion
 
         #region Operators
-
-        public static explicit operator SPListCollection(ListCollection listCol)
+        public static explicit operator SPFolderCollection(FolderCollection folCol)
         {
-            CTX.Lae(listCol, true,
-                lCol => lCol.Include(
-                    l => l.Title, l => l.HasUniqueRoleAssignments,
-                    l => l.Id, l => l.ItemCount, l => l.Created
-                )
-            );
-            var spListCol = new SPListCollection(listCol.Count);
-            for (int i = 0; i < listCol.Count; i++)
+            //CTX.Lae(folCol, true,
+            //    col => col.Include(
+            //        f => f.
+            //    )
+            //);
+            var spList = new SPFolderCollection(folCol.Count);
+            for (int i = 0; i < folCol.Count; i++)
             {
-                var list = listCol[i];
-                spListCol.Add((SPList)list);              
+                var fol = folCol[i];
+                spList.Add((SPFolder)fol);
             }
-            spListCol.IsReadOnly = true;
-            return spListCol;
+            return spList;
         }
 
         #endregion

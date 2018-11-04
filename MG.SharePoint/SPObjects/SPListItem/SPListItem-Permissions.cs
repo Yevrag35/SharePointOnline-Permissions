@@ -49,7 +49,7 @@ namespace MG.SharePoint
             if (HasUniquePermissions.HasValue && !HasUniquePermissions.Value)
             {
                 if (!forceBreak)
-                    throw new NoForceBreakException(Guid.Empty);
+                    throw new NoForceBreakException(_li.Id);
                 else
                     _li.BreakRoleInheritance(true, true);
             }

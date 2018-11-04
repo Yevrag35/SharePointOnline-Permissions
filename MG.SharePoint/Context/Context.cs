@@ -14,6 +14,12 @@ namespace MG.SharePoint
         public static bool Connected => SP1 != null;
 
         internal static string SpecifiedTenantName { get; set; }
+        internal static string DestinationSite =>
+            !string.IsNullOrEmpty(SpecifiedTenantName) ?
+                SP1.Url.Replace(
+                    "https://" + SpecifiedTenantName +
+                    ".sharepoint.com", string.Empty) :
+                null;
 
         internal static RoleDefinitionCollection allRoles { get; set; }
 

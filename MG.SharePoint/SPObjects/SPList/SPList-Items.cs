@@ -37,7 +37,7 @@ namespace MG.SharePoint
             ListItemCollection col = _list.GetItems(query);
             CTX.Lae(col, true, c => c.Include(expressions));
             CTX.Lae(_list, true, l => l.ItemCount);
-            Items = col;
+            Items = (SPListItemCollection)col;
             ItemCount = _list.ItemCount;
         }
     }

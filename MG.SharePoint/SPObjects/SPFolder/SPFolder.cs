@@ -72,7 +72,8 @@ namespace MG.SharePoint
             var spFols = new SPFolder[_fol.Folders.Count];
             for (int i = 0; i < _fol.Folders.Count; i++)
             {
-                spFols[i] = _fol.Folders[i];
+                var fol = _fol.Folders[i];
+                spFols[i] = (SPFolder)fol;
             }
             return spFols;
         }
@@ -88,8 +89,14 @@ namespace MG.SharePoint
         #endregion
 
         #region Operators
-        public static implicit operator SPFolder(Folder fol) => new SPFolder(fol);
+        public static explicit operator SPFolder(Folder fol) => new SPFolder(fol);
         public static explicit operator Folder(SPFolder spFol) => (Folder)spFol.ShowOriginal();
+        public static explicit operator SPFolder(string relativeUrl)
+        {
+            if (relativeUrl.StartsWith(CTX.DestinationSite))
+                relativeUrl.Replace(CTX.DestinationSite + "/", string.Empty);
+            return new SPFolder(relativeUrl);
+        }
 
         #endregion
     }

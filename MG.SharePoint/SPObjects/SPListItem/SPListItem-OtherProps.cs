@@ -22,13 +22,13 @@ namespace MG.SharePoint
         public FieldStringValues FieldValuesAsHtml { get; internal set; }
         public FieldStringValues FieldValuesAsText { get; internal set; }
         public FieldStringValues FieldValuesForEdit { get; internal set; }
-        public File File { get; internal set; }
+        public SPFile File { get; internal set; }
         public FileSystemObjectType? FileSystemObjectType { get; internal set; }
         public SecurableObject FirstUniqueAncestorSecurableObject { get; internal set; }
-        public Folder Folder { get; internal set; }
+        public SPFolder Folder { get; internal set; }
         public DlpPolicyTip GetDlpPolicyTip { get; internal set; }
         public string IconOverlay { get; internal set; }
-        public List ParentList { get; internal set; }
+        public SPList ParentList { get; internal set; }
         public PropertyValues Properties { get; internal set; }
         public string ServerRedirectedEmbedUri { get; internal set; }
         public string ServerRedirectedEmbedUrl { get; internal set; }

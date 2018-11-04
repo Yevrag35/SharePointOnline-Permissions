@@ -46,7 +46,7 @@ namespace MG.SharePoint
 
         public override object ShowOriginal() => _list;
 
-        public static implicit operator SPList(List realList) =>
+        public static explicit operator SPList(List realList) =>
             new SPList(realList);
     }
 }

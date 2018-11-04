@@ -1,12 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
 using Microsoft.SharePoint.Client.Workflow;
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Reflection;
 
 namespace MG.SharePoint
 {
@@ -82,13 +76,13 @@ namespace MG.SharePoint
         public bool? NoCrawl { get; internal set; }
         public bool? OnQuickLaunch { get; internal set; }
         public ListPageRenderType? PageRenderType { get; internal set; }
-        public Web ParentWeb { get; internal set; }
+        public SPWeb ParentWeb { get; internal set; }
         public ResourcePath ParentWebPath { get; internal set; }
         public string ParentWebUrl { get; internal set; }
         public bool? ParserDisabled { get; internal set; }
         public int? ReadSecurity { get; internal set; }
         public RoleAssignmentCollection RoleAssignments { get; internal set; }
-        public Folder RootFolder { get; internal set; }
+        public SPFolder RootFolder { get; internal set; }
         public string SchemaXml { get; internal set; }
         public bool? ServerObjectIsNull { get; internal set; }
         public bool? ServerTemplateCanCreateFolders { get; internal set; }

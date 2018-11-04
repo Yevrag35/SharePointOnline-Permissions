@@ -174,7 +174,7 @@ namespace MG.SharePoint
         #endregion
 
         #region Operators
-        public static implicit operator SPListItemCollection(ListItemCollection listItemCol)
+        public static explicit operator SPListItemCollection(ListItemCollection listItemCol)
         {
             CTX.Lae(listItemCol, true,
                 col => col.Include(
@@ -186,7 +186,7 @@ namespace MG.SharePoint
             for (int i = 0; i < listItemCol.Count; i++)
             {
                 var item = listItemCol[i];
-                spList.Add(item);
+                spList.Add((SPListItem)item);
             }
             return spList;
         }

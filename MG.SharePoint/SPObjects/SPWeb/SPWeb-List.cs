@@ -13,7 +13,7 @@ namespace MG.SharePoint
         {
             if (loadProperties == null)
             {
-                Lists = _web.Lists;
+                Lists = (SPListCollection)_web.Lists;
             }
             else
             {
@@ -23,7 +23,8 @@ namespace MG.SharePoint
                 Lists = new SPListCollection();
                 for (int i = 0; i < allLists.Count; i++)
                 {
-                    Lists.Add(allLists[i]);
+                    var splist = (SPList)allLists[i];
+                    Lists.Add(splist);
                 }
                 Lists.IsReadOnly = true;
             }

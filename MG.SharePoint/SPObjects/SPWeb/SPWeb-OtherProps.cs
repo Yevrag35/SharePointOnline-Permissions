@@ -53,7 +53,6 @@ namespace MG.SharePoint
         public FieldCollection Fields { get; internal set; }
         public SecurableObject FirstUniqueAncestorSecurableObject { get; internal set; }
         public bool? FooterEnabled { get; internal set; }
-        public bool? HasUniqueRoleAssignments { get; internal set; }
         public SPVariantThemeType? HeaderEmphasis { get; internal set; }
         public bool? HorizontalQuickLaunch { get; internal set; }
         public bool? IsMultilingual { get; internal set; }
@@ -80,7 +79,7 @@ namespace MG.SharePoint
         public string RequestAccessEmail { get; internal set; }
         public ResourcePath ResourcePath { get; internal set; }
         public RoleDefinitionCollection RoleDefinitions { get; internal set; }
-        public Folder RootFolder { get; internal set; }
+        public SPFolder RootFolder { get; internal set; }
         public bool? SaveSiteAsTemplateEnabled { get; internal set; }
         public ResourcePath ServerRelativePath { get; internal set; }
         public bool? ShowUrlStructureForCurrentUser { get; internal set; }
@@ -88,7 +87,7 @@ namespace MG.SharePoint
         public GroupCollection SiteGroups { get; internal set; }
         public string SiteLogoDescription { get; internal set; }
         public string SiteLogoUrl { get; internal set; }
-        public List SiteUserInfoList { get; internal set; }
+        public SPList SiteUserInfoList { get; internal set; }
         public UserCollection SiteUsers { get; internal set; }
         public IEnumerable<int> SupportedUILanguageIds { get; internal set; }
         public bool? SyndicationEnabled { get; internal set; }

@@ -19,8 +19,18 @@ namespace MG.SharePoint
         public DateTime Created => _web.Created;
         public bool? HasUniquePermissions => _hup;
 
-        public SPWeb() : this("/")
+        public SPWeb() : this(CTX.DestinationSite)
         {
+        }
+
+        internal SPWeb(Web w)
+        {
+            CTX.Lae(w, true, web => web.Id, web => w.Title,
+                web => web.HasUniqueRoleAssignments, web => web.Created,
+                web => web.ServerRelativeUrl);
+            _web = w;
+            _hup = _web.IsPropertyAvailable("HasUniqueRoleAssignments") ?
+                (bool?)_web.HasUniqueRoleAssignments : null;
         }
 
         public SPWeb(string relativeUrl)
@@ -41,5 +51,8 @@ namespace MG.SharePoint
         }
 
         public override object ShowOriginal() => _web;
+
+        public static explicit operator SPWeb(Web w) =>
+            new SPWeb(w);
     }
 }
