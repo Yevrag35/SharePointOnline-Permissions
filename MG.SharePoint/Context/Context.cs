@@ -21,7 +21,7 @@ namespace MG.SharePoint
                     ".sharepoint.com", string.Empty) :
                 null;
 
-        internal static RoleDefinitionCollection allRoles { get; set; }
+        public static RoleDefinitionCollection AllRoles { get; set; }
 
         #region Load and Execute (LAE)
         public static void Lae() => SP1.ExecuteQuery();

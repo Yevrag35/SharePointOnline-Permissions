@@ -36,7 +36,8 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MG.SharePoint">
+    <Reference Include="MG.SharePoint, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>Assemblies\MG.SharePoint.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory">
@@ -72,6 +73,9 @@
   <ItemGroup>
     <None Include="Context\OAuthSession.cs" />
     <None Include="Context\PSCtxHelper.cs" />
+    <Compile Include="AddSPPermission.cs" />
+    <Compile Include="BaseCmdlets\BaseSPCmdlet.cs" />
+    <Compile Include="GetSPPermission.cs" />
     <Compile Include="GetSPFolder.cs" />
     <Compile Include="GetSPWeb.cs" />
     <Compile Include="LoginSharePoint.cs" />

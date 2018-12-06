@@ -7,7 +7,7 @@ namespace MG.SharePoint.PowerShell
     [Cmdlet(VerbsCommon.Get, "SPFolder", DefaultParameterSetName = "ByRelativeUrl")]
     [CmdletBinding(PositionalBinding = false)]
     [OutputType(typeof(SPFolder))]
-    public class GetSPFolder : PSCmdlet
+    public class GetSPFolder : BaseSPCmdlet
     {
         [Parameter(Mandatory = true, Position = 0, ParameterSetName = "ByRelativeUrl")]
         public string RelativeUrl { get; set; }
@@ -18,7 +18,9 @@ namespace MG.SharePoint.PowerShell
         [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = "ByFolderInput")]
         public Folder Folder { get; set; }
 
-        private protected Folder inQuestion;
+        private Folder inQuestion;
+
+        protected override void BeginProcessing() => base.BeginProcessing();
 
         protected override void ProcessRecord()
         {
@@ -42,7 +44,7 @@ namespace MG.SharePoint.PowerShell
                     break;
             }
 
-            SPFolder outFol = inQuestion;
+            var outFol = (SPFolder)inQuestion;
             WriteObject(outFol);
         }
     }

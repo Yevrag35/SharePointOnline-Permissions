@@ -6,7 +6,7 @@ namespace MG.SharePoint.PowerShell
 {
     [Cmdlet(VerbsCommon.Get, "SPWeb")]
     [OutputType(typeof(SPWeb))]
-    public class GetSPWeb : PSCmdlet
+    public class GetSPWeb : BaseSPCmdlet
     {
         private protected bool _withPerms;
         [Parameter(Mandatory = false)]
@@ -16,12 +16,7 @@ namespace MG.SharePoint.PowerShell
             set => _withPerms = value;
         }
 
-        protected override void BeginProcessing()
-        {
-            base.BeginProcessing();
-            if (!CTX.Connected)
-                throw new InvalidOperationException("SPO Context is not set");
-        }
+        protected override void BeginProcessing() => base.BeginProcessing();
 
         protected override void ProcessRecord()
         {

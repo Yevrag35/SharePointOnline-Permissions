@@ -101,10 +101,10 @@ namespace MG.SharePoint
         {
             var user = CTX.SP1.Web.EnsureUser(logonName);
             CTX.Lae(user);
-            if (CTX.allRoles == null)
+            if (CTX.AllRoles == null)
             {
-                CTX.allRoles = CTX.SP1.Web.RoleDefinitions;
-                CTX.Lae(CTX.allRoles, true,
+                CTX.AllRoles = CTX.SP1.Web.RoleDefinitions;
+                CTX.Lae(CTX.AllRoles, true,
                     ar => ar.Include(
                         r => r.Name
                     )
@@ -113,7 +113,7 @@ namespace MG.SharePoint
             RoleDefinition roleDef;
             try
             {
-                roleDef = CTX.allRoles.Single(x => string.Equals(x.Name, roleDefinition, StringComparison.OrdinalIgnoreCase));
+                roleDef = CTX.AllRoles.Single(x => string.Equals(x.Name, roleDefinition, StringComparison.OrdinalIgnoreCase));
             }
             catch (InvalidOperationException)
             {
