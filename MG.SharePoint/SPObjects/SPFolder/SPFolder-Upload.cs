@@ -4,7 +4,7 @@ using System.Collections;
 
 namespace MG.SharePoint
 {
-    public partial class SPFolder : SPObject, ISPPermissions
+    public partial class SPFolder : SPSecurable
     {
         #region Upload Document
         public SPFile UploadFile(string localFilePath, bool forceOverwrite = false, bool refreshFiles = true)

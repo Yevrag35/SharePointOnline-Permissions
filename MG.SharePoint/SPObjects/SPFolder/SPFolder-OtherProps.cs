@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace MG.SharePoint
 {
-    public partial class SPFolder : SPObject, ISPPermissions
+    public partial class SPFolder : SPSecurable
     {
         #region Other Properties
         public IList<ContentTypeId> ContentTypeOrder { get; internal set; }

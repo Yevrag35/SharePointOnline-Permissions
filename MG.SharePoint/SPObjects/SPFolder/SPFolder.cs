@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace MG.SharePoint
 {
-    public partial class SPFolder : SPObject, ISPPermissions
+    public partial class SPFolder : SPSecurable
     {
         #region Private Fields
         private protected Folder _fol;
@@ -15,8 +15,8 @@ namespace MG.SharePoint
         private protected string _sru => _fol.ServerRelativeUrl;
         private protected int? _filec => _fol.Files.AreItemsAvailable ? _fol.Files.Count : (int?)null;
         private protected int? _folc => _fol.Folders.AreItemsAvailable ? _fol.Folders.Count : (int?)null;
-        
-        private protected bool? _hup;
+
+        //protected internal SecurableObject SecObj => _fol.ListItemAllFields;
 
         #endregion
 
@@ -24,7 +24,7 @@ namespace MG.SharePoint
         public override string Name => _name;
         public override object Id => _id;
         public string ServerRelativeUrl => _sru;
-        public bool? HasUniquePermissions => _hup;
+        //public bool? HasUniquePermissions => _hup;
 
         public int? FileCount => (int?)Files.Count;
         public int? FolderCount => (int?)Folders.Count;
@@ -40,13 +40,14 @@ namespace MG.SharePoint
             : this(CTX.SP1.Web.GetFolderByServerRelativeUrl(serverRelativeUrl))
         {
         }
-        public SPFolder(Folder fol)
+        public SPFolder(Folder fol) : base(fol.ListItemAllFields)
         {
             CTX.Lae(fol, true, f => f.Name, f => f.UniqueId, f => f.ParentFolder.Name,
-                f => f.ServerRelativeUrl, f => f.ListItemAllFields.HasUniqueRoleAssignments);
+                f => f.ServerRelativeUrl);
 
-            _hup = !fol.ListItemAllFields.IsPropertyAvailable("HasUniqueRoleAssignments") ? 
-                null : (bool?)fol.ListItemAllFields.HasUniqueRoleAssignments;
+            //f => f.ListItemAllFields.HasUniqueRoleAssignments)
+            //_hup = !fol.ListItemAllFields.IsPropertyAvailable("HasUniqueRoleAssignments") ? 
+            //    null : (bool?)fol.ListItemAllFields.HasUniqueRoleAssignments;
 
             _fol = fol;
         }
@@ -55,6 +56,8 @@ namespace MG.SharePoint
 
         #region Methods
         public override object ShowOriginal() => _fol;
+
+        public override void Update() => _fol.Update();
 
         #endregion
 

@@ -33,6 +33,11 @@ namespace MG.SharePoint
         private protected const string defMsg = "{0} already has unique permissions; inheritance is already broken!";
         public object OffendingId { get; }
 
+        public InvalidBreakInheritanceException()
+            : base(string.Format(defMsg, "This object"))
+        {
+        }
+
         public InvalidBreakInheritanceException(object id)
             : base(string.Format(defMsg, Convert.ToString(id))) => OffendingId = OffendingId;
 
@@ -41,8 +46,13 @@ namespace MG.SharePoint
     }
     public class InvalidResetInheritanceException : ClientRequestException, IPermissionException
     {
-        private protected const string defMsg = "{0} is already inherited permissions from its parent folder!";
+        private protected const string defMsg = "{0} is already inheriting permissions from its parent folder!";
         public object OffendingId { get; }
+
+        public InvalidResetInheritanceException()
+            : base(string.Format(defMsg, "This object"))
+        {
+        }
 
         public InvalidResetInheritanceException(object id)
             : base(string.Format(defMsg, Convert.ToString(id))) => OffendingId = id;
@@ -54,6 +64,11 @@ namespace MG.SharePoint
     {
         private protected const string defMsg = "{0} still inherits its permissions!  Break inheritance first or specify the \"forceBreak\" parameter.";
         public object OffendingId { get; }
+
+        public NoForceBreakException()
+            : base(string.Format(defMsg, "This object"))
+        {
+        }
 
         public NoForceBreakException(object id)
             : base(string.Format(defMsg, Convert.ToString(id))) => OffendingId = id;

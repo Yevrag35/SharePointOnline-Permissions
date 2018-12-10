@@ -135,13 +135,14 @@
     <Compile Include="SPObjects\SPBinding\SPBindingCollection.cs" />
     <Compile Include="SPObjects\ISPObject.cs" />
     <Compile Include="SPObjects\SPFolder\SPFolder-AddFolder.cs" />
-    <Compile Include="SPObjects\SPFolder\SPFolder-Permissions.cs" />
+    <None Include="SPObjects\SPFolder\SPFolder-Permissions.cs" />
     <Compile Include="SPObjects\SPFolder\SPFolder.cs" />
     <Compile Include="SPObjects\SPList\SPList-Permissions.cs" />
     <Compile Include="SPObjects\SPList\SPList.cs" />
     <Compile Include="SPObjects\SPList\SPListCollection.cs" />
     <Compile Include="SPObjects\SPPermissions\SPPermission.cs" />
     <Compile Include="SPObjects\SPPermissions\SPPermissionCollection.cs" />
+    <Compile Include="SPObjects\SPSecurable.cs" />
     <Compile Include="SPObjects\SPWeb\SPWebCollection.cs" />
     <Compile Include="SPObjects\SPWeb\SPWeb-List.cs" />
     <Compile Include="SPObjects\SPWeb\SPWeb-OtherProps.cs" />

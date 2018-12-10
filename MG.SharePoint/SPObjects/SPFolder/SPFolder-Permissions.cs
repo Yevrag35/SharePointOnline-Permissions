@@ -6,11 +6,11 @@ using System.Linq;
 
 namespace MG.SharePoint
 {
-    public partial class SPFolder : SPObject, ISPPermissions
+    public partial class SPFolder : SPSecurable
     {
         public SPPermissionCollection Permissions { get; internal set; }
 
-        #region Permission Methods
+        #region Generic Permission Methods
 
         public SPPermissionCollection GetPermissions()
         {
@@ -53,6 +53,10 @@ namespace MG.SharePoint
             }
             return result;
         }
+
+        #endregion
+
+        #region Add Permission Methods
 
         public void AddPermission(SPBindingCollection bindingCol, bool forceBreak = false)
         {
@@ -122,6 +126,12 @@ namespace MG.SharePoint
 
         public void AddPermission(IDictionary permissionsHash, bool forceBreak = false) =>       // @{ "Role" = "Principal"; "Role" = @("Principal", "Principal") }
             AddPermission(new SPBindingCollection(ResolvePermissions(permissionsHash)), forceBreak);
+
+        #endregion
+
+        #region Remove Permission Methods
+
+
 
         #endregion
 
