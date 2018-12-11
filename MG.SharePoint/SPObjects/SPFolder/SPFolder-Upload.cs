@@ -36,7 +36,7 @@ namespace MG.SharePoint
         {
             var uploadedFile = UploadFile(localFilePath, forceOverwrite, refreshFiles);
             uploadedFile.BreakInheritance(copyRoleAssignments, true);
-            uploadedFile.AddPermission(permissionsHash);
+            uploadedFile.AddPermission(permissionsHash, true);
             return uploadedFile;
         }
 
@@ -45,7 +45,7 @@ namespace MG.SharePoint
         {
             var uploadedFile = UploadFile(localFilePath, forceOverwrite, refreshFiles);
             uploadedFile.BreakInheritance(copyRoleAssignments, true);
-            uploadedFile.AddPermission(bindingCol);
+            uploadedFile.AddPermission(bindingCol, true);
             return uploadedFile;
         }
 

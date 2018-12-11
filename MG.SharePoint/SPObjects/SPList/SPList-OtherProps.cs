@@ -4,7 +4,7 @@ using System;
 
 namespace MG.SharePoint
 {
-    public partial class SPList : SPObject
+    public partial class SPList : SPSecurable
     {
         #region Properties
         // We'll turn the other properties into separate methods

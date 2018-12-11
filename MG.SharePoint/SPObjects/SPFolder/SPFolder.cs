@@ -45,10 +45,6 @@ namespace MG.SharePoint
             CTX.Lae(fol, true, f => f.Name, f => f.UniqueId, f => f.ParentFolder.Name,
                 f => f.ServerRelativeUrl);
 
-            //f => f.ListItemAllFields.HasUniqueRoleAssignments)
-            //_hup = !fol.ListItemAllFields.IsPropertyAvailable("HasUniqueRoleAssignments") ? 
-            //    null : (bool?)fol.ListItemAllFields.HasUniqueRoleAssignments;
-
             _fol = fol;
         }
 

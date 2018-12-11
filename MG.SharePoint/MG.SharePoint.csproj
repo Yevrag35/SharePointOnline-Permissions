@@ -116,14 +116,14 @@
     <Compile Include="Extensions\ClientObjectExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SPObjects\SPFile\SPFile-OtherProps.cs" />
-    <Compile Include="SPObjects\SPFile\SPFile-Permissions.cs" />
+    <None Include="SPObjects\SPFile\SPFile-Permissions.cs" />
     <Compile Include="SPObjects\SPFile\SPFile.cs" />
     <Compile Include="SPObjects\SPFile\SPFileCollection-Upload.cs" />
     <Compile Include="SPObjects\SPFolder\SPFolder-OtherProps.cs" />
     <Compile Include="SPObjects\SPFolder\SPFolder-Upload.cs" />
     <Compile Include="SPObjects\SPFolder\SPFolderCollection.cs" />
     <Compile Include="SPObjects\SPListItem\SPListItem-OtherProps.cs" />
-    <Compile Include="SPObjects\SPListItem\SPListItem-Permissions.cs" />
+    <None Include="SPObjects\SPListItem\SPListItem-Permissions.cs" />
     <Compile Include="SPObjects\SPListItem\SPListItem.cs" />
     <Compile Include="SPObjects\SPListItem\SPListItemCollection.cs" />
     <Compile Include="SPObjects\SPList\SPList-Items.cs" />
@@ -135,9 +135,8 @@
     <Compile Include="SPObjects\SPBinding\SPBindingCollection.cs" />
     <Compile Include="SPObjects\ISPObject.cs" />
     <Compile Include="SPObjects\SPFolder\SPFolder-AddFolder.cs" />
-    <None Include="SPObjects\SPFolder\SPFolder-Permissions.cs" />
     <Compile Include="SPObjects\SPFolder\SPFolder.cs" />
-    <Compile Include="SPObjects\SPList\SPList-Permissions.cs" />
+    <None Include="SPObjects\SPList\SPList-Permissions.cs" />
     <Compile Include="SPObjects\SPList\SPList.cs" />
     <Compile Include="SPObjects\SPList\SPListCollection.cs" />
     <Compile Include="SPObjects\SPPermissions\SPPermission.cs" />
@@ -146,7 +145,7 @@
     <Compile Include="SPObjects\SPWeb\SPWebCollection.cs" />
     <Compile Include="SPObjects\SPWeb\SPWeb-List.cs" />
     <Compile Include="SPObjects\SPWeb\SPWeb-OtherProps.cs" />
-    <Compile Include="SPObjects\SPWeb\SPWeb-Permissions.cs" />
+    <None Include="SPObjects\SPWeb\SPWeb-Permissions.cs" />
     <Compile Include="SPObjects\SPWeb\SPWeb.cs" />
   </ItemGroup>
   <ItemGroup>

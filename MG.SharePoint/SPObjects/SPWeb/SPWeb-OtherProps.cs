@@ -8,7 +8,7 @@ using System.Linq.Expressions;
 
 namespace MG.SharePoint
 {
-    public partial class SPWeb : SPObject, ISPPermissions
+    public partial class SPWeb : SPSecurable
     {
         #region Other Properties
         public AlertCollection Alerts { get; internal set; }

@@ -6,47 +6,52 @@ using System.Linq;
 
 namespace MG.SharePoint
 {
-    public partial class SPList : SPObject, ISPPermissions
+    public partial class SPList : SPSecurable
     {
         private protected List _list;
-        private protected bool? _hup;
+        //private protected bool? _hup;
 
         public override string Name => _list.Title;
         public override object Id => _list.Id;
         public SPListItemCollection Items { get; internal set; }
         public int? ItemCount { get; internal set; }
         public DateTime Created => _list.Created;
-        public bool? HasUniquePermissions => _hup;
+        //public bool? HasUniquePermissions => _hup;
 
         public SPList(string listName)
+            : this(FindListByName(listName))
         {
-            var allLists = CTX.SP1.Web.Lists;
-            CTX.Lae(allLists, true, ls => ls.Include(
-                l => l.Title, l => l.Id, l => l.HasUniqueRoleAssignments, l => l.Created));
-            _list = allLists.Single(l => string.Equals(
-                l.Title, listName, StringComparison.InvariantCultureIgnoreCase));
-            _hup = _list.IsPropertyAvailable("HasUniqueRoleAssignments") ?
-                (bool?)_list.HasUniqueRoleAssignments : null;
         }
         internal SPList(List list)
+            : base(list)
         {
             CTX.Lae(list, true, 
                 l => l.Title, 
                 l => l.Id, 
-                l => l.HasUniqueRoleAssignments, 
                 l => l.Created,
                 l => l.ItemCount);
             _list = list;
-            _hup = _list.IsPropertyAvailable("HasUniqueRoleAssignments") ?
-                (bool?)_list.HasUniqueRoleAssignments : null;
         }
 
         public override object ShowOriginal() => _list;
+
+        public override void Update() => _list.Update();
 
         public static explicit operator SPList(List realList) =>
             new SPList(realList);
 
         public static explicit operator SPList(string listName) =>
             new SPList(listName);
+
+        private static List FindListByName(string listName)
+        {
+            var allLists = CTX.SP1.Web.Lists;
+            CTX.Lae(allLists, true, ls => ls.Include(
+                    l => l.Title
+                )
+            );
+            return allLists.Single(
+                l => l.Title.Equals(listName, StringComparison.InvariantCultureIgnoreCase));
+        }
     }
 }

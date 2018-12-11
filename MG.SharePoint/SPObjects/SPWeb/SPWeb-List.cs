@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace MG.SharePoint
 {
-    public partial class SPWeb : SPObject, ISPPermissions
+    public partial class SPWeb : SPSecurable
     {
         public SPListCollection GetLists(params string[] loadProperties)
         {

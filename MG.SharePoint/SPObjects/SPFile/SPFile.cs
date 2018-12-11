@@ -7,20 +7,20 @@ using System.Linq.Expressions;
 
 namespace MG.SharePoint
 {
-    public partial class SPFile : SPObject, ISPPermissions
+    public partial class SPFile : SPSecurable
     {
         #region Private Properties/Fields
-        private protected File _file;
-        private protected bool? _hup;
-        private protected string _srUrl;
+        private File _file;
+        //private bool? _hup;
+        //private string _srUrl;
 
         #endregion
 
         #region Public Properties/Fields
         public override string Name => _file.Name;
         public override object Id => _file.UniqueId;
-        public string ServerRelativeUrl => _srUrl;
-        public bool? HasUniquePermissions => _hup;
+        public string ServerRelativeUrl { get; }
+        //public bool? HasUniquePermissions => _hup;
 
         #endregion
 
@@ -34,15 +34,15 @@ namespace MG.SharePoint
         {
         }
         internal SPFile(File file)
+            : base(file.ListItemAllFields)
         {
             CTX.Lae(file, true, f => f.Name,
                 f => f.UniqueId,
-                f => f.ListItemAllFields.HasUniqueRoleAssignments,
                 f => f.ServerRelativeUrl
             );
-            _srUrl = file.ServerRelativeUrl;
-            _hup = file.ListItemAllFields.IsPropertyAvailable("HasUniqueRoleAssignments") ?
-                (bool?)file.ListItemAllFields.HasUniqueRoleAssignments : null;
+            ServerRelativeUrl = file.ServerRelativeUrl;
+            //_hup = file.ListItemAllFields.IsPropertyAvailable("HasUniqueRoleAssignments") ?
+            //    (bool?)file.ListItemAllFields.HasUniqueRoleAssignments : null;
             _file = file;
         }
 
@@ -50,6 +50,8 @@ namespace MG.SharePoint
 
         #region Methods
         public override object ShowOriginal() => _file;
+
+        public override void Update() => _file.Update();
 
         private static string GetFormattedPath(string serverRelativeUrl, bool isDifferentSite)
         {

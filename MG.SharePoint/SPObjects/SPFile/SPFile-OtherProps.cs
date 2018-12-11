@@ -3,7 +3,7 @@ using System;
 
 namespace MG.SharePoint
 {
-    public partial class SPFile : SPObject, ISPPermissions
+    public partial class SPFile : SPSecurable
     {
         #region Other Properties
         public User Author { get; internal set; }

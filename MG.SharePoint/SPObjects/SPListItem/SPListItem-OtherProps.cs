@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace MG.SharePoint
 {
-    public partial class SPListItem : SPObject, ISPPermissions
+    public partial class SPListItem : SPSecurable
     {
         #region Other Properties
         public AttachmentCollection AttachmentFiles { get; internal set; }

@@ -8,7 +8,7 @@ using System.Reflection;
 
 namespace MG.SharePoint
 {
-    public partial class SPList : SPObject, ISPPermissions
+    public partial class SPList : SPSecurable
     {
         public void GetItems(params string[] listItemProperties)
         {
