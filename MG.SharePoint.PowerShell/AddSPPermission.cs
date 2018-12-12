@@ -1,14 +1,16 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Management.Automation;
 
 namespace MG.SharePoint.PowerShell
 {
-    [Cmdlet(VerbsCommon.Add, "SPPermission", SupportsShouldProcess = true)]
+    [Cmdlet(VerbsCommon.Add, "SPPermission", SupportsShouldProcess = true,
+        DefaultParameterSetName = "ByStringPrincipal")]
     [CmdletBinding(PositionalBinding = false)]
-    [OutputType(typeof(SPPermissionCollection))]
+    [OutputType(typeof(SPPermission))]
     public class AddSPPermission : GetSPPermission, IDynamicParameters
     {
         private protected Collection<Attribute> colAtt = new Collection<Attribute>()
@@ -16,7 +18,8 @@ namespace MG.SharePoint.PowerShell
             new ParameterAttribute()
             {
                 Mandatory = true,
-                Position = 1
+                Position = 1,
+                ParameterSetName = "ByPrincipalObject"
             },
             new AliasAttribute("Permission", "perm"),
             new AllowNullAttribute()
@@ -27,11 +30,14 @@ namespace MG.SharePoint.PowerShell
 
         private protected RuntimeDefinedParameterDictionary rtDict;
 
-        [Parameter(Mandatory = false, Position = 0)]
+        [Parameter(Mandatory = false, Position = 0, ParameterSetName = "ByPrincipalObject")]
         public string Principal { get; set; }
 
-        [Parameter(Mandatory = false)]
+        [Parameter(Mandatory = true, ParameterSetName = "ByPrincipalObject")]
         public Principal SPPrincipal { get; set; }
+
+        [Parameter(Mandatory = true, Position = 0, ParameterSetName = "ByPermissionHashtable")]
+        public IDictionary ApplyPermissionSet { get; set; }
 
         private bool _force;
         [Parameter(Mandatory = false)]
@@ -48,30 +54,44 @@ namespace MG.SharePoint.PowerShell
             base.BeginProcessing();
             DoDynamic();
 
-            if (string.IsNullOrEmpty(Principal) && SPPrincipal == null)
-                throw new ArgumentNullException("Either Principal or SPPrincipal must be specified!");
+            if (ParameterSetName == "ByPrincipalObject")
+            {
+                if (string.IsNullOrEmpty(Principal) && SPPrincipal == null)
+                    throw new ArgumentNullException("Either Principal or SPPrincipal must be specified!");
 
-            if (MyInvocation.BoundParameters.ContainsKey("Principal"))
-                SPPrincipal = CTX.SP1.Web.EnsureUser(Principal);
+                if (MyInvocation.BoundParameters.ContainsKey("Principal"))
+                    SPPrincipal = CTX.SP1.Web.EnsureUser(Principal);
 
-            CTX.Lae(SPPrincipal, true);
+                CTX.Lae(SPPrincipal, true);
+            }
         }
 
         protected override void ProcessRecord()
         {
             base.CheckParameters();
 
-            // Get the chosen role
-            RoleDefinition _role = CTX.AllRoles.Single(x => x.Name.Equals((string)rtDict[pName].Value, StringComparison.InvariantCultureIgnoreCase));
-
             if (SPObject.HasUniquePermissions.HasValue && (SPObject.HasUniquePermissions.Value || !SPObject.HasUniquePermissions.Value &&
                 (_force || ShouldContinue(SPObject.Id.ToString(), "Break Inheritance"))))
-                SPObject.AddPermission(SPPrincipal, _role, true);
+            {
+                switch (ParameterSetName)
+                {
+                    case "ByPermissionHashtable":
+                        SPObject.AddPermission(ApplyPermissionSet, true);
+                        break;
+                    default:
+                        // Get the chosen role
+                        RoleDefinition _role = CTX.AllRoles.Single(x => x.Name.Equals((string)rtDict[pName].Value, StringComparison.InvariantCultureIgnoreCase));
+
+                        SPObject.AddPermission(SPPrincipal, _role, true);
+                        break;
+                }
+            }
+                
             else
                 throw new InvalidOperationException("I wouldn't do that if I were you...");
 
             SPObject.GetPermissions();
-            WriteObject(SPObject.Permissions, false);
+            WriteObject(SPObject.Permissions, true);
         }
 
         private protected RuntimeDefinedParameterDictionary DoDynamic()

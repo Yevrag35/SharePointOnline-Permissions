@@ -7,31 +7,31 @@ namespace MG.SharePoint.PowerShell
 {
     [Cmdlet(VerbsCommon.Get, "SPPermission")]
     [CmdletBinding(PositionalBinding = false)]
-    [OutputType(typeof(SPPermissionCollection))]
+    [OutputType(typeof(SPPermission))]
     public class GetSPPermission : BaseSPCmdlet
     {
         #region ClientObject Pipe Parameters
 
-        [Parameter(Mandatory = true, ParameterSetName = "WithWebObject", ValueFromPipeline = true)]
+        [Parameter(Mandatory = false, DontShow = true, ValueFromPipeline = true)]
         public Web Web { get; set; }
 
-        [Parameter(Mandatory = true, ParameterSetName = "WithListObject", ValueFromPipeline = true)]
+        [Parameter(Mandatory = false, DontShow = true, ValueFromPipeline = true)]
         public List List { get; set; }
 
-        [Parameter(Mandatory = true, ParameterSetName = "WithFolderObject", ValueFromPipeline = true)]
+        [Parameter(Mandatory = false, DontShow = true, ValueFromPipeline = true)]
         public Folder Folder { get; set; }
 
-        [Parameter(Mandatory = true, ParameterSetName = "WithFileObject", ValueFromPipeline = true)]
+        [Parameter(Mandatory = false, DontShow = true, ValueFromPipeline = true)]
         public File File { get; set; }
 
-        [Parameter(Mandatory = true, ParameterSetName = "WithListItemObject", ValueFromPipeline = true)]
+        [Parameter(Mandatory = false, DontShow = true, ValueFromPipeline = true)]
         public ListItem ListItem { get; set; }
 
         #endregion
 
         #region ISPPermissions Pipe Parameters
 
-        [Parameter(Mandatory = true, ParameterSetName = "ByISPPermissions", ValueFromPipeline = true)]
+        [Parameter(Mandatory = false, ValueFromPipeline = true)]
         public ISPPermissions SPObject { get; set; }
 
         #endregion
@@ -42,7 +42,7 @@ namespace MG.SharePoint.PowerShell
         {
             CheckParameters();
             var perms = SPObject.GetPermissions();
-            WriteObject(perms, false);
+            WriteObject(perms, true);
         }
 
         private protected void CheckParameters()
@@ -57,6 +57,8 @@ namespace MG.SharePoint.PowerShell
                         SPObject = WrapObject(MyInvocation.BoundParameters[key]);
                 }
             }
+            if (SPObject == null)
+                throw new ArgumentException("You must specify an input object!");
         }
 
         private ISPPermissions WrapObject(object cliObj)

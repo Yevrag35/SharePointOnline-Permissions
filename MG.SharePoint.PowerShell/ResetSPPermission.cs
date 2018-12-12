@@ -7,7 +7,7 @@ namespace MG.SharePoint.PowerShell
 {
     [Cmdlet(VerbsCommon.Reset, "SPPermission", SupportsShouldProcess = true)]
     [CmdletBinding(PositionalBinding = false)]
-    [OutputType(typeof(SPPermissionCollection))]
+    [OutputType(typeof(SPPermission))]
     public class ResetSPPermission : GetSPPermission
     {
         private bool _force;
@@ -27,7 +27,7 @@ namespace MG.SharePoint.PowerShell
             if (_force || ShouldContinue("Reset Permissions on " + SPObject.Id.ToString() + "?", "Re-enabling Inheritance"))
                 SPObject.ResetInheritance();
 
-            WriteObject(SPObject.GetPermissions(), false);
+            WriteObject(SPObject.GetPermissions(), true);
         }
     }
 }
