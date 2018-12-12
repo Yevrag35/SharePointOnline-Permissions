@@ -15,7 +15,7 @@ namespace MG.SharePoint.PowerShell
         {
             new ParameterAttribute()
             {
-                Mandatory = false,
+                Mandatory = true,
                 Position = 1
             },
             new AliasAttribute("Permission", "perm"),
@@ -65,12 +65,12 @@ namespace MG.SharePoint.PowerShell
             RoleDefinition _role = CTX.AllRoles.Single(x => x.Name.Equals((string)rtDict[pName].Value, StringComparison.InvariantCultureIgnoreCase));
 
             if (SPObject.HasUniquePermissions.HasValue && (SPObject.HasUniquePermissions.Value || !SPObject.HasUniquePermissions.Value &&
-                (_force || ShouldProcess(SPObject.Id.ToString(), "Break Inheritance"))))
+                (_force || ShouldContinue(SPObject.Id.ToString(), "Break Inheritance"))))
                 SPObject.AddPermission(SPPrincipal, _role, true);
             else
                 throw new InvalidOperationException("I wouldn't do that if I were you...");
 
-            WriteObject(SPObject.Permissions, false);
+            WriteObject(SPObject.GetPermissions(), false);
         }
 
         private protected RuntimeDefinedParameterDictionary DoDynamic()

@@ -71,6 +71,8 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RemoveSPPermission.cs" />
+    <Compile Include="ResetSPPermission.cs" />
     <None Include="Context\OAuthSession.cs" />
     <None Include="Context\PSCtxHelper.cs" />
     <Compile Include="AddSPPermission.cs" />
@@ -80,9 +82,17 @@
     <Compile Include="GetSPWeb.cs" />
     <Compile Include="LoginSharePoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="DebugScript.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="GenerateManifest.ps1" />
+    <None Include="TypeFormats\MG.SharePoint.SPFolder.ps1xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assemblies\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -NonInteractive -WindowStyle Hidden -File "$(ProjectDir)GenerateManifest.ps1" -DebugDirectory "$(ProjectDir)bin\$(ConfigurationName)" -ModuleFileDirectory "$(ProjectDir)TypeFormats" -AssemblyInfo "$(ProjectDir)Properties\AssemblyInfo.cs" -TargetFileName "$(TargetFileName)"</PreBuildEvent>
+  </PropertyGroup>
 </Project>
