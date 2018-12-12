@@ -71,6 +71,8 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseCmdlets\DynamicCmdlet.cs" />
+    <Compile Include="BaseCmdlets\PropertyLoadingCmdlet.cs" />
     <Compile Include="RemoveSPPermission.cs" />
     <Compile Include="ResetSPPermission.cs" />
     <None Include="Context\OAuthSession.cs" />
