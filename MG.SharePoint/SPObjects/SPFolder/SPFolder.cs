@@ -24,6 +24,7 @@ namespace MG.SharePoint
         public override string Name => _name;
         public override object Id => _id;
         public string ServerRelativeUrl => _sru;
+        public DateTime TimeLastModified => _fol.TimeLastModified.ToLocalTime();
         //public bool? HasUniquePermissions => _hup;
 
         public int? FileCount => (int?)Files.Count;
@@ -43,7 +44,7 @@ namespace MG.SharePoint
         public SPFolder(Folder fol) : base(fol.ListItemAllFields)
         {
             CTX.Lae(fol, true, f => f.Name, f => f.UniqueId, f => f.ParentFolder.Name,
-                f => f.ServerRelativeUrl);
+                f => f.ServerRelativeUrl, f => f.TimeLastModified);
 
             _fol = fol;
         }

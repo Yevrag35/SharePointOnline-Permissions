@@ -22,7 +22,6 @@ namespace MG.SharePoint
         public ResourcePath ServerRelativePath { get; internal set; }
         public StorageMetrics StorageMetrics { get; internal set; }
         public DateTime? TimeCreated { get; internal set; }
-        public DateTime? TimeLastModified { get; internal set; }
         public IList<ContentTypeId> UniqueContentTypeOrder { get; internal set; }
         public Guid? UniqueId { get; internal set; }
         public string WelcomePage { get; internal set; }

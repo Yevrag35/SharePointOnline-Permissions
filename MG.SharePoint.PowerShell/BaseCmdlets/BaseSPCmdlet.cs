@@ -8,8 +8,10 @@ namespace MG.SharePoint.PowerShell
         protected override void BeginProcessing()
         {
             base.BeginProcessing();
-            if (!CTX.Connected)
+            if (!CheckSession())
                 throw new InvalidOperationException("SPO Context is not set");
         }
+
+        protected internal bool CheckSession() => CTX.Connected;
     }
 }
