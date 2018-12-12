@@ -13,7 +13,7 @@ namespace MG.SharePoint
         public override string Name => _web.Title;
         public override object Id => _web.Id;
         public SPListCollection Lists { get; internal set; }
-        public string RelativeUrl => _web.ServerRelativeUrl;
+        public string ServerRelativeUrl => _web.ServerRelativeUrl;
         public DateTime Created => _web.Created;
         //public bool? HasUniquePermissions => _hup;
 
@@ -24,9 +24,7 @@ namespace MG.SharePoint
         internal SPWeb(Web w)
             : base(w)
         {
-            CTX.Lae(w, true, web => web.Id, 
-                web => w.Title, web => web.Created, 
-                web => web.ServerRelativeUrl);
+            CTX.Lae(w, true, wb => wb.Id, wb => wb.Title, wb => wb.Created, wb => wb.ServerRelativeUrl);
             _web = w;
         }
 

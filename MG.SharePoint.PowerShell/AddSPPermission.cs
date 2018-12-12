@@ -70,7 +70,8 @@ namespace MG.SharePoint.PowerShell
             else
                 throw new InvalidOperationException("I wouldn't do that if I were you...");
 
-            WriteObject(SPObject.GetPermissions(), false);
+            SPObject.GetPermissions();
+            WriteObject(SPObject.Permissions, false);
         }
 
         private protected RuntimeDefinedParameterDictionary DoDynamic()

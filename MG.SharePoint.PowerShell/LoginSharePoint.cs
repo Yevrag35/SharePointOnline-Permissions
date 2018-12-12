@@ -4,7 +4,8 @@ using System.Management.Automation;
 
 namespace MG.SharePoint.PowerShell
 {
-    [Cmdlet("Login", "SharePoint", DefaultParameterSetName = "ByAzureLogin")]
+    [Cmdlet(VerbsCommunications.Connect, "ToSharePoint", DefaultParameterSetName = "ByAzureLogin")]
+    [Alias("Login-SharePoint", "loginsp")]
     [OutputType(typeof(bool))]
     [CmdletBinding(PositionalBinding = false)]
     public class LoginSharePoint : PSCmdlet
@@ -23,13 +24,6 @@ namespace MG.SharePoint.PowerShell
 
         [Parameter(Mandatory = true, ParameterSetName = "ByExplicitLogin")]
         public PSCredential Credential { get; set; }
-
-        //[Parameter(Mandatory = false, ParameterSetName = "ByAzureLogin")]
-        //public Guid ApplicationId = Guid.Parse(DEFAULT_CLIENT_ID);
-
-        //[Parameter(Mandatory = false, ParameterSetName = "ByAzureLogin")]
-        //public Uri RedirectUrl = new Uri(DEFAULT_REDIRECT_URI, UriKind.Absolute);
-
 
         protected override void ProcessRecord()
         {

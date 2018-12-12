@@ -51,9 +51,8 @@ namespace MG.SharePoint.PowerShell
 
             var outFol = (SPFolder)inQuestion;
             if (MyInvocation.BoundParameters.ContainsKey("Property"))
-            {
                 LoadWithDynamic(pName, outFol);
-            }
+            
             WriteObject(outFol);
         }
     }

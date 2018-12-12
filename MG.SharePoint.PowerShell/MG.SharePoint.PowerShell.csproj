@@ -89,6 +89,7 @@
     </Content>
     <None Include="GenerateManifest.ps1" />
     <None Include="TypeFormats\MG.SharePoint.SPFolder.ps1xml" />
+    <None Include="TypeFormats\MG.SharePoint.SPWeb.ps1xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assemblies\" />
