@@ -7,7 +7,7 @@ namespace MG.SharePoint.PowerShell
     [Cmdlet(VerbsCommon.Get, "SPFolder", DefaultParameterSetName = "ByRelativeUrl")]
     [CmdletBinding(PositionalBinding = false)]
     [OutputType(typeof(SPFolder))]
-    public class GetSPFolder : BaseSPCmdlet
+    public class GetSPFolder : PropertyLoadingCmdlet
     {
         [Parameter(Mandatory = true, Position = 0, ParameterSetName = "ByRelativeUrl")]
         public string RelativeUrl { get; set; }
@@ -19,6 +19,11 @@ namespace MG.SharePoint.PowerShell
         public Folder Folder { get; set; }
 
         private Folder inQuestion;
+
+        protected internal override Type ThisType => typeof(SPFolder);
+
+        protected internal override string[] SkipThese => new string[6] {
+            "HasUniquePermissions", "Id", "Name", "Permissions", "ServerRelativeUrl", "TimeLastModified" };
 
         protected override void BeginProcessing() => base.BeginProcessing();
 
@@ -45,6 +50,10 @@ namespace MG.SharePoint.PowerShell
             }
 
             var outFol = (SPFolder)inQuestion;
+            if (MyInvocation.BoundParameters.ContainsKey("Property"))
+            {
+                LoadWithDynamic(pName, outFol);
+            }
             WriteObject(outFol);
         }
     }

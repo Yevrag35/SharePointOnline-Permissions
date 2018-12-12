@@ -1,13 +1,61 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Management.Automation;
 
-namespace MG.SharePoint.PowerShell.BaseCmdlets
+namespace MG.SharePoint.PowerShell
 {
     public abstract class PropertyLoadingCmdlet : DynamicCmdlet
     {
+        protected internal string[] Properties;
+        internal const string pName = "Property";
+        protected internal abstract string[] SkipThese { get; }
+        protected internal abstract Type ThisType { get; }
+
+        private Collection<Attribute> attCol = new Collection<Attribute>()
+        {
+            new ParameterAttribute()
+            {
+                Mandatory = false
+            },
+            new AliasAttribute("p", "prop", "props"),
+            new AllowNullAttribute()
+        };
+
+        protected internal static string[] GetPropertyNames(Type spType, params string[] skipThese)
+        {
+            var allProps = spType.GetProperties();
+            if (skipThese != null)
+                allProps = allProps.Where(x => !skipThese.Contains(x.Name)).ToArray();
+
+            var propNames = new string[allProps.Length];
+            for (int i = 0; i < allProps.Length; i++)
+            {
+                propNames[i] = allProps[i].Name;
+            }
+
+            return propNames;
+        }
+
+        protected internal override RuntimeDefinedParameterDictionary DoDynamic() => DoDynamicProperties(ThisType, SkipThese);
+
+        protected internal RuntimeDefinedParameterDictionary DoDynamicProperties(Type spType, params string[] skipThese)
+        {
+            if (rtDict == null)
+            {
+                Properties = GetPropertyNames(spType, skipThese);
+                attCol.Add(new ValidateSetAttribute(Properties));
+                var rtp = new RuntimeDefinedParameter(pName, typeof(string[]), attCol);
+                rtDict = new RuntimeDefinedParameterDictionary()
+                {
+                    { pName, rtp }
+                };
+            }
+            return rtDict;
+        }
+
         protected private void LoadWithDynamic(string paramName, SPObject spObj)
         {
             var addProps = rtDict[paramName].Value;

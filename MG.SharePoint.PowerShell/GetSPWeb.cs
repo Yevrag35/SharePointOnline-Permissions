@@ -6,26 +6,21 @@ namespace MG.SharePoint.PowerShell
 {
     [Cmdlet(VerbsCommon.Get, "SPWeb")]
     [OutputType(typeof(SPWeb))]
-    public class GetSPWeb : BaseSPCmdlet
+    public class GetSPWeb : PropertyLoadingCmdlet
     {
-        private protected bool _withPerms;
-        [Parameter(Mandatory = false)]
-        public SwitchParameter LoadPermissions
-        {
-            get => _withPerms;
-            set => _withPerms = value;
-        }
+        protected internal override string[] SkipThese => 
+        protected internal override Type ThisType => throw new NotImplementedException();
 
         protected override void BeginProcessing() => base.BeginProcessing();
 
-        protected override void ProcessRecord()
-        {
-            base.ProcessRecord();
-            var web = new SPWeb();
-            if (_withPerms)
-                web.GetPermissions();
+        //protected override void ProcessRecord()
+        //{
+        //    base.ProcessRecord();
+        //    var web = new SPWeb();
+        //    if (_withPerms)
+        //        web.GetPermissions();
 
-            WriteObject(web, false);
-        }
+        //    WriteObject(web, false);
+        //}
     }
 }
