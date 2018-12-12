@@ -165,6 +165,26 @@ namespace MG.SharePoint
 
         #endregion
 
+        #region REMOVE PERMISSIONS
+
+        public void RemovePermission(Principal principal)
+        {
+            if (!HasUniquePermissions.HasValue || (HasUniquePermissions.HasValue && !HasUniquePermissions.Value))
+                throw new InvalidOperationException("This item does not contain unique permissions.  No permissions were removed.");
+
+            var roleAss = SecObj.RoleAssignments.GetByPrincipal(principal);
+            roleAss.DeleteObject();
+            CTX.Lae();
+        }
+
+        public void RemovePermission(string logonName)
+        {
+            var principal = CTX.SP1.Web.EnsureUser(logonName);
+            RemovePermission(principal);
+        }
+
+        #endregion
+
         #region ISPPermissionResolver Method
 
         public IEnumerable<SPBinding> ResolvePermissions(IDictionary permissions)
