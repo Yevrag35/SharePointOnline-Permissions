@@ -7,6 +7,7 @@ namespace MG.SharePoint
     {
         object Id { get; }
         string Name { get; }
+        ClientContext GetContext();
         object ShowOriginal();
     }
 }

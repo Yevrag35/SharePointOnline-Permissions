@@ -94,7 +94,7 @@ namespace MG.SharePoint.PowerShell
             WriteObject(SPObject.Permissions, true);
         }
 
-        private protected RuntimeDefinedParameterDictionary DoDynamic()
+        private RuntimeDefinedParameterDictionary DoDynamic()
         {
             if (rtDict == null)
             {
@@ -109,7 +109,7 @@ namespace MG.SharePoint.PowerShell
             return rtDict;
         }
 
-        private protected string[] GetAllRoles()
+        private string[] GetAllRoles()
         {
             if (_roleNames == null)
             {
@@ -131,5 +131,10 @@ namespace MG.SharePoint.PowerShell
             }
             return _roleNames;
         }
+
+        //private void SetRecursivePermissions()
+        //{
+        //    SPObject
+        //}
     }
 }

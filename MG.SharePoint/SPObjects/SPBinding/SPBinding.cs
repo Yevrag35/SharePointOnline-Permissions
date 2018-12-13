@@ -70,6 +70,8 @@ namespace MG.SharePoint
         public object Clone() =>
             this.MemberwiseClone();
 
+        public ClientContext GetContext() => (ClientContext)Principal.Context;
+
         public object ShowOriginal() => 
             new KeyValuePair<Principal, RoleDefinition>(Principal, Definition);
 

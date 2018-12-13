@@ -47,6 +47,7 @@ namespace MG.SharePoint
             new SPPermission(ass);
 
         public object ShowOriginal() => _roleAss;
+        public ClientContext GetContext() => (ClientContext)_roleAss.Context;
 
         public object Clone()
         {

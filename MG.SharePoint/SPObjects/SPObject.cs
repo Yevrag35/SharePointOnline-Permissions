@@ -23,6 +23,7 @@ namespace MG.SharePoint
         public abstract object Id { get; }
 
         public abstract object ShowOriginal();
+        public ClientContext GetContext() => (ClientContext)((ClientObject)ShowOriginal()).Context;
 
         internal protected List<Expression<Func<T, object>>> GetPropertyExpressions<T>(params string[] propertyNamesToLoad)
             where T : ClientObject

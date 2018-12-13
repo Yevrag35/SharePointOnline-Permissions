@@ -185,6 +185,8 @@ namespace MG.SharePoint
 
         #endregion
 
+        //public ClientContext GetContext() => (ClientContext)SecObj.Context;
+
         #region ISPPermissionResolver Method
 
         public IEnumerable<SPBinding> ResolvePermissions(IDictionary permissions)
