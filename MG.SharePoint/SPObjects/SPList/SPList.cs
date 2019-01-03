@@ -45,13 +45,19 @@ namespace MG.SharePoint
 
         private static List FindListByName(string listName)
         {
+            if (listName.Contains("/") && !listName.StartsWith("/"))
+            {
+                listName = "/" + listName;
+            }
+
             var allLists = CTX.SP1.Web.Lists;
             CTX.Lae(allLists, true, ls => ls.Include(
-                    l => l.Title
+                    l => l.Title, l => l.RootFolder.ServerRelativeUrl
                 )
             );
             return allLists.Single(
-                l => l.Title.Equals(listName, StringComparison.InvariantCultureIgnoreCase));
+                l => l.Title.Equals(listName, StringComparison.InvariantCultureIgnoreCase) ||
+                l.RootFolder.ServerRelativeUrl.Equals(listName, StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }

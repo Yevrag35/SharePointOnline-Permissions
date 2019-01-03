@@ -9,7 +9,7 @@ namespace MG.SharePoint
     public partial class SPFolder : SPSecurable
     {
         #region Private Fields
-        private protected Folder _fol;
+        private protected Microsoft.SharePoint.Client.Folder _fol;
         private protected string _name => _fol.Name;
         private protected Guid _id => _fol.UniqueId;
         private protected string _sru => _fol.ServerRelativeUrl;
@@ -41,7 +41,7 @@ namespace MG.SharePoint
             : this(CTX.SP1.Web.GetFolderByServerRelativeUrl(serverRelativeUrl))
         {
         }
-        public SPFolder(Folder fol) : base(fol.ListItemAllFields)
+        public SPFolder(Microsoft.SharePoint.Client.Folder fol) : base(fol.ListItemAllFields)
         {
             CTX.Lae(fol, true, f => f.Name, f => f.UniqueId, f => f.ParentFolder.Name,
                 f => f.ServerRelativeUrl, f => f.TimeLastModified);
@@ -89,8 +89,8 @@ namespace MG.SharePoint
         #endregion
 
         #region Operators
-        public static explicit operator SPFolder(Folder fol) => new SPFolder(fol);
-        public static explicit operator Folder(SPFolder spFol) => (Folder)spFol.ShowOriginal();
+        public static explicit operator SPFolder(Microsoft.SharePoint.Client.Folder fol) => new SPFolder(fol);
+        public static explicit operator Folder(SPFolder spFol) => (Microsoft.SharePoint.Client.Folder)spFol.ShowOriginal();
         public static explicit operator SPFolder(string relativeUrl)
         {
             if (relativeUrl.StartsWith(CTX.DestinationSite))

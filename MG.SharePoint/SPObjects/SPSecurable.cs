@@ -86,16 +86,16 @@ namespace MG.SharePoint
 
         #region ADD PERMISSIONS
 
-        public void AddPermission(IDictionary permissionsHash, bool forceBreak) =>
-            this.AddPermission(new SPBindingCollection(ResolvePermissions(permissionsHash)), forceBreak);
+        public void AddPermission(IDictionary permissionsHash, bool forceBreak, bool permissionsApplyRecursively) =>
+            this.AddPermission(new SPBindingCollection(ResolvePermissions(permissionsHash)), forceBreak, permissionsApplyRecursively);
 
-        public void AddPermission(Principal principal, RoleDefinition roleDefinition, bool forceBreak) =>
-            this.AddPermission(new SPBindingCollection(principal, roleDefinition), forceBreak);
+        public void AddPermission(Principal principal, RoleDefinition roleDefinition, bool forceBreak, bool permissionsApplyRecursively) =>
+            this.AddPermission(new SPBindingCollection(principal, roleDefinition), forceBreak, permissionsApplyRecursively);
 
-        public void AddPermission(SPBinding binding, bool forceBreak) =>
-            this.AddPermission(new SPBindingCollection(binding), forceBreak);
+        public void AddPermission(SPBinding binding, bool forceBreak, bool permissionsApplyRecursively) =>
+            this.AddPermission(new SPBindingCollection(binding), forceBreak, permissionsApplyRecursively);
 
-        public void AddPermission(string logonName, string roleDefinition, bool forceBreak)
+        public void AddPermission(string logonName, string roleDefinition, bool forceBreak, bool permissionsApplyRecursively)
         {
             var user = CTX.SP1.Web.EnsureUser(logonName);
             CTX.Lae(user, true);
@@ -117,10 +117,10 @@ namespace MG.SharePoint
             {
                 throw new ArgumentException(roleDefinition + " is not the name of a valid Role Definition in this site collection.");
             }
-            this.AddPermission(new SPBindingCollection(user, roleDef), forceBreak);
+            this.AddPermission(new SPBindingCollection(user, roleDef), forceBreak, permissionsApplyRecursively);
         }
 
-        public void AddPermission(SPBindingCollection bindingCol, bool forceBreak)
+        public void AddPermission(SPBindingCollection bindingCol, bool forceBreak, bool permissionsApplyRecursively)
         {
             if (HasUniquePermissions.HasValue && !HasUniquePermissions.Value)
             {
@@ -161,6 +161,8 @@ namespace MG.SharePoint
             }
             else
                 this.GetPermissions();
+
+            //if ()
         }
 
         #endregion
@@ -184,8 +186,6 @@ namespace MG.SharePoint
         }
 
         #endregion
-
-        //public ClientContext GetContext() => (ClientContext)SecObj.Context;
 
         #region ISPPermissionResolver Method
 
@@ -213,6 +213,60 @@ namespace MG.SharePoint
             }
             return bindingCol;
         }
+
+        #endregion
+
+        #region RECURSIVE PERMISSIONING
+
+        private const string RECURSE_CAML_QUERY = @"<View Scope=""RecursiveAll"">
+    <Query>
+       <Where>
+          <IsNotNull>
+             <FieldRef Name = 'SharedWithUsers' />
+          </ IsNotNull >
+       </ Where >
+       < OrderBy >
+          < FieldRef Name='SharedWithUsers' Ascending='True' />
+       </OrderBy>
+    </Query>
+</View>";
+
+        private void AddPermissionRecursively(List list, SPBindingCollection bindCol)
+        {
+            var query = new CamlQuery()
+            {
+                ViewXml = RECURSE_CAML_QUERY
+            };
+            var lic = (SPListItemCollection)list.GetItems(query);
+            
+            for (int i = 0; i < lic.Count; i++)
+            {
+                var li = lic[i];
+                li.AddPermission(bindCol, true, false);
+            }
+        }
+
+        private void AddPermissionRecursively(SPBindingCollection bindCol)
+        {
+            var thisType = this.GetType().Name;
+            switch (thisType)
+            {
+                case "SPFolder":
+                    AddPermissionRecursively((SPFolder)this, bindCol);
+                    break;
+                case "SPFile":
+                    AddPermissionRecursively((SPFile)this, bindCol);
+                    break;
+                default:
+                    throw new InvalidOperationException("What the fuck?");
+            }
+        }
+
+        private void AddPermissionRecursively(SPFile file, SPBindingCollection bindCol) =>
+            this.AddPermissionRecursively(((File)file.ShowOriginal()).ListItemAllFields.ParentList, bindCol);
+
+        private void AddPermissionRecursively(SPFolder fol, SPBindingCollection bindCol) =>
+            this.AddPermissionRecursively(((Folder)fol.ShowOriginal()).ListItemAllFields.ParentList, bindCol);
 
         #endregion
     }

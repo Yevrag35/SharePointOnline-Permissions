@@ -13,11 +13,11 @@ namespace MG.SharePoint
 
         bool ResetInheritance();
 
-        void AddPermission(string principal, string roleDefinition, bool forceBreak);
-        void AddPermission(SPBinding binding, bool forceBreak);
-        void AddPermission(Principal principal, RoleDefinition roleDefinition, bool forceBreak);
-        void AddPermission(SPBindingCollection bindingCol, bool forceBreak);
-        void AddPermission(IDictionary permissionHash, bool forceBreak);
+        void AddPermission(string principal, string roleDefinition, bool forceBreak, bool permissionsApplyRecursively);
+        void AddPermission(SPBinding binding, bool forceBreak, bool permissionsApplyRecursively);
+        void AddPermission(Principal principal, RoleDefinition roleDefinition, bool forceBreak, bool permissionsApplyRecursively);
+        void AddPermission(SPBindingCollection bindingCol, bool forceBreak, bool permissionsApplyRecursively);
+        void AddPermission(IDictionary permissionHash, bool forceBreak, bool permissionsApplyRecursively);
 
         void RemovePermission(Principal principal);
         void RemovePermission(string logonName);

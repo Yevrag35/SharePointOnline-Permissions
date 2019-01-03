@@ -12,22 +12,22 @@ namespace MG.SharePoint
         public void AddSubFolder(string folderName) =>
             _fol.AddSubFolder(folderName);
 
-        public SPFolder AddSubFolder(string folderName, string principal, string roleDefinition) =>
-            AddSubFolder(folderName, new SPBinding(principal, roleDefinition));
+        public SPFolder AddSubFolder(string folderName, string principal, string roleDefinition, bool permissionsApplyRecursively) =>
+            AddSubFolder(folderName, permissionsApplyRecursively, new SPBinding(principal, roleDefinition));
 
-        public SPFolder AddSubFolder(string folderName, IDictionary bindingHash) =>
-            AddSubFolder(folderName, new SPBindingCollection(ResolvePermissions(bindingHash)));
+        public SPFolder AddSubFolder(string folderName, IDictionary bindingHash, bool permissionsApplyRecursively) =>
+            AddSubFolder(folderName, new SPBindingCollection(ResolvePermissions(bindingHash)), permissionsApplyRecursively);
         
-        public SPFolder AddSubFolder(string folderName, Principal principal, RoleDefinition roleDefinition) =>
-            AddSubFolder(folderName, new SPBinding(principal, roleDefinition));
+        public SPFolder AddSubFolder(string folderName, Principal principal, RoleDefinition roleDefinition, bool permissionsApplyRecursively) =>
+            AddSubFolder(folderName, permissionsApplyRecursively, new SPBinding(principal, roleDefinition));
 
-        public SPFolder AddSubFolder(string folderName, params SPBinding[] bindings) =>
-            AddSubFolder(folderName, new SPBindingCollection(bindings));
+        public SPFolder AddSubFolder(string folderName, bool permissionsApplyRecursively, params SPBinding[] bindings) =>
+            AddSubFolder(folderName, new SPBindingCollection(bindings), permissionsApplyRecursively);
 
-        public SPFolder AddSubFolder(string folderName, SPBindingCollection bindingCol)
+        public SPFolder AddSubFolder(string folderName, SPBindingCollection bindingCol, bool permissionsApplyRecursively)
         {
             var newFolder = (SPFolder)CTX.SP1.Web.Folders.Add(_fol.ServerRelativeUrl + "/" + folderName);
-            newFolder.AddPermission(bindingCol, true);
+            newFolder.AddPermission(bindingCol, true, permissionsApplyRecursively);
             return newFolder;
         }
 
