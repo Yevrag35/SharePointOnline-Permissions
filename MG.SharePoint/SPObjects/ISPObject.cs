@@ -8,6 +8,8 @@ namespace MG.SharePoint
         object Id { get; }
         string Name { get; }
         ClientContext GetContext();
+        bool IsObjectPropertyInstantiated(string propertyName);
+        void RefreshLoad();
         ClientObject ShowOriginal();
     }
 }

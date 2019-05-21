@@ -10,13 +10,6 @@ namespace MG.SharePoint
     public partial class SPWeb : SPSecurable
     {
         private Web _web;
-        private string _name;
-        private Guid _id;
-        private DateTime _dc;
-        private string _relUrl;
-        //private bool? _hup;
-
-        //public bool? HasUniquePermissions => _hup;
 
         public SPWeb() : this(CTX.DestinationSite)
         {
@@ -27,9 +20,6 @@ namespace MG.SharePoint
         {
             base.FormatObject(w, null);
             this.Name = w.Title;
-            //_id = w.Id;
-            //_dc = w.Created;
-            //this.ServerRelativeUrl = w.ServerRelativeUrl;
             _web = w;
         }
 

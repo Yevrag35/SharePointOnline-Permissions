@@ -94,7 +94,7 @@ namespace MG.SharePoint
         public string SiteLogoDescription { get; internal set; }
         public string SiteLogoUrl { get; internal set; }
         public SPList SiteUserInfoList { get; internal set; }
-        public UserCollection SiteUsers { get; internal set; }
+        public SPUserCollection SiteUsers { get; internal set; }
         public IEnumerable<int> SupportedUILanguageIds { get; internal set; }
         public bool? SyndicationEnabled { get; internal set; }
         public Microsoft.SharePoint.Marketplace.CorporateCuratedGallery.TenantCorporateCatalogAccessor TenantAppCatalog { get; internal set; }

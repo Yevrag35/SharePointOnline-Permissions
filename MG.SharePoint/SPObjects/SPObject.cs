@@ -24,6 +24,9 @@ namespace MG.SharePoint
         public abstract string Name { get; internal set; }
         public abstract object Id { get; internal set; }
 
+        bool ISPObject.IsObjectPropertyInstantiated(string propertyName) => this.ShowOriginal().IsObjectPropertyInstantiated(propertyName);
+        void ISPObject.RefreshLoad() => this.ShowOriginal().RefreshLoad();
+
         public abstract ClientObject ShowOriginal();
         public ClientContext GetContext() => (ClientContext)this.ShowOriginal().Context;
 
@@ -147,8 +150,11 @@ namespace MG.SharePoint
                 case "WebCollection":
                     return typeof(SPWebCollection);
 
-                //case "User":
-                //    return typeof(SPUser);
+                case "User":
+                    return typeof(SPUser);
+
+                case "UserCollection":
+                    return typeof(SPUserCollection);
 
                 //case "Group":
                 //    return typeof(SPGroup);

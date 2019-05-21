@@ -115,6 +115,7 @@
     <Compile Include="Exceptions\Exceptions.cs" />
     <Compile Include="Extensions\ClientObjectExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SPObjects\BaseCollection.cs" />
     <Compile Include="SPObjects\SPFile\SPFile-OtherProps.cs" />
     <Content Include="Debug.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

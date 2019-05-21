@@ -11,9 +11,9 @@ namespace MG.SharePoint
         private protected readonly string[] _perms;
         private protected readonly RoleAssignment _roleAss;
 
+        public object Id => _memLog;
         public string Name => _memTit;
         public string Permissions => string.Join(", ", _perms);
-        public object Id => _memLog;
         public int PermissionCount => _perms.Length;
 
         #region Constructors
@@ -32,6 +32,16 @@ namespace MG.SharePoint
 
         #endregion
 
+        public static implicit operator SPPermission(RoleAssignment ass) =>
+            new SPPermission(ass);
+
+        public object Clone()
+        {
+            var perm = this.MemberwiseClone() as SPPermission;
+            return perm;
+        }
+        public ClientContext GetContext() => (ClientContext)_roleAss.Context;
+        bool ISPObject.IsObjectPropertyInstantiated(string propertyName) => _roleAss.IsObjectPropertyInstantiated(propertyName);
         private string[] ParseBindings(RoleDefinitionBindingCollection bindingCol)
         {
             var strPerms = new string[bindingCol.Count];
@@ -42,17 +52,7 @@ namespace MG.SharePoint
             }
             return strPerms;
         }
-
-        public static implicit operator SPPermission(RoleAssignment ass) =>
-            new SPPermission(ass);
-
+        void ISPObject.RefreshLoad() => _roleAss.RefreshLoad();
         public ClientObject ShowOriginal() => _roleAss;
-        public ClientContext GetContext() => (ClientContext)_roleAss.Context;
-
-        public object Clone()
-        {
-            SPPermission perm = this.ShowOriginal() as RoleAssignment;
-            return perm;
-        }
     }
 }
