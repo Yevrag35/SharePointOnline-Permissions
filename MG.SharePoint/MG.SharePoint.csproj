@@ -128,6 +128,8 @@
     <Compile Include="SPObjects\SPFolder\SPFolder-OtherProps.cs" />
     <Compile Include="SPObjects\SPFolder\SPFolder-Upload.cs" />
     <Compile Include="SPObjects\SPFolder\SPFolderCollection.cs" />
+    <Compile Include="SPObjects\SPGroup\SPGroup.cs" />
+    <Compile Include="SPObjects\SPGroup\SPGroupCollection.cs" />
     <Compile Include="SPObjects\SPListItem\SPListItem-OtherProps.cs" />
     <None Include="SPObjects\SPListItem\SPListItem-Permissions.cs" />
     <Compile Include="SPObjects\SPListItem\SPListItem.cs" />
@@ -148,7 +150,8 @@
     <Compile Include="SPObjects\SPPermissions\SPPermission.cs" />
     <Compile Include="SPObjects\SPPermissions\SPPermissionCollection.cs" />
     <Compile Include="SPObjects\SPSecurable.cs" />
-    <Compile Include="SPObjects\SPUser.cs" />
+    <Compile Include="SPObjects\SPUser\SPUserCollection.cs" />
+    <Compile Include="SPObjects\SPUser\SPUser.cs" />
     <Compile Include="SPObjects\SPWeb\SPWebCollection.cs" />
     <Compile Include="SPObjects\SPWeb\SPWeb-List.cs" />
     <Compile Include="SPObjects\SPWeb\SPWeb-OtherProps.cs" />
