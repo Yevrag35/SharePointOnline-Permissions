@@ -23,7 +23,7 @@ namespace MG.SharePoint
             SecObj = so;
             CTX.Lae(SecObj, true, s => s.HasUniqueRoleAssignments, s => s.RoleAssignments);
             HasUniquePermissions = !SecObj.IsPropertyAvailable("HasUniqueRoleAssignments") ?
-                null : (bool?)SecObj.HasUniqueRoleAssignments;
+                null : (bool?)SecObj.HasUniqueRoleAssignments; 
         }
 
         #endregion
@@ -35,6 +35,8 @@ namespace MG.SharePoint
         #endregion
 
         #region GET PERMISSIONS
+
+        //public bool UserHasPermissions(string userName, )
 
         public SPPermissionCollection GetPermissions()
         {
@@ -87,7 +89,7 @@ namespace MG.SharePoint
         #region ADD PERMISSIONS
 
         public void AddPermission(IDictionary permissionsHash, bool forceBreak, bool permissionsApplyRecursively) =>
-            this.AddPermission(new SPBindingCollection(ResolvePermissions(permissionsHash)), forceBreak, permissionsApplyRecursively);
+            this.AddPermission(new SPBindingCollection(((ISPPermissionResolver)this).ResolvePermissions(permissionsHash)), forceBreak, permissionsApplyRecursively);
 
         public void AddPermission(Principal principal, RoleDefinition roleDefinition, bool forceBreak, bool permissionsApplyRecursively) =>
             this.AddPermission(new SPBindingCollection(principal, roleDefinition), forceBreak, permissionsApplyRecursively);
@@ -189,7 +191,7 @@ namespace MG.SharePoint
 
         #region ISPPermissionResolver Method
 
-        public IEnumerable<SPBinding> ResolvePermissions(IDictionary permissions)
+        IEnumerable<SPBinding> ISPPermissionResolver.ResolvePermissions(IDictionary permissions)
         {
             var keys = permissions.Keys.Cast<string>().ToArray();
             var bindingCol = new SPBindingCollection();

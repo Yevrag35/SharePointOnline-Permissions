@@ -10,7 +10,8 @@ namespace MG.SharePoint
 {
     public partial class SPWeb : SPSecurable
     {
-        #region Other Properties
+        #region OTHER PROPERTIES
+
         public AlertCollection Alerts { get; internal set; }
         public bool? AllowAutomaticASPXPageIndexing { get; internal set; }
         public bool? AllowCreateDeclarativeWorkflowForCurrentUser { get; internal set; }
@@ -34,6 +35,7 @@ namespace MG.SharePoint
         public short? Configuration { get; internal set; }
         public bool? ContainsConfidentialInfo { get; internal set; }
         public ContentTypeCollection ContentTypes { get; internal set; }
+        public DateTime Created { get; }
         public ChangeToken CurrentChangeToken { get; internal set; }
         public User CurrentUser { get; internal set; }
         public string CustomMasterUrl { get; internal set; }
@@ -55,14 +57,17 @@ namespace MG.SharePoint
         public bool? FooterEnabled { get; internal set; }
         public SPVariantThemeType? HeaderEmphasis { get; internal set; }
         public bool? HorizontalQuickLaunch { get; internal set; }
+        public override object Id { get; internal set; }
         public bool? IsMultilingual { get; internal set; }
         public uint? Language { get; internal set; }
         public DateTime? LastItemModifiedDate { get; internal set; }
         public DateTime? LastItemUserModifiedDate { get; internal set; }
+        public SPListCollection Lists { get; internal set; }
         public ListTemplateCollection ListTemplates { get; internal set; }
         public string MasterUrl { get; internal set; }
         public bool? MegaMenuEnabled { get; internal set; }
         public bool? MembersCanShare { get; internal set; }
+        public override string Name { get; internal set; }
         public Navigation Navigation { get; internal set; }
         public bool? NoCrawl { get; internal set; }
         public bool? NotificationsInOneDriveForBusinessEnabled { get; internal set; }
@@ -82,6 +87,7 @@ namespace MG.SharePoint
         public SPFolder RootFolder { get; internal set; }
         public bool? SaveSiteAsTemplateEnabled { get; internal set; }
         public ResourcePath ServerRelativePath { get; internal set; }
+        public string ServerRelativeUrl { get; internal set; }
         public bool? ShowUrlStructureForCurrentUser { get; internal set; }
         public Microsoft.SharePoint.Marketplace.CorporateCuratedGallery.SiteCollectionCorporateCatalogAccessor SiteCollectionAppCatalog { get; internal set; }
         public GroupCollection SiteGroups { get; internal set; }

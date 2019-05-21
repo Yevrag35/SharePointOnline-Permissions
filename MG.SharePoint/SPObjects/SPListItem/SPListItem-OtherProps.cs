@@ -9,7 +9,7 @@ namespace MG.SharePoint
 {
     public partial class SPListItem : SPSecurable
     {
-        #region Other Properties
+        #region PROPERTIES
         public AttachmentCollection AttachmentFiles { get; internal set; }
         public string Client_Title { get; internal set; }
         public bool? CommentsDisabled { get; internal set; }
@@ -28,6 +28,8 @@ namespace MG.SharePoint
         public SPFolder Folder { get; internal set; }
         public DlpPolicyTip GetDlpPolicyTip { get; internal set; }
         public string IconOverlay { get; internal set; }
+        public override object Id { get; internal set; }
+        public override string Name { get; internal set; }
         public SPList ParentList { get; internal set; }
         public PropertyValues Properties { get; internal set; }
         public string ServerRedirectedEmbedUri { get; internal set; }

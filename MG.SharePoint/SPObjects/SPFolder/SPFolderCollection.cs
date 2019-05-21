@@ -9,7 +9,8 @@ namespace MG.SharePoint
 {
     public class SPFolderCollection : IList<SPFolder>, ICollection
     {
-        private protected List<SPFolder> _col;
+        private List<SPFolder> _col;
+        private FolderCollection _original;
 
         #region Constructors
         public SPFolderCollection()
@@ -176,12 +177,12 @@ namespace MG.SharePoint
         #region Operators
         public static explicit operator SPFolderCollection(FolderCollection folCol)
         {
-            var spList = new SPFolderCollection(folCol.Count);
-            for (int i = 0; i < folCol.Count; i++)
+            var spList = new SPFolderCollection();
+            foreach (Folder f in folCol)
             {
-                var fol = folCol[i];
-                spList.Add((SPFolder)fol);
+                spList.Add((SPFolder)f);
             }
+            spList._original = folCol;
             return spList;
         }
 

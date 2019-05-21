@@ -1,20 +1,21 @@
 ﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.SharePoint.Client;
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace MG.SharePoint
 {
     public partial class SPWeb : SPSecurable
     {
-        private protected Web _web;
-        //private protected bool? _hup;
+        private Web _web;
+        private string _name;
+        private Guid _id;
+        private DateTime _dc;
+        private string _relUrl;
+        //private bool? _hup;
 
-        public override string Name => _web.Title;
-        public override object Id => _web.Id;
-        public SPListCollection Lists { get; internal set; }
-        public string ServerRelativeUrl => _web.ServerRelativeUrl;
-        public DateTime Created => _web.Created;
         //public bool? HasUniquePermissions => _hup;
 
         public SPWeb() : this(CTX.DestinationSite)
@@ -24,7 +25,11 @@ namespace MG.SharePoint
         internal SPWeb(Web w)
             : base(w)
         {
-            CTX.Lae(w, true, wb => wb.Id, wb => wb.Title, wb => wb.Created, wb => wb.ServerRelativeUrl);
+            base.FormatObject(w, null);
+            this.Name = w.Title;
+            //_id = w.Id;
+            //_dc = w.Created;
+            //this.ServerRelativeUrl = w.ServerRelativeUrl;
             _web = w;
         }
 
@@ -33,7 +38,9 @@ namespace MG.SharePoint
         {
         }
 
-        public override object ShowOriginal() => _web;
+        public User EnsureUser(string userId) => _web.EnsureUser(userId);
+
+        public override ClientObject ShowOriginal() => _web;
 
         public override void Update() => _web.Update();
 

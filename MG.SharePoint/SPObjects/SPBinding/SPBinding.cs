@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace MG.SharePoint
 {
-    public class SPBinding : ICloneable, IComparable<SPBinding>, IEquatable<SPBinding>, ISPObject, IEnumerable<SPBinding>
+    public class SPBinding : ICloneable, IComparable<SPBinding>, IEquatable<SPBinding>
     {
         public object Id => Principal.Id;
         public string Name { get; }
@@ -72,13 +72,7 @@ namespace MG.SharePoint
 
         public ClientContext GetContext() => (ClientContext)Principal.Context;
 
-        public object ShowOriginal() => 
-            new KeyValuePair<Principal, RoleDefinition>(Principal, Definition);
-
-        public IEnumerator<SPBinding> GetEnumerator() =>
-            new List<SPBinding>(1) { this }.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() =>
-            new List<SPBinding>(1) { this }.GetEnumerator();
+        public KeyValuePair<Principal, RoleDefinition> ShowOriginal() =>
+            new KeyValuePair<Principal, RoleDefinition>(this.Principal, this.Definition);
     }
 }

@@ -46,7 +46,7 @@ namespace MG.SharePoint
         public static implicit operator SPPermission(RoleAssignment ass) =>
             new SPPermission(ass);
 
-        public object ShowOriginal() => _roleAss;
+        public ClientObject ShowOriginal() => _roleAss;
         public ClientContext GetContext() => (ClientContext)_roleAss.Context;
 
         public object Clone()

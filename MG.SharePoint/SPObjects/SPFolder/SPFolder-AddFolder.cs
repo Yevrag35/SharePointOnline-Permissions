@@ -16,7 +16,7 @@ namespace MG.SharePoint
             AddSubFolder(folderName, permissionsApplyRecursively, new SPBinding(principal, roleDefinition));
 
         public SPFolder AddSubFolder(string folderName, IDictionary bindingHash, bool permissionsApplyRecursively) =>
-            AddSubFolder(folderName, new SPBindingCollection(ResolvePermissions(bindingHash)), permissionsApplyRecursively);
+            AddSubFolder(folderName, new SPBindingCollection(((ISPPermissionResolver)this).ResolvePermissions(bindingHash)), permissionsApplyRecursively);
         
         public SPFolder AddSubFolder(string folderName, Principal principal, RoleDefinition roleDefinition, bool permissionsApplyRecursively) =>
             AddSubFolder(folderName, permissionsApplyRecursively, new SPBinding(principal, roleDefinition));

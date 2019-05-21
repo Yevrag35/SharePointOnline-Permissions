@@ -10,7 +10,7 @@ namespace MG.SharePoint
     public partial class SPFileCollection : IList<SPFile>, ICollection
     {
         private protected List<SPFile> _col;
-        internal protected FileCollection Original;     // Just used for its methods
+        protected internal FileCollection Original;     // Just used for its methods
 
         public string FolderPath =>
             _col.Count > 0 ?
@@ -183,13 +183,12 @@ namespace MG.SharePoint
         #region Operators
         public static explicit operator SPFileCollection(FileCollection fileCol)
         {
-            var spList = new SPFileCollection(fileCol.Count);
-            spList.Original = fileCol;
-            for (int i = 0; i < fileCol.Count; i++)
+            var spList = new SPFileCollection();
+            foreach (File f in fileCol)
             {
-                var file = fileCol[i];
-                spList.Add((SPFile)file);
+                spList.Add((SPFile)f);
             }
+            spList.Original = fileCol;
             return spList;
         }
 

@@ -26,14 +26,7 @@ namespace MG.SharePoint
 
         public void GetItems(CamlQuery query, params string[] listItemProperties)
         {
-            var exprs = GetPropertyExpressions<ListItem>(listItemProperties);
-
-            if (listItemProperties.Where(x => string.Equals("DisplayName", x, StringComparison.InvariantCultureIgnoreCase)) == null)
-            {
-                Expression<Func<ListItem, object>> exp = li => li.DisplayName;
-                exprs.Add(exp);
-            }
-            var expressions = exprs.ToArray();
+            var expressions = GetPropertyExpressions<ListItem>(listItemProperties);
             ListItemCollection col = _list.GetItems(query);
             CTX.Lae(col, true, c => c.Include(expressions));
             CTX.Lae(_list, true, l => l.ItemCount);

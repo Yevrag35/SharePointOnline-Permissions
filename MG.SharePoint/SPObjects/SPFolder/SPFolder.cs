@@ -1,34 +1,28 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace MG.SharePoint
 {
     public partial class SPFolder : SPSecurable
     {
         #region Private Fields
-        private protected Microsoft.SharePoint.Client.Folder _fol;
-        private protected string _name => _fol.Name;
-        private protected Guid _id => _fol.UniqueId;
-        private protected string _sru => _fol.ServerRelativeUrl;
-        private protected int? _filec => _fol.Files.AreItemsAvailable ? _fol.Files.Count : (int?)null;
-        private protected int? _folc => _fol.Folders.AreItemsAvailable ? _fol.Folders.Count : (int?)null;
-
-        //protected internal SecurableObject SecObj => _fol.ListItemAllFields;
+        private Folder _fol;
 
         #endregion
 
         #region Public Fields
-        public override string Name => _name;
-        public override object Id => _id;
-        public string ServerRelativeUrl => _sru;
-        public DateTime TimeLastModified => _fol.TimeLastModified.ToLocalTime();
-        //public bool? HasUniquePermissions => _hup;
+        public override string Name { get; internal set; }
+        public override object Id { get; internal set; }
+        public string ServerRelativeUrl { get; internal set; }
+        public DateTime TimeLastModified { get; internal set; }
 
-        public int? FileCount => (int?)Files.Count;
-        public int? FolderCount => (int?)Folders.Count;
+        public int? FileCount => this.Files != null
+            ? this.Files.Count
+            : (int?)null;
+        public int? FolderCount => this.Folders != null
+            ? this.Folders.Count
+            : (int?)null;
 
         #endregion
 
@@ -41,56 +35,46 @@ namespace MG.SharePoint
             : this(CTX.SP1.Web.GetFolderByServerRelativeUrl(serverRelativeUrl))
         {
         }
-        public SPFolder(Microsoft.SharePoint.Client.Folder fol) : base(fol.ListItemAllFields)
+        public SPFolder(Folder fol) 
+            : base(fol.ListItemAllFields)
         {
-            CTX.Lae(fol, true, f => f.Name, f => f.UniqueId, f => f.ParentFolder.Name,
-                f => f.ServerRelativeUrl, f => f.TimeLastModified);
-
+            base.FormatObject(fol, null);
             _fol = fol;
         }
 
         #endregion
 
         #region Methods
-        public override object ShowOriginal() => _fol;
+        public override ClientObject ShowOriginal() => _fol;
 
         public override void Update() => _fol.Update();
 
         #endregion
 
         #region Enumerating Content
-        public FolderCollection GetFolders()
+        public SPFolderCollection GetFolders()
         {
             if (!_fol.Folders.AreItemsAvailable)
                 CTX.Lae(_fol.Folders, true, fols => fols.Include(
                     f => f.Name, f => f.UniqueId, f => f.ServerRelativeUrl));
-            return _fol.Folders;
+            this.Folders = (SPFolderCollection)_fol.Folders;
+            return this.Folders;
         }
 
-        public SPFolder[] LoadAllFolders()
-        {
-            var spFols = new SPFolder[_fol.Folders.Count];
-            for (int i = 0; i < _fol.Folders.Count; i++)
-            {
-                var fol = _fol.Folders[i];
-                spFols[i] = (SPFolder)fol;
-            }
-            return spFols;
-        }
-
-        public FileCollection GetFiles()
+        public SPFileCollection GetFiles()
         {
             if (!_fol.Files.AreItemsAvailable)
                 CTX.Lae(_fol.Files, true, fis => fis.Include(
                     f => f.Name, f => f.ServerRelativeUrl, f => f.UniqueId));
-            return _fol.Files;
+            this.Files = (SPFileCollection)_fol.Files;
+            return this.Files;
         }
 
         #endregion
 
         #region Operators
-        public static explicit operator SPFolder(Microsoft.SharePoint.Client.Folder fol) => new SPFolder(fol);
-        public static explicit operator Folder(SPFolder spFol) => (Microsoft.SharePoint.Client.Folder)spFol.ShowOriginal();
+        public static explicit operator SPFolder(Folder fol) => new SPFolder(fol);
+        public static explicit operator Folder(SPFolder spFol) => (Folder)spFol.ShowOriginal();
         public static explicit operator SPFolder(string relativeUrl)
         {
             if (relativeUrl.StartsWith(CTX.DestinationSite))

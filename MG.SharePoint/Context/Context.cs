@@ -51,9 +51,20 @@ namespace MG.SharePoint
                 var obj = cObjs[i];
                 if (obj != null)
                 {
-                    ctx.Load(obj, retrievals);
-                    if (andExecute)
-                        ctx.ExecuteQuery();
+                    try
+                    {
+                        ctx.Load(obj, retrievals);
+                        if (andExecute)
+                            ctx.ExecuteQuery();
+                    }
+                    catch (InvalidQueryExpressionException e)
+                    {
+                        if (e.Message.Contains("The query expression") && e.Message.Contains("is not supported"))
+                            return;
+
+                        else
+                            throw new AggregateException("An invalid query was attempted.", e);
+                    }
                 }
             }
         }

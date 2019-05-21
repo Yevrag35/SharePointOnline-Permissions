@@ -11,16 +11,6 @@ namespace MG.SharePoint
     {
         #region Private Properties/Fields
         private File _file;
-        //private bool? _hup;
-        //private string _srUrl;
-
-        #endregion
-
-        #region Public Properties/Fields
-        public override string Name => _file.Name;
-        public override object Id => _file.UniqueId;
-        public string ServerRelativeUrl { get; }
-        //public bool? HasUniquePermissions => _hup;
 
         #endregion
 
@@ -36,20 +26,14 @@ namespace MG.SharePoint
         internal SPFile(File file)
             : base(file.ListItemAllFields)
         {
-            CTX.Lae(file, true, f => f.Name,
-                f => f.UniqueId,
-                f => f.ServerRelativeUrl
-            );
-            ServerRelativeUrl = file.ServerRelativeUrl;
-            //_hup = file.ListItemAllFields.IsPropertyAvailable("HasUniqueRoleAssignments") ?
-            //    (bool?)file.ListItemAllFields.HasUniqueRoleAssignments : null;
+            base.FormatObject(file, null);
             _file = file;
         }
 
         #endregion
 
         #region Methods
-        public override object ShowOriginal() => _file;
+        public override ClientObject ShowOriginal() => _file;
 
         public override void Update() => _file.Update();
 
