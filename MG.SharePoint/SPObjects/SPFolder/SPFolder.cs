@@ -8,6 +8,8 @@ namespace MG.SharePoint
     {
         #region Private Fields
         private Folder _fol;
+        protected override string NameProperty => "Name";
+        protected override string IdProperty => "UniqueId";
 
         #endregion
 

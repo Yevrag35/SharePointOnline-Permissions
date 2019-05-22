@@ -1,90 +1,99 @@
 ﻿using Microsoft.SharePoint.Client;
+using Microsoft.SharePoint.Client.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
 
 namespace MG.SharePoint.PowerShell
 {
-    [Cmdlet(VerbsCommon.Get, "SPPermission")]
-    [CmdletBinding(PositionalBinding = false)]
-    [OutputType(typeof(SPPermission))]
+    [Cmdlet(VerbsCommon.Get, "SPPermission", ConfirmImpact = ConfirmImpact.None)]
+    //[OutputType(typeof(SPPermission))]
     public class GetSPPermission : BaseSPCmdlet
     {
-        #region ClientObject Pipe Parameters
-
-        [Parameter(Mandatory = false, DontShow = true, ValueFromPipeline = true)]
-        public Web Web { get; set; }
-
-        [Parameter(Mandatory = false, DontShow = true, ValueFromPipeline = true)]
-        public List List { get; set; }
-
-        [Parameter(Mandatory = false, DontShow = true, ValueFromPipeline = true)]
-        public Folder Folder { get; set; }
-
-        [Parameter(Mandatory = false, DontShow = true, ValueFromPipeline = true)]
-        public File File { get; set; }
-
-        [Parameter(Mandatory = false, DontShow = true, ValueFromPipeline = true)]
-        public ListItem ListItem { get; set; }
+        #region PARAMETERS
+        [Parameter(Mandatory = true, ValueFromPipeline = true)]
+        public SPSecurable InputObject { get; set; }
 
         #endregion
 
-        #region ISPPermissions Pipe Parameters
+        private List<SPSecurable> securables;
 
-        [Parameter(Mandatory = false, ValueFromPipeline = true)]
-        public ISPPermissions SPObject { get; set; }
-
-        #endregion
-
-        protected override void BeginProcessing() => base.BeginProcessing();
-
+        #region CMDLET PROCESSING
+        protected override void BeginProcessing()
+        {
+            base.BeginProcessing();
+            securables = new List<SPSecurable>();
+        }
         protected override void ProcessRecord()
         {
-            CheckParameters();
-            var perms = SPObject.GetPermissions();
-            WriteObject(perms, true);
+            securables.Add(this.InputObject);
         }
 
-        private protected void CheckParameters()
+        protected override void EndProcessing()
         {
-            if (!MyInvocation.BoundParameters.ContainsKey("SPObject"))
+            var allPerms = new List<SPPermission>();
+            for (int i = 1; i <= securables.Count; i++)
             {
-                var keys = MyInvocation.BoundParameters.Keys.Cast<string>().ToArray();
-                for (int i = 0; i < keys.Length; i++)
+                this.UpdateProgress(0, i);
+                var sec = securables[i - 1];
+                if (sec.CanSetPermissions)
                 {
-                    var key = keys[i];
-                    if (!CommonParameters.Contains(key) && !OptionalCommonParameters.Contains(key))
-                        SPObject = WrapObject(MyInvocation.BoundParameters[key]);
+                    SPPermissionCollection perms = this.InputObject.Permissions;
+                    if (this.InputObject.Permissions == null)
+                        perms = sec.GetPermissions();
+
+                    allPerms.AddRange(perms);
                 }
             }
-            if (SPObject == null)
-                throw new ArgumentException("You must specify an input object!");
+            this.UpdateProgress(0);
+            WriteObject(allPerms, true);
         }
 
-        private ISPPermissions WrapObject(object cliObj)
+        #endregion
+
+        #region METHODS
+        private const string COMPLETED = "Completed";
+        protected private const double HUNDRED = 100d;
+        protected private const MidpointRounding MIDPOINT = MidpointRounding.ToEven;
+        protected private const ProgressRecordType REC_TYPE_COMPLETED = ProgressRecordType.Completed;
+        protected private const int ROUND_DIGITS = 2;
+
+        protected string StatusFormat => "Fetching permissions from object {0}/{1}...";
+        protected string Activity => "Resolving Permissions";
+
+        protected private void UpdateProgress(int id, int on)
         {
-            Type ct = cliObj.GetType();
-            ISPPermissions outputObj = null;
-
-            switch (ct.Name)
-            {
-                case "Folder":
-                    outputObj = (SPFolder)(Folder)cliObj;
-                    break;
-                case "List":
-                    outputObj = (SPList)(List)cliObj;
-                    break;
-                case "Web":
-                    outputObj = (SPWeb)(Web)cliObj;
-                    break;
-                case "ListItem":
-                    outputObj = (SPListItem)(ListItem)cliObj;
-                    break;
-                case "File":
-                    outputObj = (SPFile)(File)cliObj;
-                    break;
-            }
-            return outputObj;
+            var pr = new ProgressRecord(id, this.Activity, string.Format(
+                this.StatusFormat, on, securables.Count)
+            );
+            this.WriteTheProgress(pr, on);
         }
+
+        protected private void UpdateProgressAndName(int id, int on, string name)
+        {
+            var pr = new ProgressRecord(id, this.Activity, string.Format(
+                this.StatusFormat, on, securables.Count, name)
+            );
+            this.WriteTheProgress(pr, on);
+        }
+
+        protected private void UpdateProgress(int id)
+        {
+            var pr = new ProgressRecord(id, this.Activity, COMPLETED)
+            {
+                RecordType = REC_TYPE_COMPLETED
+            };
+            WriteProgress(pr);
+        }
+
+        private void WriteTheProgress(ProgressRecord pr, int on)
+        {
+            double num = Math.Round(on / (double)securables.Count * HUNDRED, ROUND_DIGITS, MIDPOINT);
+            pr.PercentComplete = Convert.ToInt32(num);
+            WriteProgress(pr);
+        }
+
+        #endregion
     }
 }

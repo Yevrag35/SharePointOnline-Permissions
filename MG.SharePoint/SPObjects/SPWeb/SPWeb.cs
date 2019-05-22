@@ -18,6 +18,9 @@ namespace MG.SharePoint
             "UserCustomActions"
         };
 
+        protected override string NameProperty => "Title";
+        protected override string IdProperty => "Id";
+
         public SPWeb() : this(CTX.DestinationSite)
         {
         }

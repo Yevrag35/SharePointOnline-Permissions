@@ -15,15 +15,17 @@ namespace MG.SharePoint
 
         public object Id => _memLog;
         public string Name => _memTit;
+        public object ObjectId { get; }
+        public string ObjectName { get; }
         public string Permissions => string.Join(", ", _perms);
         public int PermissionCount => _perms.Length;
         public PrincipalType Type => _prinType;
         internal string LoginName { get; }
 
         #region Constructors
-        internal SPPermission(RoleAssignment ass)
+        internal SPPermission(SPSecurable securable, RoleAssignment ass)
         {
-            if (ass.IsPropertyReady(a => a.Member.Title))
+            if (!ass.IsPropertyReady(a => a.Member.Title))
             {
                 CTX.Lae(ass, true, a => a.Member.Title, a => a.Member.PrincipalType, 
                     a => a.Member.LoginName, a => a.Member.Id, a => a.RoleDefinitionBindings);
@@ -33,13 +35,17 @@ namespace MG.SharePoint
             _perms = ParseBindings(ass.RoleDefinitionBindings);
             _prinType = ass.Member.PrincipalType;
             this.LoginName = ass.Member.LoginName;
+            this.ObjectId = securable.Id;
+            this.ObjectName = securable.Name;
             _roleAss = ass;
         }
 
         #endregion
 
-        public static implicit operator SPPermission(RoleAssignment ass) =>
-            new SPPermission(ass);
+        //public static implicit operator SPPermission(RoleAssignment ass) =>
+        //    new SPPermission(ass);
+        public static SPPermission ResolvePermission(RoleAssignment ass, SPSecurable securable) =>
+            new SPPermission(securable, ass);
 
         public object Clone()
         {

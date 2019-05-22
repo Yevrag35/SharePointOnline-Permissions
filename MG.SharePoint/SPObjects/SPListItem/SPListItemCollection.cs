@@ -176,16 +176,13 @@ namespace MG.SharePoint
         #region Operators
         public static explicit operator SPListItemCollection(ListItemCollection listItemCol)
         {
-            CTX.Lae(listItemCol, true,
-                col => col.Include(
-                    l => l.DisplayName, l => l.Id,
-                    l => l.HasUniqueRoleAssignments
-                )
-            );
+            if (!listItemCol.AreItemsAvailable)
+                CTX.Lae(listItemCol);
+
             var spList = new SPListItemCollection(listItemCol.Count);
             for (int i = 0; i < listItemCol.Count; i++)
             {
-                var item = listItemCol[i];
+                ListItem item = listItemCol[i];
                 spList.Add((SPListItem)item);
             }
             return spList;

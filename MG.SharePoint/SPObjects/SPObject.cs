@@ -20,6 +20,9 @@ namespace MG.SharePoint
         #endregion
 
         protected internal PropertyInfo[] allPropInfo;
+        protected private MethodInfo ExpressionMethod = typeof(SPObject).GetMethod("GetPropertyExpressionsNoType", BindingFlags.NonPublic | BindingFlags.Instance);
+        protected abstract string NameProperty { get; }
+        protected abstract string IdProperty { get; }
 
         public abstract string Name { get; internal set; }
         public abstract object Id { get; internal set; }
@@ -48,10 +51,11 @@ namespace MG.SharePoint
             {
                 origProps = origType.GetProperties(
                     PUBINST).Where(
-                        x => !skipThese.Contains(x.Name) &&
-                        x.CanRead &&
+                        x => !skipThese.Contains(x.Name) && (
+                        includeThese.Contains(x.Name) ||
+                        (x.CanRead &&
                         (x.PropertyType.GetInterfaces().Contains(typeof(IConvertible)) ||
-                            x.PropertyType.IsValueType));
+                            x.PropertyType.IsValueType))));
             }
 
             allPropInfo = this.GetType().GetProperties(PUBINST).Where(x => x.CanWrite).ToArray();
@@ -111,7 +115,7 @@ namespace MG.SharePoint
             return exprs.ToArray();
         }
 
-        protected private Expression<Func<T, object>>[] GetPropertyExpressions<T>(params string[] propertyNamesToLoad) =>
+        protected private Expression<Func<T, object>>[] GetPropertyExpressionsNoType<T>(params string[] propertyNamesToLoad) =>
             this.GetPropertyExpressions<T>(typeof(T), propertyNamesToLoad);
 
         public abstract void LoadProperty(params string[] propertyNames);
@@ -177,9 +181,67 @@ namespace MG.SharePoint
 
         protected internal T Cast<T>(dynamic o) => (T)o;
 
+        private string GetPropertyName(string verify)
+        {
+            string retStr = null;
+            if (verify.Equals(NameProperty, StringComparison.CurrentCultureIgnoreCase))
+                retStr = "Name";
+
+            else if (verify.Equals(IdProperty, StringComparison.CurrentCultureIgnoreCase))
+                retStr = "Id";
+
+            else
+                retStr = verify;
+
+            return retStr;
+        }
+
+        protected internal void Load(Type originalType, ClientObject obj, params string[] propertyNames)
+        {
+            Type thisType = this.GetType();
+            var meth = thisType.GetMethod("GetPropertyExpressionsNoType", BindingFlags.Instance | BindingFlags.NonPublic);
+            var genMeth = meth.MakeGenericMethod(originalType);
+            var expressions = genMeth.Invoke(this, new object[1] { propertyNames });
+
+            var specLae = typeof(CTX).GetMethod("SpecialLae", BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(originalType);
+            specLae.Invoke(null, new object[3] { obj, true, expressions });
+
+            for (int i = 0; i < propertyNames.Length; i++)
+            {
+                var prop = propertyNames[i];
+                var propInfo = thisType.GetProperty(GetPropertyName(prop));
+                if (propInfo == null)
+                {
+                    if (allPropInfo == null)
+                        allPropInfo = thisType.GetProperties();
+
+                    for (int p = 0; p < allPropInfo.Length; p++)
+                    {
+                        var pi = allPropInfo[p];
+                        if (string.Equals(pi.Name, prop, StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            propInfo = pi;
+                            break;
+                        }
+                    }
+                    if (propInfo == null)
+                        throw new ArgumentException(prop + " was not recognized as a valid property name for this object!");
+                }
+                var thatObj = originalType.InvokeMember(propInfo.Name, GETPROP, null, obj, null);
+                if (thatObj is ClientObject && ToSPType(thatObj.GetType(), out Type newType))
+                {
+                    MethodInfo GenericCast = this.GetType().GetMethod(
+                        "Cast", NONPUBINST).MakeGenericMethod(newType);
+                    thatObj = GenericCast.Invoke(this, new object[1] { thatObj });
+                }
+                propInfo.SetValue(this, thatObj, NONPUBINST,
+                    null, null, CultureInfo.CurrentCulture);
+            }
+        }
+
         protected internal void Load<T>(T original, params string[] propertyNames) where T : ClientObject
         {
-            var expressions = GetPropertyExpressions<T>(propertyNames).ToArray();
+            var expressions = GetPropertyExpressionsNoType<T>(propertyNames).ToArray();
             CTX.Lae(original, true, expressions);
             var thisType = this.GetType();
             var thatType = typeof(T);

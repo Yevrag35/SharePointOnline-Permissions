@@ -14,6 +14,9 @@ namespace MG.SharePoint
             "AadObjectId", "Alerts", "UserId"
         };
 
+        protected override string NameProperty => "Title";
+        protected override string IdProperty => "Id";
+
         #region PROPERTIES
         public UserIdInfo AadObjectId { get; private set; }
         public AlertCollection Alerts { get; private set; }

@@ -70,13 +70,14 @@
     <None Include="BaseCmdlets\DynamicCmdlet.cs" />
     <None Include="BaseCmdlets\PropertyLoadingCmdlet.cs" />
     <Compile Include="GetSPList.cs" />
-    <Compile Include="RemoveSPPermission.cs" />
-    <Compile Include="ResetSPPermission.cs" />
+    <Compile Include="GetSPPermission.cs" />
+    <None Include="RemoveSPPermission.cs" />
+    <None Include="ResetSPPermission.cs" />
     <None Include="Context\OAuthSession.cs" />
     <None Include="Context\PSCtxHelper.cs" />
-    <Compile Include="AddSPPermission.cs" />
+    <None Include="AddSPPermission.cs" />
     <Compile Include="BaseCmdlets\BaseSPCmdlet.cs" />
-    <Compile Include="GetSPPermission.cs" />
+    <None Include="GetSPPermission.cs.old" />
     <None Include="GetSPFolder.cs" />
     <Compile Include="GetSPWeb.cs" />
     <Compile Include="LoginSharePoint.cs" />
@@ -86,8 +87,9 @@
     </Content>
     <None Include="GenerateManifest.ps1" />
     <None Include="TypeFormats\MG.SharePoint.SPFolder.ps1xml" />
+    <None Include="TypeFormats\MG.SharePoint.SPListItem.ps1xml" />
     <None Include="TypeFormats\MG.SharePoint.SPPermission.ps1xml" />
-    <None Include="TypeFormats\MG.SharePoint.SPWeb.ps1xml.old" />
+    <None Include="TypeFormats\MG.SharePoint.SPWeb.ps1xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assemblies\" />

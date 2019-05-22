@@ -11,6 +11,9 @@ namespace MG.SharePoint
         private List _list;
         private static readonly string[] SkipThese = new string[1] { "SchemaXml" };
 
+        protected override string NameProperty => "Title";
+        protected override string IdProperty => "Id";
+
         #region CONSTRUCTORS
         public SPList(string listName)
             : this(FindRealListByName(listName))

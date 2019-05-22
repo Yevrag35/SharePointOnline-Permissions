@@ -16,6 +16,9 @@ namespace MG.SharePoint
             "Author", "ModifiedBy", "ServerRelativePath", "Versions", "UniqueId"
         };
 
+        protected override string NameProperty => "Name";
+        protected override string IdProperty => "UniqueId";
+
         #endregion
 
         #region Constructors

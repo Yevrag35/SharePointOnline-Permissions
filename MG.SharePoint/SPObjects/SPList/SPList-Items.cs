@@ -26,7 +26,7 @@ namespace MG.SharePoint
 
         public void GetItems(CamlQuery query, params string[] listItemProperties)
         {
-            var expressions = GetPropertyExpressions<ListItem>(listItemProperties);
+            var expressions = GetPropertyExpressionsNoType<ListItem>(listItemProperties);
             ListItemCollection col = _list.GetItems(query);
             CTX.Lae(col, true, c => c.Include(expressions));
             CTX.Lae(_list, true, l => l.ItemCount);

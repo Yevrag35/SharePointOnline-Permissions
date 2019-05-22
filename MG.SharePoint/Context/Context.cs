@@ -32,6 +32,12 @@ namespace MG.SharePoint
             where T : ClientObject =>
             Lae(new T[1] { obj }, andExecute, retrievals);
 
+        internal static void SpecialLae<T>(T obj, bool andExecute, object retrievals) where T : ClientObject
+        {
+            var rets = (Expression<Func<T, object>>[])retrievals;
+            Lae(new T[1] { obj }, SP1, andExecute, rets);
+        }
+
         public static void Lae<T>(IEnumerable<T> objs, bool andExecute = true, params Expression<Func<T, object>>[] retrievals)
             where T : ClientObject =>
             Lae(objs, SP1, andExecute, retrievals);

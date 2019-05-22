@@ -68,14 +68,19 @@ namespace MG.SharePoint
 
         #region GET PERMISSIONS
 
-        //public bool UserHasPermissions(string userName, )
-
         public SPPermissionCollection GetPermissions()
         {
             if (!SecObj.IsPropertyReady(x => x.RoleAssignments))
                 CTX.Lae(SecObj, true, s => s.RoleAssignments);
 
-            Permissions = (SPPermissionCollection)SecObj.RoleAssignments;
+            Type secType = SecObj.GetType();
+            var genMeth = ExpressionMethod.MakeGenericMethod(secType);
+            var expressions = genMeth.Invoke(this, new object[1] { new string[2] { NameProperty, IdProperty }});
+
+            var specLae = typeof(CTX).GetMethod("SpecialLae", BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(SecObj.GetType());
+            specLae.Invoke(null, new object[3] { SecObj, true, expressions });
+
+            Permissions = SPPermissionCollection.ResolvePermissions(this);
             return Permissions;
         }
 
@@ -194,7 +199,7 @@ namespace MG.SharePoint
                     var r = list[ra];
                     CTX.Lae(r, true, ras => ras.Member.Id, ras => ras.Member.Title);
                 }
-                Permissions.AddRange(list);
+                Permissions.AddRange(this, list);
             }
             else
                 this.GetPermissions();

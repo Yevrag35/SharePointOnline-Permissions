@@ -9,6 +9,8 @@ namespace MG.SharePoint
     public class SPGroup : SPObject
     {
         private Group _group;
+        protected override string NameProperty => "Title";
+        protected override string IdProperty => "Id";
 
         #region PROPERTIES
         public bool AllowMembersEditMembership { get; private set; }
