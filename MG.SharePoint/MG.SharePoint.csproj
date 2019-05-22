@@ -154,7 +154,7 @@
     <Compile Include="SPObjects\SPUser\SPUserCollection.cs" />
     <Compile Include="SPObjects\SPUser\SPUser.cs" />
     <Compile Include="SPObjects\SPWeb\SPWebCollection.cs" />
-    <Compile Include="SPObjects\SPWeb\SPWeb-List.cs" />
+    <None Include="SPObjects\SPWeb\SPWeb-List.cs" />
     <Compile Include="SPObjects\SPWeb\SPWeb-OtherProps.cs" />
     <None Include="SPObjects\SPWeb\SPWeb-Permissions.cs" />
     <Compile Include="SPObjects\SPWeb\SPWeb.cs" />

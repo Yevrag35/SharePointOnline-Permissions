@@ -36,6 +36,9 @@ namespace MG.SharePoint
 
             HasUniquePermissions = !SecObj.IsPropertyAvailable("HasUniqueRoleAssignments") ?
                 null : (bool?)SecObj.HasUniqueRoleAssignments;
+
+            if (!this.HasUniquePermissions.HasValue)
+                _pol = false;
         }
 
         #endregion
@@ -43,6 +46,23 @@ namespace MG.SharePoint
         #region ABSTRACT METHODS
 
         public abstract void Update();
+
+        #endregion
+
+        #region CHECK PERMISSIONS
+        //public SPPermissionCollection GetUserPermissions(string userId)
+        //{
+        //    if (this.CanSetPermissions)
+        //    {
+        //        var user = new SPUser(userId, true);
+        //        if (this.Permissions == null)
+        //            this.GetPermissions();
+
+        //        if (this.Permissions)
+        //    }
+        //    else
+        //        return null;
+        //}
 
         #endregion
 

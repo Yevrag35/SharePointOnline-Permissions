@@ -1,4 +1,5 @@
 ﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
+using Microsoft.SharePoint.Client;
 using System;
 using System.Management.Automation;
 
@@ -6,7 +7,6 @@ namespace MG.SharePoint.PowerShell
 {
     [Cmdlet(VerbsCommunications.Connect, "ToSharePoint", DefaultParameterSetName = "ByAzureLogin")]
     [Alias("Login-SharePoint", "loginsp")]
-    [OutputType(typeof(bool))]
     [CmdletBinding(PositionalBinding = false)]
     public class LoginSharePoint : PSCmdlet
     {
@@ -25,21 +25,27 @@ namespace MG.SharePoint.PowerShell
         [Parameter(Mandatory = true, ParameterSetName = "ByExplicitLogin")]
         public PSCredential Credential { get; set; }
 
+        [Parameter(Mandatory = false)]
+        public SwitchParameter PassThru { get; set; }
+
         protected override void ProcessRecord()
         {
             base.ProcessRecord();
-
+            bool result = false;
             switch (ParameterSetName)
             {
                 case "ByAzureLogin":
-                    bool res1 = CTX.Login(TenantName, DestinationSite, PromptBehavior);
-                    WriteObject(res1);
+                    result = CTX.Login(TenantName, DestinationSite, PromptBehavior);
                     break;
                 default:
-                    bool res2 = CTX.Login(TenantName, DestinationSite, Credential);
-                    WriteObject(res2);
+                    result = CTX.Login(TenantName, DestinationSite, Credential);
                     break;
             }
+            if (!result)
+                throw new Exception("Something went trying to authenticate!");
+
+            else if (PassThru)
+                WriteObject((SPWeb)CTX.SP1.Web);
         }
     }
 }

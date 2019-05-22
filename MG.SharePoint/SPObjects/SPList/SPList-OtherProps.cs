@@ -1,6 +1,7 @@
 ﻿using Microsoft.SharePoint.Client;
 using Microsoft.SharePoint.Client.Workflow;
 using System;
+using System.Linq;
 
 namespace MG.SharePoint
 {
@@ -104,10 +105,14 @@ namespace MG.SharePoint
 
         public override void LoadProperty(params string[] propertyNames)
         {
-            if (propertyNames == null)
-                return;
-
-            base.Load(_list, propertyNames);
+            if (propertyNames.Length > 0)
+            {
+                if (propertyNames.Any(x => x.Equals("Items", StringComparison.CurrentCultureIgnoreCase)))
+                {
+                    this.GetItems();
+                }
+                base.Load(_list, propertyNames.Where(x => !x.Equals("Items", StringComparison.CurrentCultureIgnoreCase)).ToArray());
+            }
         }
     }
 }

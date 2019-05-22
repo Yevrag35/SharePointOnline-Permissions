@@ -1,5 +1,6 @@
 ﻿using Microsoft.SharePoint.Client;
 using System;
+using System.Linq;
 
 namespace MG.SharePoint
 {
@@ -7,8 +8,8 @@ namespace MG.SharePoint
     {
         #region PROPERTIES
 
-        public User Author { get; internal set; }
-        public User CheckedOutByUser { get; internal set; }
+        public SPUser Author { get; internal set; }
+        public SPUser CheckedOutByUser { get; internal set; }
         public string CheckInComment { get; internal set; }
         public CheckOutType? CheckOutType { get; internal set; }
         public string ContentTag { get; internal set; }
@@ -24,10 +25,10 @@ namespace MG.SharePoint
         public string LinkingUri { get; internal set; }
         public Guid ListId { get; internal set; }
         public SPListItem ListItemAllFields { get; internal set; }
-        public User LockedByUser { get; internal set; }
+        public SPUser LockedByUser { get; internal set; }
         public int? MajorVersion { get; internal set; }
         public int? MinorVersion { get; internal set; }
-        public User ModifiedBy { get; internal set; }
+        public SPUser ModifiedBy { get; internal set; }
         public override string Name { get; internal set; }
         //public string ObjectVersion { get; internal set; }
         public ListPageRenderType? PageRenderType { get; internal set; }
@@ -49,10 +50,13 @@ namespace MG.SharePoint
         #region Load Property Method
         public override void LoadProperty(params string[] propertyNames)
         {
-            if (propertyNames == null)
-                return;
+            if (propertyNames.Length > 0)
+            {
+                if (propertyNames.Contains("Permissions"))
+                    base.GetPermissions();
 
-            Load(_file, propertyNames);
+                base.Load(_file, propertyNames.Where(x => !x.Equals("Permissions", StringComparison.CurrentCultureIgnoreCase)).ToArray());
+            }
         }
 
         #endregion

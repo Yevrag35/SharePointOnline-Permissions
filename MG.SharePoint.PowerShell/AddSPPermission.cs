@@ -39,6 +39,9 @@ namespace MG.SharePoint.PowerShell
         [Parameter(Mandatory = true, Position = 0, ParameterSetName = "ByPermissionHashtable")]
         public IDictionary ApplyPermissionSet { get; set; }
 
+        [Parameter(Mandatory = false)]
+        public SwitchParameter Recurse { get; set; }
+
         private bool _force;
         [Parameter(Mandatory = false)]
         public SwitchParameter Force
@@ -76,13 +79,13 @@ namespace MG.SharePoint.PowerShell
                 switch (ParameterSetName)
                 {
                     case "ByPermissionHashtable":
-                        SPObject.AddPermission(ApplyPermissionSet, true);
+                        SPObject.AddPermission(ApplyPermissionSet, true, Recurse.ToBool());
                         break;
                     default:
                         // Get the chosen role
                         RoleDefinition _role = CTX.AllRoles.Single(x => x.Name.Equals((string)rtDict[pName].Value, StringComparison.InvariantCultureIgnoreCase));
 
-                        SPObject.AddPermission(SPPrincipal, _role, true);
+                        SPObject.AddPermission(SPPrincipal, _role, true, Recurse.ToBool());
                         break;
                 }
             }

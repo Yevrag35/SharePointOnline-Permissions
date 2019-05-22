@@ -11,7 +11,7 @@ namespace MG.SharePoint
     {
         #region PROPERTIES
         public AttachmentCollection AttachmentFiles { get; internal set; }
-        public string Client_Title { get; internal set; }
+        //public string Client_Title { get; internal set; }
         public bool? CommentsDisabled { get; internal set; }
         public CommentsDisabledScope? CommentsDisabledScope { get; internal set; }
         public ListItemComplianceInfo ComplianceInfo { get; internal set; }
@@ -32,8 +32,7 @@ namespace MG.SharePoint
         public override string Name { get; internal set; }
         public SPList ParentList { get; internal set; }
         public PropertyValues Properties { get; internal set; }
-        public string ServerRedirectedEmbedUri { get; internal set; }
-        public string ServerRedirectedEmbedUrl { get; internal set; }
+        //public string ServerRedirectedEmbedUri { get; internal set; }
         public ListItemVersionCollection Versions { get; internal set; }
 
         #endregion

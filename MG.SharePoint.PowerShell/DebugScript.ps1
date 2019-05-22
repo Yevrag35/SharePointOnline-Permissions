@@ -12,5 +12,4 @@ $curDir = Split-Path -Parent $MyInvocation.MyCommand.Definition;
 $psd1 = Get-ChildItem $curDir *.psd1 -File | Convert-Path;
 Import-Module $psd1 -ea Stop;
 
-Login-SharePoint -TenantName $TenantName -DestinationSite $DestinationSite -PromptBehavior Auto;
-$pt = "Documents/PermTest";
+$web = Login-SharePoint @PSBoundParameters -PromptBehavior Auto -PassThru;

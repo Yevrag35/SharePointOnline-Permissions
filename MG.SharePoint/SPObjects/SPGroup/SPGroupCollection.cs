@@ -18,6 +18,33 @@ namespace MG.SharePoint
             }
         }
 
+        public bool ContainsGroupByLoginName(string loginName)
+        {
+            bool result = false;
+            for (int i = 0; i < _list.Count; i++)
+            {
+                if (_list[i].LoginName.Equals(loginName))
+                {
+                    result = true;
+                    break;
+                }
+            }
+            return result;
+        }
+        public bool ContainsGroupByName(string name)
+        {
+            bool result = false;
+            for (int i = 0; i < _list.Count; i++)
+            {
+                if (_list[i].Name.Equals(name))
+                {
+                    result = true;
+                    break;
+                }
+            }
+            return result;
+        }
+
         public static explicit operator SPGroupCollection(GroupCollection groupCol)
         {
             if (!groupCol.AreItemsAvailable)

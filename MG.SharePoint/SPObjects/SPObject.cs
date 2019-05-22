@@ -59,6 +59,7 @@ namespace MG.SharePoint
             var propList = origProps.Select(x => x.Name).ToList();
 
             //propList.Add("Title");
+            propList.Remove("Client_Title");
             propList.Remove("ObjectVersion");
             propList.Remove("ServerObjectIsNull");
             var expressions = this.GetPropertyExpressions<T>(origType, propList.ToArray());
@@ -67,7 +68,7 @@ namespace MG.SharePoint
                 CTX.SP1.Load(obj, expressions);
             }
             catch (InvalidQueryExpressionException) { }
-            
+
             CTX.SP1.ExecuteQuery();
 
             for (int i = 0; i < allPropInfo.Length; i++)

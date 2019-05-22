@@ -18,6 +18,7 @@ namespace MG.SharePoint
         public UserIdInfo AadObjectId { get; private set; }
         public AlertCollection Alerts { get; private set; }
         public string Email { get; private set; }
+        public SPGroupCollection Groups { get; private set; }
         public override object Id { get; internal set; }
         public bool IsEmailAuthenticationGuestUser { get; private set; }
         public bool IsHiddenInUI { get; private set; }
@@ -31,13 +32,15 @@ namespace MG.SharePoint
         #endregion
 
         #region CONSTRUCTORS
-        public SPUser(string userId)
-            : this(CTX.SP1.Web.EnsureUser(userId)) { }
+        public SPUser(string userId, bool getGroups = false)
+            : this(CTX.SP1.Web.EnsureUser(userId), getGroups) { }
 
-        internal SPUser(User user)
+        internal SPUser(User user, bool getGroups = false)
         {
             base.FormatObject(user, null, IncludeThese);
             this.Name = user.Title;
+            if (getGroups)
+                base.Load(user, "Groups");
 
             _user = user;
         }

@@ -23,7 +23,6 @@ namespace MG.SharePoint
         public StorageMetrics StorageMetrics { get; internal set; }
         public DateTime TimeCreated { get; internal set; }
         public IList<ContentTypeId> UniqueContentTypeOrder { get; internal set; }
-        public Guid UniqueId { get; internal set; }
         public string WelcomePage { get; internal set; }
 
         #endregion
@@ -31,10 +30,36 @@ namespace MG.SharePoint
         #region Load Property Method
         public override void LoadProperty(params string[] propertyNames)
         {
-            if (propertyNames == null)
-                return;
+            if (propertyNames.Length > 0)
+            {
+                var list = propertyNames.ToList();
+                for (int i = list.Count - 1; i >= 0; i--)
+                {
+                    string name = list[i];
+                    if (name.Equals("Folders", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        this.GetFolders();
+                        list.Remove(name);
+                    }
+                    else if (name.Equals("Files", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        this.GetFiles();
+                        list.Remove(name);
+                    }
+                    else if (name.Equals("Permissions", StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        if (this.CanSetPermissions)
+                            this.GetPermissions();
 
-            Load(_fol, propertyNames);
+                        list.Remove(name);
+                    }
+                    else if (name.Equals("ParentFolder", StringComparison.CurrentCultureIgnoreCase) && this.ServerRelativeUrl.Equals("/"))
+                    {
+                        list.Remove(name);
+                    }
+                }
+                base.Load(_fol, list.ToArray());
+            }
         }
 
         #endregion

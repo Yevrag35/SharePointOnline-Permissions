@@ -12,7 +12,7 @@ namespace MG.SharePoint
     {
         public void GetItems(params string[] listItemProperties)
         {
-            GetItems(100, listItemProperties);
+            this.GetItems(100, listItemProperties);
         }
 
         public void GetItems(int rowLimit, params string[] listItemProperties)
@@ -21,7 +21,7 @@ namespace MG.SharePoint
             {
                 ViewXml = string.Format("<View><RowLimit>{0}</RowLimit></View>", Convert.ToString(rowLimit))
             };
-            GetItems(query, listItemProperties);
+            this.GetItems(query, listItemProperties);
         }
 
         public void GetItems(CamlQuery query, params string[] listItemProperties)
@@ -30,8 +30,8 @@ namespace MG.SharePoint
             ListItemCollection col = _list.GetItems(query);
             CTX.Lae(col, true, c => c.Include(expressions));
             CTX.Lae(_list, true, l => l.ItemCount);
-            Items = (SPListItemCollection)col;
-            ItemCount = _list.ItemCount;
+            this.Items = (SPListItemCollection)col;
+            this.ItemCount = _list.ItemCount;
         }
     }
 }

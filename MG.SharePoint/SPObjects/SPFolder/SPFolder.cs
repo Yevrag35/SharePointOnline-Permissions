@@ -38,7 +38,8 @@ namespace MG.SharePoint
         public SPFolder(Folder fol) 
             : base(fol.ListItemAllFields)
         {
-            base.FormatObject(fol, null);
+            base.FormatObject(fol, null, "UniqueId");
+            this.Id = fol.UniqueId;
             _fol = fol;
         }
 

@@ -36,10 +36,6 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MG.SharePoint, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Assemblies\MG.SharePoint.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory">
       <HintPath>Assemblies\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
     </Reference>
@@ -54,11 +50,11 @@
     </Reference>
     <Reference Include="Microsoft.SharePoint.Client, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Assemblies\Microsoft.SharePoint.Client.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Repos\MG.SharePoint\MG.SharePoint.PowerShell\Assemblies\Microsoft.SharePoint.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.SharePoint.Client.Runtime, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>Assemblies\Microsoft.SharePoint.Client.Runtime.dll</HintPath>
+      <HintPath>..\..\..\..\..\..\Repos\MG.SharePoint\MG.SharePoint.PowerShell\Assemblies\Microsoft.SharePoint.Client.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -71,8 +67,9 @@
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BaseCmdlets\DynamicCmdlet.cs" />
-    <Compile Include="BaseCmdlets\PropertyLoadingCmdlet.cs" />
+    <None Include="BaseCmdlets\DynamicCmdlet.cs" />
+    <None Include="BaseCmdlets\PropertyLoadingCmdlet.cs" />
+    <Compile Include="GetSPList.cs" />
     <Compile Include="RemoveSPPermission.cs" />
     <Compile Include="ResetSPPermission.cs" />
     <None Include="Context\OAuthSession.cs" />
@@ -80,7 +77,7 @@
     <Compile Include="AddSPPermission.cs" />
     <Compile Include="BaseCmdlets\BaseSPCmdlet.cs" />
     <Compile Include="GetSPPermission.cs" />
-    <Compile Include="GetSPFolder.cs" />
+    <None Include="GetSPFolder.cs" />
     <Compile Include="GetSPWeb.cs" />
     <Compile Include="LoginSharePoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -90,10 +87,16 @@
     <None Include="GenerateManifest.ps1" />
     <None Include="TypeFormats\MG.SharePoint.SPFolder.ps1xml" />
     <None Include="TypeFormats\MG.SharePoint.SPPermission.ps1xml" />
-    <None Include="TypeFormats\MG.SharePoint.SPWeb.ps1xml" />
+    <None Include="TypeFormats\MG.SharePoint.SPWeb.ps1xml.old" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assemblies\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MG.SharePoint\MG.SharePoint.csproj">
+      <Project>{3ef21be1-95cf-4ed3-b1b5-0bac392f6795}</Project>
+      <Name>MG.SharePoint</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

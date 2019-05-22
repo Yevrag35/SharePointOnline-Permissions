@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Configuration>
     <ViewDefinitions>
         <View>
@@ -12,30 +12,57 @@
                         <ListItems>
                             <ListItem>
 								<PropertyName>Alerts</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.Alerts -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>AllowAutomaticASPXPageIndexing</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.AllowAutomaticASPXPageIndexing -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>AllowCreateDeclarativeWorkflowForCurrentUser</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.AllowCreateDeclarativeWorkflowForCurrentUser -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>AllowDesignerForCurrentUser</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.AllowDesignerForCurrentUser -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>AllowMasterPageEditingForCurrentUser</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.AllowMasterPageEditingForCurrentUser -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>AllowRevertFromTemplateForCurrentUser</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.AllowRevertFromTemplateForCurrentUser -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>AllowRssFeeds</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.AllowRssFeeds -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>AllowSaveDeclarativeWorkflowAsTemplateForCurrentUser</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.AllowSaveDeclarativeWorkflowAsTemplateForCurrentUser -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>AllowSavePublishDeclarativeWorkflowForCurrentUser</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.AllowSavePublishDeclarativeWorkflowForCurrentUser -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>AllProperties</PropertyName>
@@ -45,9 +72,15 @@
 							</ListItem>
 							<ListItem>
 								<PropertyName>AlternateCssUrl</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.AlternateCssUrl -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>AppInstanceId</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.AppInstanceId -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>AppTiles</PropertyName>
@@ -57,18 +90,27 @@
 							</ListItem>
 							<ListItem>
 								<PropertyName>AssociatedMemberGroup</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.AssociatedMemberGroup -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>AssociatedOwnerGroup</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.AssociatedOwnerGroup -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>AssociatedVisitorGroup</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.AssociatedVisitorGroup -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>Author</PropertyName>
-                                <ItemSelectionCondition>
-                                    <ScriptBlock>$_.Author -ne $null</ScriptBlock>
-                                </ItemSelectionCondition>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.Author -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>AvailableContentTypes</PropertyName>
@@ -84,12 +126,21 @@
 							</ListItem>
 							<ListItem>
 								<PropertyName>CommentsOnSitePagesDisabled</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.CommentsOnSitePagesDisabled -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>Configuration</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.Configuration -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>ContainsConfidentialInfo</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.ContainsConfidentialInfo -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>ContentTypes</PropertyName>
@@ -108,9 +159,15 @@
 							</ListItem>
 							<ListItem>
 								<PropertyName>CurrentUser</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.CurrentUser -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>CustomMasterUrl</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.CustomMasterUrl -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>DataLeakagePreventionStatusInfo</PropertyName>
@@ -120,6 +177,9 @@
 							</ListItem>
 							<ListItem>
 								<PropertyName>Description</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.Description -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>DescriptionResource</PropertyName>
@@ -129,18 +189,33 @@
 							</ListItem>
 							<ListItem>
 								<PropertyName>DesignerDownloadUrlForCurrentUser</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.DesignerDownloadUrlForCurrentUser -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>DesignPackageId</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.DesignPackageId -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>DisableAppViews</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.DisableAppViews -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>DisableFlows</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.DisableFlows -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>DocumentLibraryCalloutOfficeWebAppPreviewersDisabled</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.DocumentLibraryCalloutOfficeWebAppPreviewersDisabled -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>EffectiveBasePermissions</PropertyName>
@@ -150,6 +225,9 @@
 							</ListItem>
 							<ListItem>
 								<PropertyName>EnableMinimalDownload</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.EnableMinimalDownload -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>EventReceivers</PropertyName>
@@ -159,6 +237,9 @@
 							</ListItem>
 							<ListItem>
 								<PropertyName>ExcludeFromOfflineClient</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.ExcludeFromOfflineClient -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>Features</PropertyName>
@@ -180,30 +261,51 @@
 							</ListItem>
 							<ListItem>
 								<PropertyName>FooterEnabled</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.FooterEnabled -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>HasUniquePermissions</PropertyName>
 							</ListItem>
 							<ListItem>
 								<PropertyName>HeaderEmphasis</PropertyName>
-                            </ListItem>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.HeaderEmphasis -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
+							</ListItem>
 							<ListItem>
 								<PropertyName>HorizontalQuickLaunch</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.HorizontalQuickLaunch -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>Id</PropertyName>
 							</ListItem>
 							<ListItem>
 								<PropertyName>IsMultilingual</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.IsMultilingual -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>Language</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.Language -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>LastItemModifiedDate</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.LastItemModifiedDate -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>LastItemUserModifiedDate</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.LastItemUserModifiedDate -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>Lists</PropertyName>
@@ -219,27 +321,48 @@
 							</ListItem>
 							<ListItem>
 								<PropertyName>MasterUrl</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.MasterUrl -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>MegaMenuEnabled</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.MegaMenuEnabled -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>MembersCanShare</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.MembersCanShare -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>Name</PropertyName>
 							</ListItem>
 							<ListItem>
 								<PropertyName>Navigation</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.Navigation -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>NoCrawl</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.NoCrawl -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>NotificationsInOneDriveForBusinessEnabled</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.NotificationsInOneDriveForBusinessEnabled -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>NotificationsInSharePointEnabled</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.NotificationsInSharePointEnabled -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>ObjectCacheEnabled</PropertyName>
@@ -249,6 +372,9 @@
 							</ListItem>
 							<ListItem>
 								<PropertyName>OverwriteTranslationsOnChange</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.OverwriteTranslationsOnChange -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>ParentWeb</PropertyName>
@@ -264,6 +390,9 @@
 							</ListItem>
 							<ListItem>
 								<PropertyName>PreviewFeaturesEnabled</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.PreviewFeaturesEnabled -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>PushNotificationSubscribers</PropertyName>
@@ -273,6 +402,9 @@
 							</ListItem>
 							<ListItem>
 								<PropertyName>QuickLaunchEnabled</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.QuickLaunchEnabled -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>RecycleBin</PropertyName>
@@ -282,18 +414,33 @@
 							</ListItem>
 							<ListItem>
 								<PropertyName>RecycleBinEnabled</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.RecycleBinEnabled -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>RegionalSettings</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.RegionalSettings -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>RequestAccessEmail</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.RequestAccessEmail -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>ResourcePath</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.ResourcePath -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>RoleDefinitions</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.RoleDefinitions -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>RootFolder</PropertyName>
@@ -303,15 +450,24 @@
 							</ListItem>
 							<ListItem>
 								<PropertyName>SaveSiteAsTemplateEnabled</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.SaveSiteAsTemplateEnabled -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>ServerRelativePath</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.ServerRelativePath -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>ServerRelativeUrl</PropertyName>
 							</ListItem>
 							<ListItem>
 								<PropertyName>ShowUrlStructureForCurrentUser</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.ShowUrlStructureForCurrentUser -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>SiteCollectionAppCatalog</PropertyName>
@@ -321,12 +477,21 @@
 							</ListItem>
 							<ListItem>
 								<PropertyName>SiteGroups</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.SiteGroups -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>SiteLogoDescription</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.SiteLogoDescription -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>SiteLogoUrl</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.SiteLogoUrl -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>SiteUserInfoList</PropertyName>
@@ -342,60 +507,111 @@
 							</ListItem>
 							<ListItem>
 								<PropertyName>SupportedUILanguageIds</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.SupportedUILanguageIds -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>SyndicationEnabled</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.SyndicationEnabled -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>TenantAppCatalog</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.TenantAppCatalog -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>TenantTagPolicyEnabled</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.TenantTagPolicyEnabled -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>ThemedCssFolderUrl</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.ThemedCssFolderUrl -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>ThemeInfo</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.ThemeInfo -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>ThirdPartyMdmEnabled</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.ThirdPartyMdmEnabled -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>TitleResource</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.TitleResource -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>TreeViewEnabled</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.TreeViewEnabled -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>UIVersion</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.UIVersion -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>UIVersionConfigurationEnabled</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.UIVersionConfigurationEnabled -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>Url</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.Url -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>UserCustomActions</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.UserCustomActions -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>Webs</PropertyName>
-                                <ItemSelectionCondition>
+								<ItemSelectionCondition>
 									<ScriptBlock>$_.Webs -ne $null</ScriptBlock>
 								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>WebTemplate</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.WebTemplate -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>WelcomePage</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.WelcomePage -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>WorkflowAssociations</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.WorkflowAssociations -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>WorkflowTemplates</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.WorkflowTemplates -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
                         </ListItems>
                     </ListEntry>

@@ -11,6 +11,10 @@ namespace MG.SharePoint
     {
         #region Private Properties/Fields
         private File _file;
+        private static readonly string[] IncludeThese = new string[]
+        {
+            "Author", "ModifiedBy", "ServerRelativePath", "Versions", "UniqueId"
+        };
 
         #endregion
 
@@ -26,7 +30,8 @@ namespace MG.SharePoint
         internal SPFile(File file)
             : base(file.ListItemAllFields)
         {
-            base.FormatObject(file, null);
+            base.FormatObject(file, null, IncludeThese);
+            this.Id = file.UniqueId;
             _file = file;
         }
 

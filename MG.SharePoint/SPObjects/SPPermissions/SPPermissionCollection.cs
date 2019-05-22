@@ -1,4 +1,5 @@
 ﻿using Microsoft.SharePoint.Client;
+using Microsoft.SharePoint.Client.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -110,6 +111,34 @@ namespace MG.SharePoint
 
         public void RemoveAll(Predicate<SPPermission> match) =>
             _list.RemoveAll(match);
+
+        #endregion
+
+        #region CUSTOM METHODS
+        public bool ContainsPrincipal(User user, out SPPermissionCollection permissionGroups) =>
+            this.ContainsPrincipal((SPUser)user, out permissionGroups);
+
+        public bool ContainsPrincipal(SPUser user, out SPPermissionCollection permissionGroups)
+        {
+            bool result = false;
+            if (user.Groups == null)
+                user.LoadProperty("Groups");
+
+            var roleDefs = new SPPermissionCollection();
+            for (int i = 0; i < _list.Count; i++)
+            {
+                var spp = _list[i];
+                if ((spp.Type == PrincipalType.User && spp.LoginName.Equals(user.LoginName)) ||
+                    (spp.Type == PrincipalType.SecurityGroup || spp.Type == PrincipalType.SharePointGroup &&
+                    user.Groups.ContainsGroupByLoginName(spp.LoginName)))
+                {
+                    result = true;
+                    roleDefs.Add(spp);
+                }
+            }
+            permissionGroups = roleDefs;
+            return result;
+        }
 
         #endregion
 

@@ -24,6 +24,44 @@
     $outObj | Select-Object ReturnType, Name, Parameters | Sort-Object Name | Out-GridView
 }
 
+Function New-SPExpression()
+{
+    [CmdletBinding()]
+    [alias("newex")]
+    param
+    (
+        [parameter(Mandatory=$true, Position=0)]
+        [string[]] $PropertyName,
+
+        [parameter(Mandatory=$true, Position=1)]
+        [type] $Type
+    )
+    Begin
+    {
+        $parameterExprType = [System.Linq.Expressions.ParameterExpression].MakeArrayType()
+        $lambdaMethod = [System.Linq.Expressions.Expression].GetMethods() | ? { $_.Name -eq "Lambda" -and $_.IsGenericMethod -and $_.GetParameters().Length -eq 2 -and $_.GetParameters()[1].ParameterType -eq $parameterExprType }
+        $lambdaGeneric = Invoke-Expression "`$lambdaMethod.MakeGenericMethod([System.Func``2[$($Type.FullName),System.Object]])";
+        $list = Invoke-Expression "New-Object 'System.Collections.Generic.List[System.Linq.Expressions.Expression[System.Func``2[$($Type.FullName),System.Object]]]' $($PropertyName.Length)"
+    }
+    Process
+    {
+        for ($i = 0; $i -lt $PropertyName.Length; $i++)
+        {
+            $name = $PropertyName[$i]
+            $param1 = [System.Linq.Expressions.Expression]::Parameter($Type, "p")
+            $name1 = [System.Linq.Expressions.Expression]::Property($param1, $name)
+            $body1 = [System.Linq.Expressions.Expression]::Convert($name1, $([object]))
+            $list.Add($lambdaGeneric.Invoke($null, [object[]]@($body1, [System.Linq.Expressions.ParameterExpression[]]@($param1))))
+        }
+    }
+    End
+    {
+        $out = Invoke-Expression "New-Object 'System.Linq.Expressions.Expression[System.Func``2[$($Type.FullName),System.Object]][]' $($list.Count)"
+        $list.CopyTo($out, 0);
+        Write-Output -InputObject $out -NoEnumerate;
+    }
+}
+
 Function Get-TypeProperties()
 {
 	[CmdletBinding()]
@@ -137,4 +175,4 @@ Function Resolve-Type([type]$Type)
     Write-Output $pType
 }
 
-Export-ModuleMember -Function "Get-TypeMethods", "Get-TypeProperties"
+Export-ModuleMember -Function "Get-TypeMethods", "Get-TypeProperties", "New-SPExpression" -Alias "newex"

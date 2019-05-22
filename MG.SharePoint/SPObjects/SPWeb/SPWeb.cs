@@ -10,6 +10,13 @@ namespace MG.SharePoint
     public partial class SPWeb : SPSecurable
     {
         private Web _web;
+        private static readonly string[] IncludeThese = new string[]
+        {
+            "Alerts", "AssociatedMemberGroup", "AssociatedOwnerGroup", "AssociatedVisitorGroup",
+            "CurrentUser", "Navigation", "RegionalSettings", "ResourcePath", "TitleResource",
+            "RoleDefinitions", "ServerRelativePath", "SupportedUILanguageIds", "ThemeInfo",
+            "UserCustomActions"
+        };
 
         public SPWeb() : this(CTX.DestinationSite)
         {
@@ -18,7 +25,7 @@ namespace MG.SharePoint
         internal SPWeb(Web w)
             : base(w)
         {
-            base.FormatObject(w, null);
+            base.FormatObject(w, null, IncludeThese);
             this.Name = w.Title;
             _web = w;
         }
