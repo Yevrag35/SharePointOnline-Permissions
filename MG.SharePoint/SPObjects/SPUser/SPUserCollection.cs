@@ -24,8 +24,13 @@ namespace MG.SharePoint
         #endregion
 
         #region STATIC METHODS/OPERATORS
-        public static explicit operator SPUserCollection(UserCollection userCol) =>
-            new SPUserCollection(userCol);
+        public static explicit operator SPUserCollection(UserCollection userCol)
+        {
+            if (!userCol.AreItemsAvailable)
+                CTX.Lae(userCol, true);
+
+            return new SPUserCollection(userCol);
+        }
 
         #endregion
     }

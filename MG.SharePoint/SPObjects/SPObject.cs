@@ -78,7 +78,14 @@ namespace MG.SharePoint
                 {
                     if (thisProp.Name.Equals(origProp.Name))
                     {
-                        thisProp.SetValue(this, origProp.GetValue(obj));
+                        object setObj = origProp.GetValue(obj);
+                        if (setObj is ClientObject && ToSPType(origProp.PropertyType, out Type castingType))
+                        {
+                            var genMeth = this.GetType().GetMethod("Cast", BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(castingType);
+                            setObj = genMeth.Invoke(this, new object[1] { setObj });
+                        }
+
+                        thisProp.SetValue(this, setObj);
                         break;
                     }
                 }
@@ -116,7 +123,7 @@ namespace MG.SharePoint
             return returnType != null;
         }
 
-        private Type GetSPType<T>() where T : ClientObject
+        protected private Type GetSPType<T>() where T : ClientObject
         {
             switch (typeof(T).Name)
             {
@@ -156,8 +163,11 @@ namespace MG.SharePoint
                 case "UserCollection":
                     return typeof(SPUserCollection);
 
-                //case "Group":
-                //    return typeof(SPGroup);
+                case "Group":
+                    return typeof(SPGroup);
+
+                case "GroupCollection":
+                    return typeof(SPGroupCollection);
 
                 default:
                     return typeof(T);

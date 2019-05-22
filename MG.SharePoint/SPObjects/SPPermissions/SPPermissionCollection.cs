@@ -114,7 +114,7 @@ namespace MG.SharePoint
         #endregion
 
         #region Operators
-        public static implicit operator SPPermissionCollection(RoleAssignmentCollection assCol)
+        public static explicit operator SPPermissionCollection(RoleAssignmentCollection assCol)
         {
             CTX.Lae(assCol, true,
                 rCol => rCol.Include(

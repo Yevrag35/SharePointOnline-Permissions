@@ -12,8 +12,8 @@ namespace MG.SharePoint
         #endregion
 
         #region Public Fields
-        public override string Name { get; internal set; }
         public override object Id { get; internal set; }
+        public override string Name { get; internal set; }
         public string ServerRelativeUrl { get; internal set; }
         public DateTime TimeLastModified { get; internal set; }
 

@@ -9,9 +9,9 @@ namespace MG.SharePoint
     public class SPUser : SPObject
     {
         private User _user;
-        private static readonly string[] IncludeThese = new string[4]
+        private static readonly string[] IncludeThese = new string[3]
         {
-            "AadObjectId", "Alerts", "Path", "UserId"
+            "AadObjectId", "Alerts", "UserId"
         };
 
         #region PROPERTIES
@@ -25,7 +25,6 @@ namespace MG.SharePoint
         public bool IsSiteAdmin { get; private set; }
         public string LoginName { get; private set; }
         public override string Name { get; internal set; }
-        public ObjectPath Path { get; private set; }
         public PrincipalType PrincipalType { get; private set; }
         public UserIdInfo UserId { get; private set; }
 

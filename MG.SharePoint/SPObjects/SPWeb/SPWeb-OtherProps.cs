@@ -10,6 +10,11 @@ namespace MG.SharePoint
 {
     public partial class SPWeb : SPSecurable
     {
+        private static readonly string[] IncludeThese = new string[]
+        {
+            "SiteUsers"
+        };
+
         #region OTHER PROPERTIES
 
         public AlertCollection Alerts { get; internal set; }
@@ -35,7 +40,7 @@ namespace MG.SharePoint
         public short? Configuration { get; internal set; }
         public bool? ContainsConfidentialInfo { get; internal set; }
         public ContentTypeCollection ContentTypes { get; internal set; }
-        public DateTime Created { get; }
+        public DateTime Created { get; internal set; }
         public ChangeToken CurrentChangeToken { get; internal set; }
         public User CurrentUser { get; internal set; }
         public string CustomMasterUrl { get; internal set; }
@@ -90,7 +95,7 @@ namespace MG.SharePoint
         public string ServerRelativeUrl { get; internal set; }
         public bool? ShowUrlStructureForCurrentUser { get; internal set; }
         public Microsoft.SharePoint.Marketplace.CorporateCuratedGallery.SiteCollectionCorporateCatalogAccessor SiteCollectionAppCatalog { get; internal set; }
-        public GroupCollection SiteGroups { get; internal set; }
+        public SPGroupCollection SiteGroups { get; internal set; }
         public string SiteLogoDescription { get; internal set; }
         public string SiteLogoUrl { get; internal set; }
         public SPList SiteUserInfoList { get; internal set; }
@@ -119,10 +124,18 @@ namespace MG.SharePoint
         #region Load Property Method
         public override void LoadProperty(params string[] propertyNames)
         {
-            if (propertyNames == null)
-                return;
-
-            Load(_web, propertyNames);
+            bool flag = false;
+            if (propertyNames.Length > 0)
+            {
+                if (propertyNames.Contains("Permissions"))
+                {
+                    propertyNames = propertyNames.Where(x => !x.Equals("Permissions")).ToArray();
+                    flag = true;
+                }
+                base.Load(_web, propertyNames);
+            }
+            if (flag)
+                this.GetPermissions();
         }
 
         #endregion

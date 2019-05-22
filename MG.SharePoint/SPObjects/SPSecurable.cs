@@ -10,7 +10,10 @@ namespace MG.SharePoint
 {
     public abstract class SPSecurable : SPObject, ISPPermissions
     {
+        private bool _pol = true;
+
         public bool? HasUniquePermissions { get; protected internal set; }
+        public bool CanSetPermissions => _pol;
 
         protected internal SecurableObject SecObj { get; }
 
@@ -21,9 +24,18 @@ namespace MG.SharePoint
         public SPSecurable(SecurableObject so)
         {
             SecObj = so;
-            CTX.Lae(SecObj, true, s => s.HasUniqueRoleAssignments, s => s.RoleAssignments);
+            try
+            {
+                CTX.Lae(SecObj, true, s => s.HasUniqueRoleAssignments, s => s.RoleAssignments);
+            }
+            catch (ServerException ex)
+            {
+                if (ex.Message.Contains("does not belong to a list."))
+                    _pol = false;
+            }
+
             HasUniquePermissions = !SecObj.IsPropertyAvailable("HasUniqueRoleAssignments") ?
-                null : (bool?)SecObj.HasUniqueRoleAssignments; 
+                null : (bool?)SecObj.HasUniqueRoleAssignments;
         }
 
         #endregion
@@ -40,7 +52,10 @@ namespace MG.SharePoint
 
         public SPPermissionCollection GetPermissions()
         {
-            Permissions = SecObj.RoleAssignments;
+            if (!SecObj.IsPropertyReady(x => x.RoleAssignments))
+                CTX.Lae(SecObj, true, s => s.RoleAssignments);
+
+            Permissions = (SPPermissionCollection)SecObj.RoleAssignments;
             return Permissions;
         }
 
