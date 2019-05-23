@@ -69,6 +69,7 @@
   <ItemGroup>
     <None Include="BaseCmdlets\DynamicCmdlet.cs" />
     <None Include="BaseCmdlets\PropertyLoadingCmdlet.cs" />
+    <None Include="GetSPFolder.cs" />
     <Compile Include="GetSPList.cs" />
     <Compile Include="GetSPPermission.cs" />
     <None Include="RemoveSPPermission.cs" />
@@ -78,8 +79,9 @@
     <None Include="AddSPPermission.cs" />
     <Compile Include="BaseCmdlets\BaseSPCmdlet.cs" />
     <None Include="GetSPPermission.cs.old" />
-    <None Include="GetSPFolder.cs" />
+    <None Include="GetSPFolder.cs.old" />
     <Compile Include="GetSPWeb.cs" />
+    <Compile Include="Identity.cs" />
     <Compile Include="LoginSharePoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="DebugScript.ps1">

@@ -59,7 +59,7 @@ namespace MG.SharePoint
             if (string.IsNullOrEmpty(tenantName) && !string.IsNullOrEmpty(SpecifiedTenantName))
                 tenantName = SpecifiedTenantName;
 
-            if (!destUrl.StartsWith("/"))
+            if (!string.IsNullOrEmpty(destUrl) && !destUrl.StartsWith("/"))
                 destUrl = "/" + destUrl;
 
             var baseLogin = string.Format(baseFormat, tenantName);

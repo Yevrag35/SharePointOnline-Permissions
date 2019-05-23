@@ -41,9 +41,6 @@ namespace MG.SharePoint
         }
 
         #endregion
-
-        //public static implicit operator SPPermission(RoleAssignment ass) =>
-        //    new SPPermission(ass);
         public static SPPermission ResolvePermission(RoleAssignment ass, SPSecurable securable) =>
             new SPPermission(securable, ass);
 

@@ -1,59 +1,41 @@
 ﻿using Microsoft.SharePoint.Client;
+using Microsoft.SharePoint.Client.Utilities;
 using System;
+using System.Collections;
+using System.Collections.ObjectModel;
+using System.Linq;
 using System.Management.Automation;
 
 namespace MG.SharePoint.PowerShell
 {
-    [Cmdlet(VerbsCommon.Get, "SPFolder", DefaultParameterSetName = "ByRelativeUrl")]
-    [CmdletBinding(PositionalBinding = false)]
+    [Cmdlet(VerbsCommon.Get, "SPFolder")]
     [OutputType(typeof(SPFolder))]
-    public class GetSPFolder : PropertyLoadingCmdlet
+    [CmdletBinding(PositionalBinding = false)]
+    public class GetSPFolder : BaseSPCmdlet
     {
-        [Parameter(Mandatory = true, Position = 0, ParameterSetName = "ByRelativeUrl")]
-        public string RelativeUrl { get; set; }
+        #region PARAMETERS
+        [Parameter(Mandatory = false, Position = 0, ParameterSetName = "WithPipeline")]
+        [Parameter(Mandatory = true, Position = 0, ParameterSetName = "WithoutPipeline")]
+        public Identity Identity { get; set; }
 
-        [Parameter(Mandatory = true, ParameterSetName = "ByFolderId")]
-        public Guid Id { get; set; }
 
-        [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = "ByFolderInput")]
-        public Folder Folder { get; set; }
+        [Parameter(Mandatory = false)]
+        public SPWeb Web { get; set; }
 
-        private Folder inQuestion;
+        #endregion
 
-        protected internal override Type ThisType => typeof(SPFolder);
-
-        protected internal override string[] SkipThese => new string[6] {
-            "HasUniquePermissions", "Id", "Name", "Permissions", "ServerRelativeUrl", "TimeLastModified" };
-
-        protected override void BeginProcessing() => base.BeginProcessing();
-
-        protected override void ProcessRecord()
+        #region CMDLET PROCESSING
+        protected override void BeginProcessing()
         {
-            base.ProcessRecord();
-            switch (ParameterSetName)
-            {
-                case "ByFolderId":
-
-                    inQuestion = CTX.SP1.Web.GetFolderById(Id);
-
-                    break;
-                case "ByFolderInput":
-
-                    inQuestion = Folder;
-
-                    break;
-                default:
-
-                    inQuestion = CTX.SP1.Web.GetFolderByServerRelativeUrl(RelativeUrl);
-
-                    break;
-            }
-
-            var outFol = (SPFolder)inQuestion;
-            if (MyInvocation.BoundParameters.ContainsKey("Property"))
-                LoadWithDynamic(pName, outFol);
-            
-            WriteObject(outFol);
+            base.BeginProcessing();
+            CTX.SP1.Web.GetF
         }
+
+        #endregion
+
+        #region METHODS
+
+
+        #endregion
     }
 }

@@ -7,7 +7,7 @@ using System.Management.Automation;
 
 namespace MG.SharePoint.PowerShell
 {
-    [Cmdlet(VerbsCommon.Get, "SPList", ConfirmImpact = ConfirmImpact.None)]
+    [Cmdlet(VerbsCommon.Get, "SPList", ConfirmImpact = ConfirmImpact.None, DefaultParameterSetName = "None")]
     [CmdletBinding(PositionalBinding = false)]
     [OutputType(typeof(SPList))]
     public class GetSPList : BaseSPCmdlet
@@ -31,7 +31,7 @@ namespace MG.SharePoint.PowerShell
 
         [Parameter(Mandatory = false, Position = 0)]
         [Alias("i")]
-        public object Identity { get; set; }
+        public Identity Identity { get; set; }
 
         [Parameter(Mandatory = false)]
         [Alias("p", "Properties", "Property")]
@@ -48,8 +48,8 @@ namespace MG.SharePoint.PowerShell
         #region CMDLET PROCESSING
         protected override void BeginProcessing()
         {
-            if (MyInvocation.BoundParameters.ContainsKey("Identity"))
-                this.ValidateIdentity(this.Identity);
+            //if (MyInvocation.BoundParameters.ContainsKey("Identity"))
+            //    this.ValidateIdentity(this.Identity);
 
             base.BeginProcessing();
         }
@@ -83,24 +83,24 @@ namespace MG.SharePoint.PowerShell
                 if (MyInvocation.BoundParameters.ContainsKey("Identity"))
                 {
                     var outList = new SPList[1];
-                    if (this.Identity is string name)
+                    if (!this.Identity.IsGuid)
                     {
                         if (!isAvail)
                         {
                             var listCol = ((Web)this.InputObject.ShowOriginal()).Lists;
-                            var list = listCol.GetByTitle(name);
+                            var list = listCol.GetByTitle((string)this.Identity);
                             if (list != null)
                                 outList[0] = (SPList)list;
                         }
                         else
-                            outList[0] = this.InputObject.Lists.FindByName(name, StringComparison.CurrentCultureIgnoreCase);
+                            outList[0] = this.InputObject.Lists.FindByName((string)this.Identity, StringComparison.CurrentCultureIgnoreCase);
                     }
-                    else if (this.Identity is Guid id)
+                    else if (this.Identity.IsGuid)
                     {
                         if (!isAvail)
                         {
                             var listCol = ((Web)this.InputObject.ShowOriginal()).Lists;
-                            var list = listCol.GetById(id);
+                            var list = listCol.GetById((Guid)this.Identity);
                             if (list != null)
                                 outList[0] = (SPList)list;
                         }
@@ -119,22 +119,22 @@ namespace MG.SharePoint.PowerShell
             return final;
         }
 
-        private void ValidateIdentity(object identity)
-        {
-            if (!(identity is Guid || identity is string))
-                throw new ArgumentException("'Identity' should be either a GUID or a list name as a string.");
-        }
+        //private void ValidateIdentity(object identity)
+        //{
+        //    if (!(identity is Guid || identity is string))
+        //        throw new ArgumentException("'Identity' should be either a GUID or a list name as a string.");
+        //}
 
-        private bool TryFindList(object identity, Web web, out SPList outList)
+        private bool TryFindList(Identity identity, Web web, out SPList outList)
         {
             bool result = false;
             SPList spl = null;
             List list = null;
-            if (identity is string name)
-                list = FindListByName(name, web);
+            if (!identity.IsGuid)
+                list = FindListByName((string)identity, web);
 
-            else if (identity is Guid id)
-                list = FindListById(id, web);
+            else if (identity.IsGuid)
+                list = FindListById((Guid)identity, web);
 
             if (list != null)
             {
