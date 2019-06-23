@@ -9,9 +9,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MG.SharePoint.PowerShell</RootNamespace>
     <AssemblyName>MG.SharePoint.PowerShell</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -36,6 +37,9 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MG.Dynamic">
+      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint.PowerShell\Assemblies\MG.Dynamic.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory">
       <HintPath>Assemblies\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
     </Reference>
@@ -56,45 +60,53 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Repos\MG.SharePoint\MG.SharePoint.PowerShell\Assemblies\Microsoft.SharePoint.Client.Runtime.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Management.Automation, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Assemblies\System.Management.Automation.dll</HintPath>
+      <HintPath>..\packages\Microsoft.PowerShell.5.ReferenceAssemblies.1.1.0\lib\net4\System.Management.Automation.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Net.Http" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="BaseCmdlets\DynamicCmdlet.cs" />
-    <None Include="BaseCmdlets\PropertyLoadingCmdlet.cs" />
-    <None Include="GetSPFolder.cs" />
-    <Compile Include="GetSPList.cs" />
-    <Compile Include="GetSPPermission.cs" />
-    <None Include="RemoveSPPermission.cs" />
-    <None Include="ResetSPPermission.cs" />
-    <None Include="Context\OAuthSession.cs" />
-    <None Include="Context\PSCtxHelper.cs" />
-    <None Include="AddSPPermission.cs" />
-    <Compile Include="BaseCmdlets\BaseSPCmdlet.cs" />
-    <None Include="GetSPPermission.cs.old" />
-    <None Include="GetSPFolder.cs.old" />
-    <Compile Include="GetSPWeb.cs" />
-    <Compile Include="Identity.cs" />
-    <Compile Include="LoginSharePoint.cs" />
+    <None Include="app.config" />
+    <None Include="Cmdlets\Bases\PropertyLoadingCmdlet.cs" />
+    <None Include="Cmdlets\Folders\GetFolder.cs" />
+    <Compile Include="Cmdlets\Lists\GetList.cs" />
+    <Compile Include="Cmdlets\Permissions\GetPermission.cs" />
+    <None Include="Cmdlets\Permissions\RemovePermission.cs" />
+    <None Include="Cmdlets\Permissions\ResetPermission.cs" />
+    <None Include="Backend\OAuthSession.cs" />
+    <None Include="Backend\PSCtxHelper.cs" />
+    <None Include="Cmdlets\Permissions\AddPermission.cs" />
+    <Compile Include="Cmdlets\Bases\BaseSPCmdlet.cs" />
+    <None Include="Cmdlets\Permissions\GetPermission.cs.old" />
+    <None Include="Cmdlets\Folders\GetSPFolder.cs.old" />
+    <Compile Include="Cmdlets\Users\GetUser.cs" />
+    <Compile Include="Cmdlets\Webs\GetWeb.cs" />
+    <Compile Include="Objects\Identity.cs" />
+    <Compile Include="Cmdlets\Connection\ConnectOnline.cs" />
+    <Compile Include="Objects\UserIdentity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="DebugScript.ps1">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="GenerateManifest.ps1" />
+    <None Include="packages.config" />
     <None Include="TypeFormats\MG.SharePoint.SPFolder.ps1xml" />
     <None Include="TypeFormats\MG.SharePoint.SPListItem.ps1xml" />
     <None Include="TypeFormats\MG.SharePoint.SPPermission.ps1xml" />
     <None Include="TypeFormats\MG.SharePoint.SPWeb.ps1xml" />
+    <None Include="TypeFormats\SPUser.ps1xml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assemblies\" />
+    <Folder Include="Cmdlets\Files\" />
+    <Folder Include="Cmdlets\ListItems\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MG.SharePoint\MG.SharePoint.csproj">
@@ -104,6 +116,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -NonInteractive -WindowStyle Hidden -File "$(ProjectDir)GenerateManifest.ps1" -DebugDirectory "$(ProjectDir)bin\$(ConfigurationName)" -ModuleFileDirectory "$(ProjectDir)TypeFormats" -AssemblyInfo "$(ProjectDir)Properties\AssemblyInfo.cs" -TargetFileName "$(TargetFileName)"</PreBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -NoProfile -ExecutionPolicy Bypass -NonInteractive -WindowStyle Hidden -File "$(ProjectDir)GenerateManifest.ps1" -DebugDirectory "$(ProjectDir)bin\$(ConfigurationName)" -ModuleFileDirectory "$(ProjectDir)TypeFormats" -AssemblyInfo "$(ProjectDir)Properties\AssemblyInfo.cs" -TargetFileName "$(TargetFileName)"</PostBuildEvent>
   </PropertyGroup>
 </Project>

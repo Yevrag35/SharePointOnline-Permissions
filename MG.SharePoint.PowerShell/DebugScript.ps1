@@ -1,15 +1,10 @@
-﻿[CmdletBinding(PositionalBinding = $false)]
-param
-(
-    [parameter(Mandatory=$true, Position = 0)]
-	[string] $TenantName,
+﻿$curDir = Split-Path -Parent $MyInvocation.MyCommand.Definition;
+Import-Module "$curDir\MG.SharePoint.psd1";
 
-	[parameter(Mandatory=$false, Position = 1)]
-	[string] $DestinationSite
-)
+$loginParams = @{
+	TenantName = "yevrag35.com"
+	PromptBehavior = "Auto"
+	PassThru = $true
+}
 
-$curDir = Split-Path -Parent $MyInvocation.MyCommand.Definition;
-$psd1 = Get-ChildItem $curDir *.psd1 -File | Convert-Path;
-Import-Module $psd1 -ea Stop;
-
-$web = Login-SharePoint @PSBoundParameters -PromptBehavior Auto -PassThru;
+$web = Connect-SPOnline @loginParams

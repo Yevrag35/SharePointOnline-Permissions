@@ -24,6 +24,8 @@ namespace MG.SharePoint
 
         public static RoleDefinitionCollection AllRoles { get; set; }
 
+        public static User GetUserByEmail(string email) => SP1.Web.GetUserByEmail(email);
+
         #region Load and Execute (LAE)
         public static void Lae() => SP1.ExecuteQuery();
         public static void DestLae() => SP2.ExecuteQuery();

@@ -1,4 +1,5 @@
 ﻿using Microsoft.SharePoint.Client;
+using Microsoft.SharePoint.Client.Utilities;
 using System;
 using System.Linq.Expressions;
 
@@ -23,5 +24,11 @@ namespace MG.SharePoint
                 clientObject.IsObjectPropertyInstantiated(propName) :
                 clientObject.IsPropertyAvailable(propName);
         }
+
+        public static void LoadProperty<T>(this T clientObject, params Expression<Func<T, object>>[] property)
+            where T : ClientObject => CTX.Lae(clientObject, true, property);
+
+        public static void LoadProperty<T>(this T clientObject, bool andExecute, params Expression<Func<T, object>>[] property)
+            where T : ClientObject => CTX.Lae(clientObject, andExecute, property);
     }
 }
