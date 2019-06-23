@@ -76,8 +76,9 @@
     <None Include="app.config" />
     <None Include="Cmdlets\Bases\PropertyLoadingCmdlet.cs" />
     <None Include="Cmdlets\Folders\GetFolder.cs" />
-    <Compile Include="Cmdlets\Lists\GetList.cs" />
-    <Compile Include="Cmdlets\Permissions\GetPermission.cs" />
+    <Compile Include="Cmdlets\Groups\GetGroup.cs" />
+    <None Include="Cmdlets\Lists\GetList.cs.old" />
+    <None Include="Cmdlets\Permissions\GetPermission.cs" />
     <None Include="Cmdlets\Permissions\RemovePermission.cs" />
     <None Include="Cmdlets\Permissions\ResetPermission.cs" />
     <None Include="Backend\OAuthSession.cs" />
@@ -86,7 +87,9 @@
     <Compile Include="Cmdlets\Bases\BaseSPCmdlet.cs" />
     <None Include="Cmdlets\Permissions\GetPermission.cs.old" />
     <None Include="Cmdlets\Folders\GetSPFolder.cs.old" />
+    <Compile Include="Cmdlets\Lists\GetList.cs" />
     <Compile Include="Cmdlets\Users\GetUser.cs" />
+    <None Include="Cmdlets\Webs\GetWeb.cs.old" />
     <Compile Include="Cmdlets\Webs\GetWeb.cs" />
     <Compile Include="Objects\Identity.cs" />
     <Compile Include="Cmdlets\Connection\ConnectOnline.cs" />
@@ -101,6 +104,8 @@
     <None Include="TypeFormats\MG.SharePoint.SPListItem.ps1xml" />
     <None Include="TypeFormats\MG.SharePoint.SPPermission.ps1xml" />
     <None Include="TypeFormats\MG.SharePoint.SPWeb.ps1xml" />
+    <None Include="TypeFormats\SPGroup.ps1xml" />
+    <None Include="TypeFormats\SPList.ps1xml" />
     <None Include="TypeFormats\SPUser.ps1xml" />
   </ItemGroup>
   <ItemGroup>

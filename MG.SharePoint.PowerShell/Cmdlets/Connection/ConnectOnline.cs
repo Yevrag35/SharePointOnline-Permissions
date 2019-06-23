@@ -56,7 +56,9 @@ namespace MG.SharePoint.PowerShell
 
             else if (PassThru)
             {
-
+                Web web = CTX.SP1.Web;
+                web.LoadWeb();
+                base.WriteObject(web);
             }
         }
     }

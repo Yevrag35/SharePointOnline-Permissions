@@ -13,5 +13,18 @@ namespace MG.SharePoint.PowerShell
         }
 
         protected internal bool CheckSession() => CTX.Connected;
+
+        protected private void WriteError(string msg, ErrorCategory cat) =>
+            this.WriteError(new ArgumentException(msg), cat, null);
+
+        protected private void WriteError(string msg, ErrorCategory cat, object obj) =>
+            this.WriteError(new ArgumentException(msg), cat, obj);
+
+        protected private void WriteError(Exception baseEx, ErrorCategory cat) => this.WriteError(baseEx, cat, null);
+        protected private void WriteError(Exception baseEx, ErrorCategory cat, object obj)
+        {
+            var errRec = new ErrorRecord(baseEx, baseEx.GetType().FullName, cat, obj);
+            base.WriteError(errRec);
+        }
     }
 }

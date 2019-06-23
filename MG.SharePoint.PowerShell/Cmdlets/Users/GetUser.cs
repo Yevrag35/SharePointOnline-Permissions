@@ -8,21 +8,23 @@ using System.Reflection;
 
 namespace MG.SharePoint.PowerShell.Cmdlets.Users
 {
-    [Cmdlet(VerbsCommon.Get, "User", ConfirmImpact = ConfirmImpact.None)]
+    [Cmdlet(VerbsCommon.Get, "User", ConfirmImpact = ConfirmImpact.None, DefaultParameterSetName = "ByUserCollectionAndIdentity")]
     [CmdletBinding(PositionalBinding = false)]
     [OutputType(typeof(User))]
     public class GetUser : BaseSPCmdlet
     {
         #region PRIVATE FIELDS/CONSTANTS
-        private List<User> _users;
 
         #endregion
 
         #region PARAMETERS
-        [Parameter(Mandatory = false, ValueFromPipeline = true)]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = "ByUserObject")]
+        public User InputObject{ get; set; }
+
+        [Parameter(Mandatory = false, ParameterSetName = "ByUserCollectionAndIdentity")]
         public UserCollection UserCollection { get; set; }
 
-        [Parameter(Mandatory = false, Position = 0)]
+        [Parameter(Mandatory = false, Position = 0, ParameterSetName = "ByUserCollectionAndIdentity")]
         public UserIdentity[] Identity { get; set; }
 
         #endregion
@@ -32,33 +34,56 @@ namespace MG.SharePoint.PowerShell.Cmdlets.Users
 
         protected override void ProcessRecord()
         {
-            UserCollection uc = this.UserCollection;
-            if (!this.MyInvocation.BoundParameters.ContainsKey("UserCollection"))
-                uc = CTX.SP1.Web.SiteUsers;
-
-            if (this.Identity != null && this.Identity.Length > 0)
+            if (this.InputObject != null)
             {
-                for (int i = 0; i < this.Identity.Length; i++)
-                {
-                    var id = this.Identity[i];
-                    User user = this.ResolveUser(id, uc);
-                    if (user != null)
-                    {
-                        user.LoadUserProps();
-                        base.WriteObject(user);
-                    }
-                }
+                this.InputObject.LoadUserProps();
+                base.WriteObject(this.InputObject);
             }
             else
             {
-                uc.LoadUsers();
-                base.WriteObject(uc, true);
+                UserCollection uc = this.UserCollection;
+                if (!this.MyInvocation.BoundParameters.ContainsKey("UserCollection") &&
+                    ParameterSetName == "ByUserCollectionAndIdentity")
+                {
+                    uc = CTX.SP1.Web.SiteUsers;
+                }
+
+                if (this.Identity != null && this.Identity.Length > 0)
+                {
+                    for (int i = 0; i < this.Identity.Length; i++)
+                    {
+                        UserIdentity id = this.Identity[i];
+                        User user = this.ResolveUser(id, uc);
+                        if (user != null)
+                        {
+                            user.LoadUserProps();
+                            base.WriteObject(user);
+                        }
+                    }
+                }
+                else
+                {
+                    //uc.LoadProperty(c => c.Include(
+                    //    x => x.AadObjectId, x => x.Alerts, x => x.Email, x => x.Groups.Include(
+                    //        g => g.AllowMembersEditMembership, g => g.AllowRequestToJoinLeave, g => g.AutoAcceptRequestToJoinLeave,
+                    //        g => g.CanCurrentUserEditMembership, g => g.CanCurrentUserManageGroup, g => g.CanCurrentUserViewMembership,
+                    //        g => g.Description, g => g.Id, g => g.IsHiddenInUI, g => g.LoginName, g => g.OnlyAllowMembersViewMembership,
+                    //        g => g.Owner, g => g.OwnerTitle, g => g.PrincipalType, g => g.RequestToJoinLeaveEmailSetting, g => g.Title,
+                    //        g => g.Users.Include(
+                    //            u => u.Title)
+                    //        ),
+                    //    x => x.IsEmailAuthenticationGuestUser, x => x.Id, x => x.IsHiddenInUI, x => x.IsShareByEmailGuestUser,
+                    //    x => x.IsSiteAdmin, x => x.LoginName, x => x.PrincipalType, x => x.Title, x => x.UserId));
+                    uc.LoadAllUsers();
+                    base.WriteObject(uc, true);
+                }
             }
         }
 
         #endregion
 
         #region CMDLET METHODS
+
         private User ResolveUser(UserIdentity id, UserCollection uc)
         {
             return id.IsEmail
