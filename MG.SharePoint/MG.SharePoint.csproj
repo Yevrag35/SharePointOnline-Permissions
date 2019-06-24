@@ -119,6 +119,7 @@
     <Compile Include="Extensions\ClientObjectExtensions.cs" />
     <Compile Include="Extensions\GroupExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
+    <Compile Include="Extensions\ListItemExtensions.cs" />
     <Compile Include="Extensions\UserExtensions.cs" />
     <Compile Include="Extensions\WebExtensions.cs" />
     <Compile Include="Interfaces\ISPCredential.cs" />

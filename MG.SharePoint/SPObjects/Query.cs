@@ -14,14 +14,21 @@ namespace MG.SharePoint
     public class Query : CamlQuery
     {
         #region FIELDS/CONSTANTS
+        private const string AND = "And";
+        private const string OR = "Or";
         private const string VIEW = "View";
         private const string QUERY = "Query";
         private const string WHERE = "Where";
         private const string EQ = "Eq";
-        private const string FIELD_REF = "FieldRefName";
+        private const string FILE = "File";
+        private const string FILE_LEAF_REF = "FileLeafRef";
+        private const string FIELD_REF = "FieldRef";
+        private const string NAME = "Name";
         private const string TEXT = "Text";
         private const string TYPE = "Type";
         private const string VALUE = "Value";
+
+        private const string EX_MSG = "The string collection needs to contains more than one string.";
 
         #endregion
 
@@ -36,20 +43,74 @@ namespace MG.SharePoint
         public Query(IDictionary dict)
             : base()
         {
-            IEnumerable<string> keys = dict.Keys.Cast<string>();
-            JObject Template = this.GetTemplate();
-            foreach (string key in keys)
+            string[] keys = dict.Keys.Cast<string>().ToArray();
+            var xmlDoc = new XmlDocument();
+            XmlNode view = xmlDoc.AppendChild(xmlDoc.CreateElement(VIEW));
+            XmlNode query = view.AppendChild(xmlDoc.CreateElement(QUERY));
+            XmlNode where = query.AppendChild(xmlDoc.CreateElement(WHERE));
+
+            XmlNode parent = keys.Length > 1
+                ? where.AppendChild(xmlDoc.CreateElement(AND))
+                : where;
+
+            for (int i = 0; i < keys.Length; i++)
             {
-                Template[VIEW][QUERY][WHERE][EQ].Value<JObject>().Add(FIELD_REF, key);
-                Template[VIEW][QUERY][WHERE][EQ].Value<JObject>().Add(VALUE, JToken.FromObject(dict[key]));
+                string key = keys[i];
+                XmlNode eq = parent.AppendChild(xmlDoc.CreateElement(EQ));
+
+                var ele = (XmlElement)eq.AppendChild(xmlDoc.CreateElement(FIELD_REF));
+                ele.SetAttribute(NAME, key);
+                var val = (XmlElement)eq.AppendChild(xmlDoc.CreateElement(VALUE));
+                if (key.Equals(FILE_LEAF_REF, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    val.SetAttribute(TYPE, FILE);
+                }
+                else
+                {
+                    val.SetAttribute(TYPE, TEXT);
+                }
+                val.AppendChild(xmlDoc.CreateTextNode(Convert.ToString(dict[key])));
             }
-            XmlDocument xmlDoc = JsonConvert.DeserializeXmlNode(JsonConvert.SerializeObject(Template));
-            XmlNodeList eleList = xmlDoc.GetElementsByTagName("Value");
-            foreach (XmlElement ele in eleList)
+
+            this.ViewXml = this.FormatOneLineXml(xmlDoc);
+        }
+
+        public Query(string fieldName, ICollection<string> col)
+            : base()
+        {
+            string[] items = col.ToArray();
+
+            var xmlDoc = new XmlDocument();
+            XmlNode view = xmlDoc.AppendChild(xmlDoc.CreateElement(VIEW));
+            XmlNode query = view.AppendChild(xmlDoc.CreateElement(QUERY));
+            XmlNode where = query.AppendChild(xmlDoc.CreateElement(WHERE));
+
+            XmlNode parent = items.Length > 1
+                ? where.AppendChild(xmlDoc.CreateElement(OR))
+                : where;
+
+            for (int i = 0; i < items.Length; i++)
             {
-                ele.SetAttribute(TYPE, TEXT);
+                string item = items[i];
+                XmlNode eq = parent.AppendChild(xmlDoc.CreateElement(EQ));
+
+                var ele = (XmlElement)eq.AppendChild(xmlDoc.CreateElement(FIELD_REF));
+                ele.SetAttribute(NAME, fieldName);
+
+                var val = (XmlElement)eq.AppendChild(xmlDoc.CreateElement(VALUE));
+
+                if (fieldName.Equals(FILE_LEAF_REF, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    val.SetAttribute(TYPE, FILE);
+                }
+                else
+                {
+                    val.SetAttribute(TYPE, TEXT);
+                }
+                val.AppendChild(xmlDoc.CreateTextNode(item));
             }
-            base.ViewXml = this.FormatOneLineXml(xmlDoc);
+
+            this.ViewXml = this.FormatOneLineXml(xmlDoc);
         }
 
         #endregion
@@ -68,7 +129,7 @@ namespace MG.SharePoint
                 using (var xtw = new XmlTextWriter(sw)
                 {
                     Formatting = System.Xml.Formatting.None,
-                    QuoteChar = char.Parse("'")
+                    QuoteChar = char.Parse("\"")
                 })
                 {
 
@@ -78,17 +139,17 @@ namespace MG.SharePoint
             }
         }
 
-        private JObject GetTemplate()
-        {
-            return new JObject(
-                    new JProperty("View",
-                        new JObject(
-                            new JProperty("Query",
-                                new JObject(
-                                    new JProperty("Where",
-                                        new JObject(
-                                            new JProperty("Eq", new JObject()))))))));
-        }
+        //private JObject GetTemplate()
+        //{
+        //    return new JObject(
+        //            new JProperty("View",
+        //                new JObject(
+        //                    new JProperty("Query",
+        //                        new JObject(
+        //                            new JProperty("Where",
+        //                                new JObject(
+        //                                    new JProperty("Eq", new JObject()))))))));
+        //}
 
         #endregion
     }
