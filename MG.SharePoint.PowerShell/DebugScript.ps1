@@ -8,4 +8,6 @@ $loginParams = @{
 }
 
 $web = Connect-SPOnline @loginParams
-$list = Get-SPList "Code Library"
+$list = Get-SPList "Code Library";
+$li = $list | Get-SPListItem -AndCondition @{ file = "command.txt" };
+$li.File;

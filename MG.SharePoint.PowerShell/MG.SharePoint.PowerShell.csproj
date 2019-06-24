@@ -76,6 +76,7 @@
     <None Include="app.config" />
     <None Include="Cmdlets\Bases\PropertyLoadingCmdlet.cs" />
     <None Include="Cmdlets\Folders\GetFolder.cs" />
+    <Compile Include="Cmdlets\Files\GetFile.cs" />
     <Compile Include="Cmdlets\Groups\GetGroup.cs" />
     <None Include="Cmdlets\Permissions\GetPermission.cs" />
     <None Include="Cmdlets\Permissions\RemovePermission.cs" />
@@ -103,6 +104,7 @@
     <None Include="TypeFormats\MG.SharePoint.SPFolder.ps1xml" />
     <None Include="TypeFormats\MG.SharePoint.SPListItem.ps1xml" />
     <None Include="TypeFormats\MG.SharePoint.SPPermission.ps1xml" />
+    <None Include="TypeFormats\SPFile.ps1xml" />
     <None Include="TypeFormats\SPWeb.ps1xml" />
     <None Include="TypeFormats\SPGroup.ps1xml" />
     <None Include="TypeFormats\SPList.ps1xml" />
@@ -111,7 +113,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assemblies\" />
-    <Folder Include="Cmdlets\Files\" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\MG.SharePoint\MG.SharePoint.csproj">
