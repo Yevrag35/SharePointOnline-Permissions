@@ -16,13 +16,13 @@ namespace MG.SharePoint
 
         public SPBinding(string principal, string roleDefinition)
         {
-            var prin = CTX.SP1.Web.EnsureUser(principal);
+            User prin = CTX.SP1.Web.EnsureUser(principal);
             CTX.Lae(prin);
-            var roleDefs = CTX.SP1.Web.RoleDefinitions;
+            RoleDefinitionCollection roleDefs = CTX.SP1.Web.RoleDefinitions;
             CTX.Lae(roleDefs, true, rds => rds.Include(
                 def => def.Name
             ));
-            var theRole = roleDefs.Single(x => string.Equals(roleDefinition, x.Name, StringComparison.OrdinalIgnoreCase));
+            RoleDefinition theRole = roleDefs.Single(x => string.Equals(roleDefinition, x.Name, StringComparison.OrdinalIgnoreCase));
             CTX.Lae(theRole);
             Principal = prin;
             Definition = theRole;

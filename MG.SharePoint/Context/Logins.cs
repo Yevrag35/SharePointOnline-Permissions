@@ -21,7 +21,7 @@ namespace MG.SharePoint
                 throw new InvalidOperationException("You need to login first.");
 
             var currentUrl = new Uri(SP1.Url, UriKind.Absolute);
-            var uri = currentUrl.PathAndQuery;
+            string uri = currentUrl.PathAndQuery;
             if (string.IsNullOrEmpty(serverRelativeUrl))
                 serverRelativeUrl = "/";
             else if (!serverRelativeUrl.StartsWith("/"))
@@ -30,7 +30,7 @@ namespace MG.SharePoint
             if (string.Equals(serverRelativeUrl, uri, StringComparison.OrdinalIgnoreCase))
                 throw new ArgumentException("The current context is already what is specified.");
 
-            var spo = NewContext(serverRelativeUrl);
+            SPOService spo = NewContext(serverRelativeUrl);
             SP1 = spo.Context;
         }
 
@@ -40,8 +40,8 @@ namespace MG.SharePoint
                 incoming = string.Empty;
 
             var wholeThing = new Uri(SP1.Url, UriKind.Absolute);
-            var hostOnly = wholeThing.Scheme + "//" + wholeThing.Host;
-            var service = Helper.SwitchContext(hostOnly + incoming, SP1);
+            string hostOnly = wholeThing.Scheme + "//" + wholeThing.Host;
+            SPOService service = Helper.SwitchContext(hostOnly + incoming, SP1);
             return service;
         }
 
@@ -62,11 +62,11 @@ namespace MG.SharePoint
             if (!string.IsNullOrEmpty(destUrl) && !destUrl.StartsWith("/"))
                 destUrl = "/" + destUrl;
 
-            var baseLogin = string.Format(baseFormat, tenantName);
+            string baseLogin = string.Format(baseFormat, tenantName);
             var destSite = new Uri(string.Format(subFormat, tenantName, destUrl));
             try
             {
-                var service = Helper.InstantiateSPOService(destSite, baseLogin, null, COMMON_AUTH_URL, behavior);
+                SPOService service = Helper.InstantiateSPOService(destSite, baseLogin, null, COMMON_AUTH_URL, behavior);
                 SP1 = service.Context;
             }
             catch
@@ -82,11 +82,11 @@ namespace MG.SharePoint
             if (Helper == null)
                 Helper = new SPOServiceHelper();
 
-            var baseLogin = string.Format(baseFormat, tenantName);
+            string baseLogin = string.Format(baseFormat, tenantName);
             var destSite = new Uri(string.Format(subFormat, tenantName, destUrl));
             try
             {
-                var service = Helper.InstantiateSPOService(destSite, baseLogin, credential, null, null);
+                SPOService service = Helper.InstantiateSPOService(destSite, baseLogin, credential, null, null);
                 SP1 = service.Context;
             }
             catch

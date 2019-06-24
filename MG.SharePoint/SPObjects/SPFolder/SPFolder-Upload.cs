@@ -9,8 +9,8 @@ namespace MG.SharePoint
         #region Upload Document
         public SPFile UploadFile(string localFilePath, bool permissionsApplyRecursively, bool forceOverwrite = false, bool refreshFiles = true)
         {
-            var fileName = localFilePath.Replace(localFilePath.Substring(0, localFilePath.LastIndexOf("\\") + 1), string.Empty);
-            var upBytes = System.IO.File.ReadAllBytes(localFilePath);
+            string fileName = localFilePath.Replace(localFilePath.Substring(0, localFilePath.LastIndexOf("\\") + 1), string.Empty);
+            byte[] upBytes = System.IO.File.ReadAllBytes(localFilePath);
 
             var fileCreationInfo = new FileCreationInformation()
             {
@@ -34,7 +34,7 @@ namespace MG.SharePoint
         public SPFile UploadFile(string localFilePath, IDictionary permissionsHash, bool permissionsApplyRecursively, bool copyRoleAssignments = true,
             bool forceOverwrite = false, bool refreshFiles = true)
         {
-            var uploadedFile = UploadFile(localFilePath, forceOverwrite, refreshFiles);
+            SPFile uploadedFile = UploadFile(localFilePath, forceOverwrite, refreshFiles);
             uploadedFile.BreakInheritance(copyRoleAssignments, true);
             uploadedFile.AddPermission(permissionsHash, true, permissionsApplyRecursively);
             return uploadedFile;
@@ -43,7 +43,7 @@ namespace MG.SharePoint
         public SPFile UploadFile(string localFilePath, SPBindingCollection bindingCol, bool permissionsApplyRecursively, bool copyRoleAssignments = true,
             bool forceOverwrite = false, bool refreshFiles = true)
         {
-            var uploadedFile = UploadFile(localFilePath, forceOverwrite, refreshFiles);
+            SPFile uploadedFile = UploadFile(localFilePath, forceOverwrite, refreshFiles);
             uploadedFile.BreakInheritance(copyRoleAssignments, true);
             uploadedFile.AddPermission(bindingCol, true, permissionsApplyRecursively);
             return uploadedFile;

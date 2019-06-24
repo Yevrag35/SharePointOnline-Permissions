@@ -66,7 +66,7 @@ namespace MG.SharePoint
             propList.Remove("Client_Title");
             propList.Remove("ObjectVersion");
             propList.Remove("ServerObjectIsNull");
-            var expressions = this.GetPropertyExpressions<T>(origType, propList.ToArray());
+            Expression<Func<T, object>>[] expressions = this.GetPropertyExpressions<T>(origType, propList.ToArray());
             try
             {
                 CTX.SP1.Load(obj, expressions);
@@ -86,7 +86,7 @@ namespace MG.SharePoint
                         object setObj = origProp.GetValue(obj);
                         if (setObj is ClientObject && ToSPType(origProp.PropertyType, out Type castingType))
                         {
-                            var genMeth = this.GetType().GetMethod("Cast", BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(castingType);
+                            MethodInfo genMeth = this.GetType().GetMethod("Cast", BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(castingType);
                             setObj = genMeth.Invoke(this, new object[1] { setObj });
                         }
 
@@ -103,10 +103,10 @@ namespace MG.SharePoint
             var exprs = new List<Expression<Func<T, object>>>(propertyNamesToLoad.Length);
             for (int i = 0; i < propertyNamesToLoad.Length; i++)
             {
-                var prop = propertyNamesToLoad[i];
-                var param1 = Expression.Parameter(type, "p");
-                var name1 = Expression.Property(param1, prop);
-                var body1 = Expression.Convert(name1, typeof(object));
+                string prop = propertyNamesToLoad[i];
+                ParameterExpression param1 = Expression.Parameter(type, "p");
+                MemberExpression name1 = Expression.Property(param1, prop);
+                UnaryExpression body1 = Expression.Convert(name1, typeof(object));
                 var lambda = Expression.Lambda<Func<T, object>>(body1, param1);
 
                 exprs.Add(lambda);
@@ -199,17 +199,17 @@ namespace MG.SharePoint
         protected internal void Load(Type originalType, ClientObject obj, params string[] propertyNames)
         {
             Type thisType = this.GetType();
-            var meth = thisType.GetMethod("GetPropertyExpressionsNoType", BindingFlags.Instance | BindingFlags.NonPublic);
-            var genMeth = meth.MakeGenericMethod(originalType);
-            var expressions = genMeth.Invoke(this, new object[1] { propertyNames });
+            MethodInfo meth = thisType.GetMethod("GetPropertyExpressionsNoType", BindingFlags.Instance | BindingFlags.NonPublic);
+            MethodInfo genMeth = meth.MakeGenericMethod(originalType);
+            object expressions = genMeth.Invoke(this, new object[1] { propertyNames });
 
-            var specLae = typeof(CTX).GetMethod("SpecialLae", BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(originalType);
+            MethodInfo specLae = typeof(CTX).GetMethod("SpecialLae", BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(originalType);
             specLae.Invoke(null, new object[3] { obj, true, expressions });
 
             for (int i = 0; i < propertyNames.Length; i++)
             {
-                var prop = propertyNames[i];
-                var propInfo = thisType.GetProperty(GetPropertyName(prop));
+                string prop = propertyNames[i];
+                PropertyInfo propInfo = thisType.GetProperty(GetPropertyName(prop));
                 if (propInfo == null)
                 {
                     if (allPropInfo == null)
@@ -217,7 +217,7 @@ namespace MG.SharePoint
 
                     for (int p = 0; p < allPropInfo.Length; p++)
                     {
-                        var pi = allPropInfo[p];
+                        PropertyInfo pi = allPropInfo[p];
                         if (string.Equals(pi.Name, prop, StringComparison.InvariantCultureIgnoreCase))
                         {
                             propInfo = pi;
@@ -227,7 +227,7 @@ namespace MG.SharePoint
                     if (propInfo == null)
                         throw new ArgumentException(prop + " was not recognized as a valid property name for this object!");
                 }
-                var thatObj = originalType.InvokeMember(propInfo.Name, GETPROP, null, obj, null);
+                object thatObj = originalType.InvokeMember(propInfo.Name, GETPROP, null, obj, null);
                 if (thatObj is ClientObject && ToSPType(thatObj.GetType(), out Type newType))
                 {
                     MethodInfo GenericCast = this.GetType().GetMethod(
@@ -241,15 +241,15 @@ namespace MG.SharePoint
 
         protected internal void Load<T>(T original, params string[] propertyNames) where T : ClientObject
         {
-            var expressions = GetPropertyExpressionsNoType<T>(propertyNames).ToArray();
+            Expression<Func<T, object>>[] expressions = GetPropertyExpressionsNoType<T>(propertyNames).ToArray();
             CTX.Lae(original, true, expressions);
-            var thisType = this.GetType();
-            var thatType = typeof(T);
+            Type thisType = this.GetType();
+            Type thatType = typeof(T);
 
             for (int i = 0; i < propertyNames.Length; i++)
             {
-                var prop = propertyNames[i];
-                var propInfo = thisType.GetProperty(prop);
+                string prop = propertyNames[i];
+                PropertyInfo propInfo = thisType.GetProperty(prop);
                 if (propInfo == null)
                 {
                     if (allPropInfo == null)
@@ -257,7 +257,7 @@ namespace MG.SharePoint
 
                     for (int p = 0; p < allPropInfo.Length; p++)
                     {
-                        var pi = allPropInfo[p];
+                        PropertyInfo pi = allPropInfo[p];
                         if (string.Equals(pi.Name, prop, StringComparison.InvariantCultureIgnoreCase))
                         {
                             propInfo = pi;
@@ -267,7 +267,7 @@ namespace MG.SharePoint
                     if (propInfo == null)
                         throw new ArgumentException(prop + " was not recognized as a valid property name for this object!");
                 }
-                var thatObj = thatType.InvokeMember(propInfo.Name, GETPROP, null, original, null);
+                object thatObj = thatType.InvokeMember(propInfo.Name, GETPROP, null, original, null);
                 if (thatObj is ClientObject && ToSPType(thatObj.GetType(), out Type newType))
                 {
                     MethodInfo GenericCast = this.GetType().GetMethod(

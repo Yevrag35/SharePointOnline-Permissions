@@ -53,10 +53,10 @@ namespace MG.SharePoint
         bool ISPObject.IsObjectPropertyInstantiated(string propertyName) => _roleAss.IsObjectPropertyInstantiated(propertyName);
         private string[] ParseBindings(RoleDefinitionBindingCollection bindingCol)
         {
-            var strPerms = new string[bindingCol.Count];
+            string[] strPerms = new string[bindingCol.Count];
             for (int i = 0; i < bindingCol.Count; i++)
             {
-                var bind = bindingCol[i];
+                RoleDefinition bind = bindingCol[i];
                 strPerms[i] = bind.Name;
             }
             return strPerms;

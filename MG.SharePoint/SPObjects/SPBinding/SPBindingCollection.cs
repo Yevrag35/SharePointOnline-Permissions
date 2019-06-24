@@ -78,7 +78,7 @@ namespace MG.SharePoint
             bool result = false;
             for (int i = 0; i < _list.Count; i++)
             {
-                var item = _list[i];
+                SPBinding item = _list[i];
                 if (string.Equals(principal, item.Name, StringComparison.OrdinalIgnoreCase))
                 {
                     result = true;
@@ -93,7 +93,7 @@ namespace MG.SharePoint
             bool result = false;
             for (int i = 0; i < _list.Count; i++)
             {
-                var item = _list[i];
+                SPBinding item = _list[i];
                 if (string.Equals(item.Definition.Name, roleDefinitionName, StringComparison.OrdinalIgnoreCase))
                 {
                     result = true;
@@ -149,7 +149,7 @@ namespace MG.SharePoint
             var newList = new SPBindingCollection(_list.Count);
             for (int i = 0; i < _list.Count; i++)
             {
-                var binding = _list[i];
+                SPBinding binding = _list[i];
                 newList.Add((SPBinding)binding.Clone());
             }
             return newList;
@@ -160,13 +160,13 @@ namespace MG.SharePoint
         #region IPermissionResolver Method
         public IEnumerable<SPBinding> ResolvePermissions(IDictionary bindingHashtable)
         {
-            var keys = bindingHashtable.Keys.Cast<string>().ToArray();
+            string[] keys = bindingHashtable.Keys.Cast<string>().ToArray();
             var bindings = new SPBinding[keys.Length];
             for (int i = 0; i < keys.Length; i++)
             {
-                var key = keys[i];
-                var prin = Convert.ToString(key);
-                var role = Convert.ToString(bindingHashtable[key]);
+                string key = keys[i];
+                string prin = Convert.ToString(key);
+                string role = Convert.ToString(bindingHashtable[key]);
                 bindings[i] = new SPBinding(prin, role);
             }
             return bindings;

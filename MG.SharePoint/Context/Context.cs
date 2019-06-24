@@ -51,10 +51,10 @@ namespace MG.SharePoint
 
         private static void Lae<T>(IEnumerable<T> objs, CmdLetContext ctx, bool andExecute, params Expression<Func<T, object>>[] retrievals) where T : ClientObject
         {
-            var cObjs = objs.ToArray();
+            T[] cObjs = objs.ToArray();
             for (int i = 0; i < cObjs.Length; i++)
             {
-                var obj = cObjs[i];
+                T obj = cObjs[i];
                 if (obj != null)
                 {
                     try

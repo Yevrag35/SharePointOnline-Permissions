@@ -160,7 +160,7 @@ namespace MG.SharePoint
                 SPWeb foundya = null;
                 for (int i = 0; i < _col.Count; i++)
                 {
-                    var l = _col[i];
+                    SPWeb l = _col[i];
                     if (string.Equals(l.Name, webTitle, StringComparison.InvariantCultureIgnoreCase))
                     {
                         foundya = l;
@@ -179,7 +179,7 @@ namespace MG.SharePoint
             var spWeb = new SPWebCollection(webCol.Count);
             for (int i = 0; i < webCol.Count; i++)
             {
-                var web = webCol[i];
+                Web web = webCol[i];
                 spWeb.Add((SPWeb)web);
             }
             spWeb.IsReadOnly = true;

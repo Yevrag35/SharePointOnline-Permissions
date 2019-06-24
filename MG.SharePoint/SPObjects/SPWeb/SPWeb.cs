@@ -57,7 +57,7 @@ namespace MG.SharePoint
                     new string[1] { "/" }, StringSplitOptions.RemoveEmptyEntries).ToArray());
 
             CTX.Login(CTX.SpecifiedTenantName, relativeUrl, PromptBehavior.Auto);
-            var tempWeb = CTX.SP1.Web;
+            Web tempWeb = CTX.SP1.Web;
             return tempWeb;
         }
     }

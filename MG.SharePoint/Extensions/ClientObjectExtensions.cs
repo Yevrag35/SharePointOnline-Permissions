@@ -21,9 +21,9 @@ namespace MG.SharePoint
             for (int i = 0; i < propertyNamesToLoad.Length; i++)
             {
                 string prop = propertyNamesToLoad[i];
-                var param1 = Expression.Parameter(typeof(T), P);
-                var name1 = Expression.Property(param1, prop);
-                var body1 = Expression.Convert(name1, typeof(object));
+                ParameterExpression param1 = Expression.Parameter(typeof(T), P);
+                MemberExpression name1 = Expression.Property(param1, prop);
+                UnaryExpression body1 = Expression.Convert(name1, typeof(object));
                 var lambda = Expression.Lambda<Func<T, object>>(body1, param1);
 
                 exprs.Add(lambda);
@@ -54,8 +54,8 @@ namespace MG.SharePoint
             where T : ClientObject
         {
             var expression = (MemberExpression)property.Body;
-            var propName = expression.Member.Name;
-            var isCollection = typeof(ClientObjectCollection).IsAssignableFrom(property.Body.Type);
+            string propName = expression.Member.Name;
+            bool isCollection = typeof(ClientObjectCollection).IsAssignableFrom(property.Body.Type);
             return isCollection ?
                 clientObject.IsObjectPropertyInstantiated(propName) :
                 clientObject.IsPropertyAvailable(propName);
@@ -65,14 +65,14 @@ namespace MG.SharePoint
             where T : ClientObject
         {
             //clientObject.Initialize();
-            var expressions = clientObject.GetPropertyExpressions(propertyName);
+            Expression<Func<T, object>>[] expressions = clientObject.GetPropertyExpressions(propertyName);
             clientObject.LoadProperty(expressions);
         }
 
         public static void LoadProperty<T>(this T clientObject, string[] propertyNames)
             where T : ClientObject
         {
-            var expressions = clientObject.GetPropertyExpressions(propertyNames);
+            Expression<Func<T, object>>[] expressions = clientObject.GetPropertyExpressions(propertyNames);
             clientObject.LoadProperty(expressions);
         }
 

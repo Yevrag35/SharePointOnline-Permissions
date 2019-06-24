@@ -22,13 +22,24 @@ namespace MG.SharePoint.PowerShell.Cmdlets.Lists
         [Parameter(Mandatory = true, ValueFromPipeline = true, ParameterSetName = "ByListInput")]
         public List InputObject { get; set; }
 
-        [Parameter(Mandatory = false, ParameterSetName = "ByDifferentWeb")]
+        [Parameter(Mandatory = false, Position = 0)]
+        [Alias("ListId", "Name", "Url")]
+        public Identity[] Identity { get; set; }
+
+        [Parameter(Mandatory = false)]
         public Web Web { get; set; }
 
         #endregion
 
         #region CMDLET PROCESSING
-        protected override void BeginProcessing() => base.BeginProcessing();
+        protected override void BeginProcessing()
+        {
+            base.BeginProcessing();
+            if (this.Web == null)
+            {
+                this.Web = CTX.SP1.Web;
+            }
+        }
 
         protected override void ProcessRecord()
         {
@@ -37,11 +48,43 @@ namespace MG.SharePoint.PowerShell.Cmdlets.Lists
                 this.InputObject.LoadListProps();
                 base.WriteObject(this.InputObject);
             }
+            else if (this.Identity != null && this.Identity.Length > 0)
+            {
+                for (int i = 0; i < this.Identity.Length; i++)
+                {
+                    List list = null;
+                    Identity id = this.Identity[i];
+                    if (id.IsString)
+                    {
+                        list = this.Web.Lists.GetByTitle((string)id);
+                    }
+                    else if (id.IsUrl && id.UriKind == UriKind.Relative)
+                    {
+                        list = this.Web.GetList(((Uri)id).ToString());
+                    }
+                    else if (id.IsGuid)
+                    {
+                        list = this.Web.Lists.GetById((Guid)id);
+                    }
+
+                    if (list != null)
+                    {
+                        try
+                        {
+                            list.LoadListProps();
+                            base.WriteObject(list);
+                        }
+                        catch (ServerException sex)
+                        {
+                            base.WriteError(sex, ErrorCategory.ObjectNotFound);
+                        }
+                    }
+                }
+            }
             else
             {
-                ListCollection listCol = CTX.SP1.Web.Lists;
-                listCol.LoadAllLists();
-                base.WriteObject(listCol, true);
+                this.Web.Lists.LoadAllLists();
+                base.WriteObject(this.Web.Lists, true);
             }
         }
 

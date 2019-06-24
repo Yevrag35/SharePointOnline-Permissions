@@ -42,7 +42,7 @@ namespace MG.SharePoint
             var spListCol = new SPListCollection(listCol.Count);
             for (int i = 0; i < listCol.Count; i++)
             {
-                var list = listCol[i];
+                List list = listCol[i];
                 spListCol._list.Add((SPList)list);
             }
             return spListCol;

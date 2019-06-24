@@ -161,7 +161,7 @@ namespace MG.SharePoint
                 SPFolder foundya = null;
                 for (int i = 0; i < _col.Count; i++)
                 {
-                    var l = _col[i];
+                    SPFolder l = _col[i];
                     if (string.Equals(l.Name, folderName, StringComparison.InvariantCultureIgnoreCase))
                     {
                         foundya = l;

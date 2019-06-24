@@ -160,7 +160,7 @@ namespace MG.SharePoint
                 SPListItem foundya = null;
                 for (int i = 0; i < _col.Count; i++)
                 {
-                    var l = _col[i];
+                    SPListItem l = _col[i];
                     if (string.Equals(l.Name, listItemName, StringComparison.InvariantCultureIgnoreCase))
                     {
                         foundya = l;

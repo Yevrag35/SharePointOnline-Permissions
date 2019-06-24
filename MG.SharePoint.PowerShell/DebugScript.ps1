@@ -8,3 +8,4 @@ $loginParams = @{
 }
 
 $web = Connect-SPOnline @loginParams
+Get-SPList "Code Library"

@@ -50,7 +50,7 @@ namespace MG.SharePoint
             var roleDefs = new SPPermissionCollection();
             for (int i = 0; i < _list.Count; i++)
             {
-                var spp = _list[i];
+                SPPermission spp = _list[i];
                 if ((spp.Type == PrincipalType.User && spp.LoginName.Equals(user.LoginName)) ||
                     (spp.Type == PrincipalType.SecurityGroup || spp.Type == PrincipalType.SharePointGroup &&
                     user.Groups.ContainsGroupByLoginName(spp.LoginName)))
@@ -68,7 +68,7 @@ namespace MG.SharePoint
         #region Operators
         public static SPPermissionCollection ResolvePermissions(SPSecurable securable)
         {
-            var roleAss = securable.SecObj.RoleAssignments;
+            RoleAssignmentCollection roleAss = securable.SecObj.RoleAssignments;
             if (!roleAss.AreItemsAvailable)
             {
                 CTX.Lae(roleAss, true, col => col.Include(
@@ -77,7 +77,7 @@ namespace MG.SharePoint
             }
 
             var permCol = new SPPermissionCollection(roleAss.Count);
-            foreach (var ass in roleAss)
+            foreach (RoleAssignment ass in roleAss)
             {
                 permCol._list.Add(SPPermission.ResolvePermission(ass, securable));
             }

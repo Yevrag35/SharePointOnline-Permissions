@@ -74,10 +74,10 @@ namespace MG.SharePoint
                 CTX.Lae(SecObj, true, s => s.RoleAssignments);
 
             Type secType = SecObj.GetType();
-            var genMeth = ExpressionMethod.MakeGenericMethod(secType);
-            var expressions = genMeth.Invoke(this, new object[1] { new string[2] { NameProperty, IdProperty }});
+            MethodInfo genMeth = ExpressionMethod.MakeGenericMethod(secType);
+            object expressions = genMeth.Invoke(this, new object[1] { new string[2] { NameProperty, IdProperty }});
 
-            var specLae = typeof(CTX).GetMethod("SpecialLae", BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(SecObj.GetType());
+            MethodInfo specLae = typeof(CTX).GetMethod("SpecialLae", BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(SecObj.GetType());
             specLae.Invoke(null, new object[3] { SecObj, true, expressions });
 
             Permissions = SPPermissionCollection.ResolvePermissions(this);
@@ -139,7 +139,7 @@ namespace MG.SharePoint
 
         public void AddPermission(string logonName, string roleDefinition, bool forceBreak, bool permissionsApplyRecursively)
         {
-            var user = CTX.SP1.Web.EnsureUser(logonName);
+            User user = CTX.SP1.Web.EnsureUser(logonName);
             CTX.Lae(user, true);
             if (CTX.AllRoles == null)
             {
@@ -177,7 +177,7 @@ namespace MG.SharePoint
             var list = new List<RoleAssignment>(bindingCol.Count);
             for (int i = 0; i < bindingCol.Count; i++)
             {
-                var binding = bindingCol[i];
+                SPBinding binding = bindingCol[i];
                 var bCol = new RoleDefinitionBindingCollection(CTX.SP1)
                 {
                     binding.Definition
@@ -185,7 +185,7 @@ namespace MG.SharePoint
                 list.Add(SecObj.RoleAssignments.Add(
                     binding.Principal, bCol));
 
-                foreach (var ass in list)
+                foreach (RoleAssignment ass in list)
                 {
                     CTX.Lae(ass, false);
                 }
@@ -196,7 +196,7 @@ namespace MG.SharePoint
             {
                 for (int ra = 0; ra < list.Count; ra++)
                 {
-                    var r = list[ra];
+                    RoleAssignment r = list[ra];
                     CTX.Lae(r, true, ras => ras.Member.Id, ras => ras.Member.Title);
                 }
                 Permissions.AddRange(this, list);
@@ -216,14 +216,14 @@ namespace MG.SharePoint
             if (!HasUniquePermissions.HasValue || (HasUniquePermissions.HasValue && !HasUniquePermissions.Value))
                 throw new InvalidOperationException("This item does not contain unique permissions.  No permissions were removed.");
 
-            var roleAss = SecObj.RoleAssignments.GetByPrincipal(principal);
+            RoleAssignment roleAss = SecObj.RoleAssignments.GetByPrincipal(principal);
             roleAss.DeleteObject();
             CTX.Lae();
         }
 
         public void RemovePermission(string logonName)
         {
-            var principal = CTX.SP1.Web.EnsureUser(logonName);
+            User principal = CTX.SP1.Web.EnsureUser(logonName);
             RemovePermission(principal);
         }
 
@@ -233,13 +233,13 @@ namespace MG.SharePoint
 
         IEnumerable<SPBinding> ISPPermissionResolver.ResolvePermissions(IDictionary permissions)
         {
-            var keys = permissions.Keys.Cast<string>().ToArray();
+            string[] keys = permissions.Keys.Cast<string>().ToArray();
             var bindingCol = new SPBindingCollection();
             for (int i = 0; i < keys.Length; i++)
             {
-                var key = keys[i];
-                var prins = permissions[key];
-                var role = Convert.ToString(key);
+                string key = keys[i];
+                object prins = permissions[key];
+                string role = Convert.ToString(key);
                 string[] allPrins;
                 if (!prins.GetType().IsArray)
                     bindingCol.Add(new SPBinding(Convert.ToString(prins), role));
@@ -248,7 +248,7 @@ namespace MG.SharePoint
                     allPrins = ((IEnumerable)prins).Cast<string>().ToArray();
                     for (int p = 0; p < allPrins.Length; p++)
                     {
-                        var prin = allPrins[p];
+                        string prin = allPrins[p];
                         bindingCol.Add(new SPBinding(prin, role));
                     }
                 }
@@ -283,14 +283,14 @@ namespace MG.SharePoint
             
             for (int i = 0; i < lic.Count; i++)
             {
-                var li = lic[i];
+                SPListItem li = lic[i];
                 li.AddPermission(bindCol, true, false);
             }
         }
 
         private void AddPermissionRecursively(SPBindingCollection bindCol)
         {
-            var thisType = this.GetType().Name;
+            string thisType = this.GetType().Name;
             switch (thisType)
             {
                 case "SPFolder":

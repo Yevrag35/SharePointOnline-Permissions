@@ -167,7 +167,7 @@ namespace MG.SharePoint
                 SPFile foundya = null;
                 for (int i = 0; i < _col.Count; i++)
                 {
-                    var l = _col[i];
+                    SPFile l = _col[i];
                     if (string.Equals(l.Name, fileName, StringComparison.InvariantCultureIgnoreCase))
                     {
                         foundya = l;

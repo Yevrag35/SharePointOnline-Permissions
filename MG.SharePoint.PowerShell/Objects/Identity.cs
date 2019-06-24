@@ -1,96 +1,99 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 
 namespace MG.SharePoint.PowerShell
 {
     public class Identity
     {
-        private readonly string _strVal;
-        private Guid _guidVal;
+        #region FIELDS/CONSTANTS
+        private Guid _guid;
+        private int _int;
+        private string _str;
+        private Uri _uri;
 
-        private const string CAST = "Cast";
-        private const BindingFlags FLAGS = BindingFlags.NonPublic | BindingFlags.Instance;
-        private static readonly MethodInfo castMethod = typeof(Identity).GetMethod(CAST, FLAGS);
-        private static readonly Type STR_TYPE = typeof(string);
-        private static readonly Type GUID_TYPE = typeof(Guid);
+        #endregion
 
+        #region PROPERTIES
         public bool IsGuid { get; }
-        public Type ImpliedType { get; }
-        public object Value => !this.IsGuid
-            ? _strVal
-            : (object)_guidVal;
+        public bool IsNumeric { get; }
+        public bool IsString { get; }
+        public bool IsUrl { get; }
+        public UriKind UriKind { get; }
 
-        private Identity(object incoming)
+        #endregion
+
+        #region CONSTRUCTORS
+        private Identity(string str)
         {
-            if (Guid.TryParse(Convert.ToString(incoming), out Guid guid))
+            if (int.TryParse(str, out int outInt))
             {
-                _guidVal = guid;
-                this.ImpliedType = GUID_TYPE;
+                this.IsNumeric = true;
+                _int = outInt;
+            }
+            else if (Guid.TryParse(str, out Guid outGuid))
+            {
                 this.IsGuid = true;
+                _guid = outGuid;
             }
-            else if (incoming is string str)
+            else if (str.StartsWith("/"))
             {
-                _strVal = str;
-                this.ImpliedType = STR_TYPE;
-                this.IsGuid = false;
-            }
-            else if (incoming is ValueType vt)
-            {
-                _strVal = Convert.ToString(vt);
-                this.ImpliedType = vt.GetType();
-                this.IsGuid = false;
+                if (Uri.TryCreate(str, UriKind.Absolute, out Uri outUri))
+                {
+                    _uri = outUri;
+                    this.IsUrl = true;
+                    this.UriKind = UriKind.Absolute;
+                }
+                else if (Uri.TryCreate(str, UriKind.Relative, out Uri relUri))
+                {
+                    _uri = relUri;
+                    this.IsUrl = true;
+                    this.UriKind = UriKind.Relative;
+                }
+                else
+                {
+                    _str = str;
+                    this.IsString = true;
+                }
             }
             else
-                throw new ArgumentException("'incoming' is not of type \"System.String\" or \"System.Guid\" and cannot be converted to as such.");
+            {
+                _str = str;
+                this.IsString = true;
+            }
         }
-
-        public T GetValue<T>()
+        private Identity(Guid id)
         {
-            Type tt = typeof(T);
-            if (tt.Equals(STR_TYPE) || (tt.IsValueType && !tt.Equals(GUID_TYPE)))
-            {
-                MethodInfo genMeth = castMethod.MakeGenericMethod(tt);
-                try
-                {
-                    return (T)genMeth.Invoke(this, new object[1] { this.Value });
-                }
-                catch (TargetInvocationException tie)
-                {
-                    throw new InvalidCastException(tie.InnerException.Message);
-                }
-            }
-            else if (tt.Equals(GUID_TYPE) && this.ImpliedType.Equals(GUID_TYPE))
-            {
-                object retVal = _guidVal;
-                return (T)retVal;
-            }
-            else
-                throw new InvalidCastException("Identity can only be converted to a 'System.String' or 'System.ValueType' value.");
+            _guid = id;
+            this.IsGuid = true;
+        }
+        private Identity(int id)
+        {
+            _int = id;
+            this.IsNumeric = true;
+        }
+        private Identity(Uri url)
+        {
+            _uri = url;
+            this.IsUrl = true;
+            this.UriKind = url.IsAbsoluteUri
+                ? UriKind.Absolute
+                : UriKind.Relative;
         }
 
-        private T Cast<T>(dynamic o) => (T)o;
-        
-        public static implicit operator Identity(Guid guid) => new Identity(guid);
+        #endregion
+
+        #region STATIC CASTS/OPERATORS
         public static implicit operator Identity(string str) => new Identity(str);
-        public static implicit operator Identity(ValueType vt) => new Identity(vt);
+        public static implicit operator Identity(int num) => new Identity(num);
+        public static implicit operator Identity(Guid guid) => new Identity(guid);
+        public static implicit operator Identity(Uri url) => new Identity(url);
 
-        public static explicit operator Guid(Identity identity)
-        {
-            if (identity.ImpliedType.Equals(typeof(Guid)))
-                return identity._guidVal;
+        public static explicit operator string(Identity id) => id._str;
+        public static explicit operator int(Identity id) => id._int;
+        public static explicit operator Guid(Identity id) => id._guid;
+        public static explicit operator Uri(Identity id) => id._uri;
 
-            else
-                throw new InvalidCastException("Identity is not of type 'System.Guid'.");
-        }
-        public static explicit operator string(Identity identity)
-        {
-            if (!identity.IsGuid)
-                return identity._strVal;
-
-            else
-                throw new InvalidCastException("Identity is not of type 'System.String'.");
-        }
+        #endregion
     }
 }

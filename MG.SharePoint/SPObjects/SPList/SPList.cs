@@ -173,7 +173,7 @@ namespace MG.SharePoint
                 listName = "/" + listName;
             }
 
-            var allLists = CTX.SP1.Web.Lists;
+            ListCollection allLists = CTX.SP1.Web.Lists;
             CTX.Lae(allLists, true, ls => ls.Include(
                     l => l.Title, l => l.RootFolder.ServerRelativeUrl
                 )
