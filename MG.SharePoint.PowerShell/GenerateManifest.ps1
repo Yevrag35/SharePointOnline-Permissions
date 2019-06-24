@@ -44,7 +44,7 @@ foreach ($cs in $csFiles)
 {
     $match = [regex]::Match($cs.Name, $pattern)
     $Cmdlets.Add(($cmdletFormat -f $match.Groups[1].Value, $match.Groups[2].Value));
-    $content = Get-Content -Path $file -Raw;
+    $content = Get-Content -Path $cs.PSPath -Raw;
     $aliasMatch = [regex]::Match($content, $aliasPat, [System.Text.RegularExpressions.RegexOptions]::IgnoreCase);
     if ($aliasMatch.Success)
     {
@@ -72,8 +72,8 @@ $manifest = @{
     DotNetFrameworkVersion = '4.7'
     RootModule             = $TargetFileName
     RequiredAssemblies     = $allDlls
-    AliasesToExport        = ''
-    CmdletsToExport        = $Cmdlets
+    AliasesToExport        = $Aliases.ToArray()
+    CmdletsToExport        = $Cmdlets.ToArray()
     DefaultCommandPrefix   = "SP"
     FormatsToProcess       = $allFormats
     ProjectUri             = 'https://github.com/Yevrag35/SharePointOnline-MFA'

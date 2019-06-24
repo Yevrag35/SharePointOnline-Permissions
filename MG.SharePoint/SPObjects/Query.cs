@@ -23,12 +23,15 @@ namespace MG.SharePoint
         private const string FILE = "File";
         private const string FILE_LEAF_REF = "FileLeafRef";
         private const string FIELD_REF = "FieldRef";
+        private const string ID = "ID";
         private const string NAME = "Name";
         private const string TEXT = "Text";
         private const string TYPE = "Type";
         private const string VALUE = "Value";
 
-        private const string EX_MSG = "The string collection needs to contains more than one string.";
+        private const string EX_MSG = "\"{0}\" is not a valid field for the given FieldCollection.";
+
+        private readonly FieldCollection _fieldCol;
 
         #endregion
 
@@ -40,8 +43,11 @@ namespace MG.SharePoint
         #region CONSTRUCTORS
         public Query() : base() { }
 
-        public Query(IDictionary dict)
-            : base()
+        public Query(FieldCollection fields)
+            : base() => _fieldCol = fields;
+
+        public Query(IDictionary dict, FieldCollection fields)
+            : this(fields)
         {
             string[] keys = dict.Keys.Cast<string>().ToArray();
             var xmlDoc = new XmlDocument();
@@ -56,28 +62,47 @@ namespace MG.SharePoint
             for (int i = 0; i < keys.Length; i++)
             {
                 string key = keys[i];
+                string value = Convert.ToString(dict[key]);
+
+                if (key.Equals(FILE, StringComparison.CurrentCultureIgnoreCase))
+                    key = FILE_LEAF_REF;
+
+                else if (key.Equals(ID, StringComparison.CurrentCultureIgnoreCase))
+                    key = ID;
+
+                Field realField = this.ResolveFieldInternalName(key);
+                if (realField == null)
+                    this.ThrowArgumentException(key);
+
                 XmlNode eq = parent.AppendChild(xmlDoc.CreateElement(EQ));
 
                 var ele = (XmlElement)eq.AppendChild(xmlDoc.CreateElement(FIELD_REF));
-                ele.SetAttribute(NAME, key);
+                ele.SetAttribute(NAME, realField.InternalName);
+
                 var val = (XmlElement)eq.AppendChild(xmlDoc.CreateElement(VALUE));
-                if (key.Equals(FILE_LEAF_REF, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    val.SetAttribute(TYPE, FILE);
-                }
-                else
-                {
-                    val.SetAttribute(TYPE, TEXT);
-                }
-                val.AppendChild(xmlDoc.CreateTextNode(Convert.ToString(dict[key])));
+                val.SetAttribute(TYPE, realField.TypeAsString);
+                val.AppendChild(xmlDoc.CreateTextNode(value));
             }
 
             this.ViewXml = this.FormatOneLineXml(xmlDoc);
         }
 
-        public Query(string fieldName, ICollection<string> col)
-            : base()
+        public Query(string fieldName, IEnumerable<string> col, FieldCollection fields)
+            : this(fields)
         {
+            if (string.IsNullOrEmpty(fieldName))
+                throw new ArgumentNullException("fieldName");
+
+            else if (fieldName.Equals(FILE, StringComparison.CurrentCultureIgnoreCase))
+                fieldName = FILE_LEAF_REF;
+
+            else if (fieldName.Equals(ID, StringComparison.CurrentCultureIgnoreCase))
+                fieldName = ID;
+
+            Field realField = this.ResolveFieldInternalName(fieldName);
+            if (realField == null)
+                this.ThrowArgumentException(fieldName);
+
             string[] items = col.ToArray();
 
             var xmlDoc = new XmlDocument();
@@ -95,18 +120,12 @@ namespace MG.SharePoint
                 XmlNode eq = parent.AppendChild(xmlDoc.CreateElement(EQ));
 
                 var ele = (XmlElement)eq.AppendChild(xmlDoc.CreateElement(FIELD_REF));
-                ele.SetAttribute(NAME, fieldName);
+
+                ele.SetAttribute(NAME, realField.InternalName);
 
                 var val = (XmlElement)eq.AppendChild(xmlDoc.CreateElement(VALUE));
+                val.SetAttribute(TYPE, realField.TypeAsString);
 
-                if (fieldName.Equals(FILE_LEAF_REF, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    val.SetAttribute(TYPE, FILE);
-                }
-                else
-                {
-                    val.SetAttribute(TYPE, TEXT);
-                }
                 val.AppendChild(xmlDoc.CreateTextNode(item));
             }
 
@@ -139,17 +158,25 @@ namespace MG.SharePoint
             }
         }
 
-        //private JObject GetTemplate()
-        //{
-        //    return new JObject(
-        //            new JProperty("View",
-        //                new JObject(
-        //                    new JProperty("Query",
-        //                        new JObject(
-        //                            new JProperty("Where",
-        //                                new JObject(
-        //                                    new JProperty("Eq", new JObject()))))))));
-        //}
+        private Field ResolveFieldInternalName(string possible)
+        {
+            if (_fieldCol == null)
+                throw new InvalidOperationException("No fields have been specified for this query.");
+
+            Field field = _fieldCol.GetByInternalNameOrTitle(possible);
+            field.Context.Load(field, f => f.InternalName, f => f.TypeAsString);
+            try
+            {
+                field.Context.ExecuteQuery();
+                return field;
+            }
+            catch (ServerException)
+            {
+                return null;
+            }
+        }
+
+        private void ThrowArgumentException(string fieldName) => throw new ArgumentException(string.Format(EX_MSG, fieldName));
 
         #endregion
     }

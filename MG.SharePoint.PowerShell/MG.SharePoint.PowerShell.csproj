@@ -38,7 +38,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MG.Dynamic">
-      <HintPath>D:\Local_Repos\MG.SharePoint\MG.SharePoint.PowerShell\Assemblies\MG.Dynamic.dll</HintPath>
+      <HintPath>Assemblies\MG.Dynamic.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.IdentityModel.Clients.ActiveDirectory">
       <HintPath>Assemblies\Microsoft.IdentityModel.Clients.ActiveDirectory.dll</HintPath>
@@ -54,11 +54,11 @@
     </Reference>
     <Reference Include="Microsoft.SharePoint.Client, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Repos\MG.SharePoint\MG.SharePoint.PowerShell\Assemblies\Microsoft.SharePoint.Client.dll</HintPath>
+      <HintPath>Assemblies\Microsoft.SharePoint.Client.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.SharePoint.Client.Runtime, Version=16.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Repos\MG.SharePoint\MG.SharePoint.PowerShell\Assemblies\Microsoft.SharePoint.Client.Runtime.dll</HintPath>
+      <HintPath>Assemblies\Microsoft.SharePoint.Client.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -103,10 +103,10 @@
     <None Include="TypeFormats\MG.SharePoint.SPFolder.ps1xml" />
     <None Include="TypeFormats\MG.SharePoint.SPListItem.ps1xml" />
     <None Include="TypeFormats\MG.SharePoint.SPPermission.ps1xml" />
-    <None Include="TypeFormats\MG.SharePoint.SPWeb.ps1xml" />
+    <None Include="TypeFormats\SPWeb.ps1xml" />
     <None Include="TypeFormats\SPGroup.ps1xml" />
     <None Include="TypeFormats\SPList.ps1xml" />
-    <None Include="TypeFormats\SPList.ps1xml.old" />
+    <None Include="TypeFormats\SPListItem.ps1xml" />
     <None Include="TypeFormats\SPUser.ps1xml" />
   </ItemGroup>
   <ItemGroup>

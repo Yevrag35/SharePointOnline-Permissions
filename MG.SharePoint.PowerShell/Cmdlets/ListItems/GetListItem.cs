@@ -15,7 +15,7 @@ namespace MG.SharePoint.PowerShell.Cmdlets.ListItems
     public class GetListItem : BaseSPCmdlet
     {
         #region PRIVATE FIELDS/CONSTANTS
-
+        private IEnumerable<string> _strCol;
 
         #endregion
 
@@ -47,38 +47,103 @@ namespace MG.SharePoint.PowerShell.Cmdlets.ListItems
         public string OrFieldName { get; set; }
 
         [Parameter(Mandatory = true, ParameterSetName = "ByOrConditions")]
-        public ICollection<string> OrConditions { get; set; }
+        public object[] OrConditions { get; set; }
 
         #endregion
 
         #region CMDLET PROCESSING
-        protected override void BeginProcessing() => base.BeginProcessing();
+        protected override void BeginProcessing()
+        {
+            base.BeginProcessing();
+            if (this.OrConditions != null && this.OrConditions.Length > 0)
+            {
+                if (this.OrConditions is IEnumerable<string> strCol)
+                    _strCol = strCol;
+
+                else
+                {
+                    try
+                    {
+                        _strCol = this.OrConditions.Cast<string>();
+                    }
+                    catch (InvalidCastException ice)
+                    {
+                        throw new ArgumentException("OrConditions must be an array of strings.", ice);
+                    }
+                }       
+            }
+        }
 
         protected override void ProcessRecord()
         {
             if (this.InputObject != null)
             {
                 this.InputObject.LoadListItemProps();
+                //this.InputObject.TryLoadAttachments();
                 base.WriteObject(this.InputObject);
             }
             else
             {
+                object items = null;
                 switch (ParameterSetName)
                 {
                     case "ByAndConditions":
                     {
+                        var query = new Query(this.AndConditions, this.List.Fields);
+                        items = this.List.GetItems(query);
                         break;
                     }
 
                     case "ByOrConditions":
                     {
-
+                        var query = new Query(this.OrFieldName, _strCol, this.List.Fields);
+                        items = this.List.GetItems(query);
                         break;
                     }
 
+                    case "ByItemId":
+                    {
+                        var list = new List<ListItem>(this.ItemId.Length);
+                        PopulateListById(ref list, this.List, this.ItemId);
+                        items = list;
+                        break;
+                    }
+
+                    case "ByItemGuid":
+                    {
+                        var list = new List<ListItem>(this.ItemUniqueId.Length);
+                        PopulateListByUniqueId(ref list, this.List, this.ItemUniqueId);
+                        items = list;
+                        break;
+                    }
+                    
                     default:
                     {
+                        Query query = this.Title != null && this.Title.Length > 0 
+                            ? new Query("Title", this.Title, this.List.Fields) 
+                            : new Query();
+
+                        items = this.List.GetItems(query);
                         break;
+                    }
+                }
+                
+                if (items is ListItemCollection itemCol)
+                {
+                    itemCol.Initialize();
+                    if (itemCol.Count > 0)
+                    {
+                        itemCol.LoadAllListItems();
+                        base.WriteObject(itemCol, true);
+                    }
+                }
+                else if (items is List<ListItem> listItems)
+                {
+                    for (int i = 0; i < listItems.Count; i++)
+                    {
+                        ListItem li = listItems[i];
+                        li.LoadListItemProps();
+                        base.WriteObject(li);
                     }
                 }
             }
@@ -87,8 +152,23 @@ namespace MG.SharePoint.PowerShell.Cmdlets.ListItems
         #endregion
 
         #region CMDLET METHODS
-        public static Query GetAndQuery(IDictionary hashtable) => new Query(hashtable);
-        public static Query GetOrQuery(string fieldName, ICollection<string> colStrs) => new Query(fieldName, colStrs);
+        //public static Query GetAndQuery(IDictionary hashtable) => new Query(hashtable);
+        //public static Query GetOrQuery(string fieldName, ICollection<string> colStrs) => new Query(fieldName, colStrs);
+
+        private static void PopulateListById(ref List<ListItem> list, List parentList, params int[] ids)
+        {
+            for (int i = 0; i < ids.Length; i++)
+            {
+                list.Add(parentList.GetItemById(ids[i]));
+            }
+        }
+        private static void PopulateListByUniqueId(ref List<ListItem> list, List parentList, params Guid[] uniqueIds)
+        {
+            for (int i = 0; i < uniqueIds.Length; i++)
+            {
+                list.Add(parentList.GetItemByUniqueId(uniqueIds[i]));
+            }
+        }
 
         #endregion
     }
