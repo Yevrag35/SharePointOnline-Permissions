@@ -152,8 +152,6 @@ namespace MG.SharePoint.PowerShell.Cmdlets.ListItems
         #endregion
 
         #region CMDLET METHODS
-        //public static Query GetAndQuery(IDictionary hashtable) => new Query(hashtable);
-        //public static Query GetOrQuery(string fieldName, ICollection<string> colStrs) => new Query(fieldName, colStrs);
 
         private static void PopulateListById(ref List<ListItem> list, List parentList, params int[] ids)
         {

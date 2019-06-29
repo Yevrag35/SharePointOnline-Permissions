@@ -29,7 +29,7 @@ namespace MG.SharePoint.PowerShell.Cmdlets.Files
         [Parameter(Mandatory = true, DontShow = true, ParameterSetName = "ByFileCollection")]
         public FileCollection FileCollection { get; set; }
 
-        [Parameter(Mandatory = false, ValueFromPipeline = true, ParameterSetName = "ByWebInput")]
+        //[Parameter(Mandatory = false, ValueFromPipeline = true, ParameterSetName = "ByWebInput")]
 
 
         #endregion
