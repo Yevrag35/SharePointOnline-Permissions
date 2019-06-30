@@ -90,6 +90,7 @@
     <None Include="Cmdlets\Permissions\GetPermission.cs.old" />
     <Compile Include="Cmdlets\ListItems\GetListItem.cs" />
     <Compile Include="Cmdlets\Lists\GetList.cs" />
+    <Compile Include="Cmdlets\PropertyLoader\RequestProperty.cs" />
     <Compile Include="Cmdlets\Users\GetUser.cs" />
     <Compile Include="Cmdlets\Webs\GetWeb.cs" />
     <None Include="Objects\Identity.cs.old" />

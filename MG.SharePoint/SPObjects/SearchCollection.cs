@@ -14,8 +14,8 @@ namespace MG.SharePoint
         #endregion
 
         #region PROPERTIES
-        public bool ContainsFiles => _list.Count > 0 && _list.Exists(x => x.TypedObject.Equals(SearchObject.FILE_TYPE));
-        public bool ContainsFolders => _list.Count > 0 && _list.Exists(x => x.TypedObject.Equals(SearchObject.FOLDER_TYPE));
+        public bool ContainsFiles => _list.Count > 0 && _list.Exists(x => x.Type == SearchObjectType.File);
+        public bool ContainsFolders => _list.Count > 0 && _list.Exists(x => x.Type == SearchObjectType.Folder);
         public ClientContext Context { get; }
         public int Count => _list.Count;
         public bool IsReadOnly => false;
