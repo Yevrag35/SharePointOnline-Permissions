@@ -20,7 +20,7 @@ namespace MG.SharePoint
         #region PROPERTIES
         public string Name { get; }
         public Guid Id { get; }
-        public Type TypedObject { get; }
+        public SearchObjectType Type { get; }
 
         #endregion
 
@@ -29,22 +29,25 @@ namespace MG.SharePoint
         {
             this.Name = spFile.Name;
             this.Id = spFile.UniqueId;
-            this.TypedObject = FILE_TYPE;
+            this.Type = SearchObjectType.File;
             _cliObj = spFile;
         }
         public SearchObject(Folder spFolder)
         {
             this.Name = spFolder.Name;
             this.Id = spFolder.UniqueId;
-            this.TypedObject = FOLDER_TYPE;
+            this.Type = SearchObjectType.Folder;
             _cliObj = spFolder;
         }
 
         #endregion
 
         #region PUBLIC METHODS
-        public bool NameMatchesId(params Guid[] ids)
+        public bool NameMatchesId(SearchObjectType type, params Guid[] ids)
         {
+            if (this.Type != type)
+                return false;
+
             if (ids == null)
                 throw new ArgumentNullException("UniqueIds");
 
@@ -59,8 +62,11 @@ namespace MG.SharePoint
             }
             return result;
         }
-        public bool NameMatchesPattern(params WildcardPattern[] wcps)
+        public bool NameMatchesPattern(SearchObjectType type, params WildcardPattern[] wcps)
         {
+            if (this.Type != type)
+                return false;
+
             if (wcps == null)
                 throw new ArgumentNullException("WildcardPatterns");
 
@@ -76,8 +82,11 @@ namespace MG.SharePoint
 
             return result;
         }
-        public bool NameMatchesString(params string[] strs)
+        public bool NameMatchesString(SearchObjectType type, params string[] strs)
         {
+            if (this.Type != type)
+                return false;
+
             if (strs == null)
                 throw new ArgumentNullException("Strings");
 
@@ -87,7 +96,7 @@ namespace MG.SharePoint
                 pats[i] = new WildcardPattern(strs[i], WildcardOptions.IgnoreCase);
             }
 
-            return this.NameMatchesPattern(pats);
+            return this.NameMatchesPattern(type, pats);
         }
 
         public ClientObject ReturnLoaded()
@@ -113,5 +122,21 @@ namespace MG.SharePoint
 
 
         #endregion
+    }
+
+    public class SearchComparer : IComparer<SearchObject>
+    {
+        public int Compare(SearchObject x, SearchObject y) => x.Name.CompareTo(y.Name);
+    }
+    public class SearchEquality : IEqualityComparer<SearchObject>
+    {
+        public bool Equals(SearchObject x, SearchObject y) => x.Id.Equals(y.Id);
+        public int GetHashCode(SearchObject obj) => 0;
+    }
+
+    public enum SearchObjectType
+    {
+        File,
+        Folder
     }
 }

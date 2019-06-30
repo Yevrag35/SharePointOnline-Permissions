@@ -9,22 +9,42 @@ namespace MG.SharePoint
     public class SearchCollection : ICollection<SearchObject>
     {
         #region FIELDS/CONSTANTS
-        private readonly List<SearchObject> _list;
+        private List<SearchObject> _list;
 
         #endregion
 
         #region PROPERTIES
         public bool ContainsFiles => _list.Count > 0 && _list.Exists(x => x.TypedObject.Equals(SearchObject.FILE_TYPE));
         public bool ContainsFolders => _list.Count > 0 && _list.Exists(x => x.TypedObject.Equals(SearchObject.FOLDER_TYPE));
+        public ClientContext Context { get; }
         public int Count => _list.Count;
         public bool IsReadOnly => false;
 
         #endregion
 
         #region CONSTRUCTORS
-        public SearchCollection() => _list = new List<SearchObject>();
-        public SearchCollection(int capacity) => _list = new List<SearchObject>(capacity);
-        public SearchCollection(IEnumerable<SearchObject> objs) => _list = new List<SearchObject>(objs);
+        public SearchCollection()
+            : this(CTX.SP1) { }
+        public SearchCollection(ClientContext ctx)
+        {
+            this.Context = ctx;
+            _list = new List<SearchObject>();
+        }
+        public SearchCollection(int capacity)
+            : this(CTX.SP1, capacity) { }
+        public SearchCollection(ClientContext ctx, int capacity)
+        {
+            this.Context = ctx;
+
+            _list = new List<SearchObject>(capacity);
+        }
+        public SearchCollection(IEnumerable<SearchObject> objs)
+            : this(CTX.SP1, objs) { }
+        public SearchCollection(ClientContext ctx, IEnumerable<SearchObject> objs)
+        {
+            this.Context = ctx;
+            _list = new List<SearchObject>(objs);
+        }
 
         #endregion
 
@@ -32,7 +52,7 @@ namespace MG.SharePoint
         public void Add(File file) => _list.Add(new SearchObject(file));
         public void Add(Folder folder) => _list.Add(new SearchObject(folder));
         public void Add(SearchObject item) => _list.Add(item);
-        public void AddFromFileCollection(FileCollection fileCol)
+        public void AddFileFromFileCollection(FileCollection fileCol)
         {
             fileCol.Context.Load(fileCol, fc => fc.Include(f => f.Name, f => f.UniqueId));
             fileCol.Context.ExecuteQuery();
@@ -42,7 +62,16 @@ namespace MG.SharePoint
                 _list.Add(new SearchObject(fileCol[i]));
             }
         }
-        public void AddFromFolderCollection(FolderCollection folderCol)
+        public void AddFileFromFolderCollection(FolderCollection folderCol)
+        {
+            folderCol.Initialize();
+            foreach (Folder topFol in folderCol.Where(fol => !fol.Name.StartsWith("_")))
+            {
+                this.LoadSubFilesAndFolders(topFol);
+            }
+            this.RemoveDuplicates();
+        }
+        public void AddFolderFromFolderCollection(FolderCollection folderCol)
         {
             folderCol.Context.Load(folderCol, fc => fc.Include(f => f.Name, f => f.UniqueId));
             folderCol.Context.ExecuteQuery();
@@ -70,13 +99,45 @@ namespace MG.SharePoint
         public IEnumerator<SearchObject> GetEnumerator() => _list.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => _list.GetEnumerator();
         public bool Remove(SearchObject item) => _list.Remove(item);
+        public void RemoveDuplicates() => _list = _list.Distinct(new SearchEquality()).ToList();
+        public void Sort() => _list.Sort(new SearchComparer());
+        public void Sort(IComparer<SearchObject> comparer) => _list.Sort(comparer);
         public override string ToString() => string.Join(", ", _list.Select(x => x.Name));
         public bool TrueForAll(Predicate<SearchObject> match) => _list.TrueForAll(match);
 
         #endregion
 
         #region BACKEND/PRIVATE METHODS
+        private void LoadSubFilesAndFolders(Folder fol)
+        {
+            fol.Context.Load(fol, x => x.Files.Include(f => f.Name, f => f.UniqueId),
+                x => x.Folders.Include(fo => fo.Name, fo => fo.UniqueId));
 
+            try
+            {
+                fol.Context.ExecuteQuery();
+            }
+            catch (ServerException)
+            {
+                return;
+            }
+
+            if (fol.Files.Count > 0)
+            {
+                this.AddFileFromFileCollection(fol.Files);
+            }
+
+            if (fol.Folders.Count > 0)
+            {
+                for (int i = 0; i < fol.Folders.Count; i++)
+                {
+                    Folder subFol = fol.Folders[i];
+                    this.LoadSubFilesAndFolders(subFol);
+                    this.Add(subFol);
+                }
+            }
+            this.Add(fol);
+        }
 
         #endregion
     }
