@@ -15,7 +15,7 @@ namespace MG.SharePoint.PowerShell
     public class GetFolder : BaseSPCmdlet
     {
         #region PRIVATE FIELDS/CONSTANTS
-
+        private const string EX_MSG = "The folder \"{0}\" could not be retrieved.  {1}";
 
         #endregion
 
@@ -101,8 +101,22 @@ namespace MG.SharePoint.PowerShell
                 else
                 {
                     this.Web.Folders.Initialize();
-                    this.Web.Folders.LoadAllFolders();
-                    base.WriteObject(this.Web.Folders, true);
+                    this.Web.Context.Load(this.Web.Folders, fols => fols.Include(f => f.Name));
+                    this.Web.Context.ExecuteQuery();
+                    foreach (Folder f in this.Web.Folders.Where(x => !x.Name.StartsWith("_")))
+                    { 
+                        try
+                        {
+                            f.LoadFolderProps();
+                            base.WriteObject(f);
+                        }
+                        catch (ServerException sex)
+                        {
+                            f.LoadProperty(x => x.Name);
+                            string msg = string.Format(EX_MSG, f.Name, sex.Message);
+                            base.WriteError(msg, sex, ErrorCategory.MetadataError, f);
+                        }
+                    }
                 }
             }
         }

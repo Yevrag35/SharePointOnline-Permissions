@@ -86,7 +86,6 @@
     <None Include="Cmdlets\Permissions\AddPermission.cs" />
     <Compile Include="Cmdlets\Bases\BaseSPCmdlet.cs" />
     <None Include="Cmdlets\Permissions\GetPermission.cs.old" />
-    <None Include="Cmdlets\Folders\GetSPFolder.cs.old" />
     <Compile Include="Cmdlets\ListItems\GetListItem.cs" />
     <Compile Include="Cmdlets\Lists\GetList.cs" />
     <Compile Include="Cmdlets\Users\GetUser.cs" />
