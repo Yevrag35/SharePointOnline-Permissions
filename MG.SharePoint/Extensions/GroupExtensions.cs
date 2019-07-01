@@ -8,6 +8,16 @@ namespace MG.SharePoint
 {
     public static class GroupExtensions
     {
+        public static bool IsLoaded(this Group grp)
+        {
+            return grp.IsPropertyReady(g => g.AllowMembersEditMembership, g => g.AllowRequestToJoinLeave,
+                g => g.AutoAcceptRequestToJoinLeave, g => g.CanCurrentUserEditMembership, g => g.CanCurrentUserManageGroup,
+                g => g.CanCurrentUserViewMembership, g => g.Description, g => g.Id, g => g.IsHiddenInUI, g => g.LoginName,
+                g => g.OnlyAllowMembersViewMembership, g => g.OwnerTitle, g => g.PrincipalType,
+                g => g.RequestToJoinLeaveEmailSetting, g => g.Title,
+                g => g.Users.Include(u => u.Title));
+        }
+
         public static void LoadAllGroups(this GroupCollection col)
         {
             col.Initialize();

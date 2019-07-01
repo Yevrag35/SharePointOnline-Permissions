@@ -31,7 +31,7 @@ namespace MG.SharePoint
             return exprs.ToArray();
         }
 
-        public static Expression<Func<T, object>>[] GetPropertyExpressions<T>(this T clientObject, params string[] propertyNamesToLoad)
+        public static Expression<Func<T, object>>[] GetClientPropertyExpressions<T>(this T clientObject, params string[] propertyNamesToLoad)
             where T : ClientObject
         {
             return GetPropertyExpressions<T>(propertyNamesToLoad);
@@ -43,6 +43,11 @@ namespace MG.SharePoint
             col.Context.ExecuteQuery();
         }
 
+        public static bool IsPropertyReady<T>(this T clientObject, Func<T, object> function)
+        {
+
+        }
+
         /// <summary>
         /// Determines whether Client Object property is loaded
         /// </summary>
@@ -50,29 +55,61 @@ namespace MG.SharePoint
         /// <param name="clientObject"></param>
         /// <param name="property"></param>
         /// <returns></returns>
-        public static bool IsPropertyReady<T>(this T clientObject, Expression<Func<T, object>> property)
+        public static bool IsPropertyReady<T>(this T clientObject, params Expression<Func<T, object>>[] properties)
             where T : ClientObject
         {
-            var expression = (MemberExpression)property.Body;
-            string propName = expression.Member.Name;
-            bool isCollection = typeof(ClientObjectCollection).IsAssignableFrom(property.Body.Type);
-            return isCollection ?
-                clientObject.IsObjectPropertyInstantiated(propName) :
-                clientObject.IsPropertyAvailable(propName);
+            if (properties == null)
+                return false;
+
+            bool check = true;
+            for (int i = 0; i < properties.Length; i++)
+            {
+                var property = properties[i];
+                string propName = null;
+                if (property.Body is MemberExpression expression)
+                {
+                    propName = expression.Member.Name;
+                }
+                else if (property.Body is UnaryExpression unExp && unExp.Operand is MemberExpression memEx)
+                {
+                    propName = memEx.Member.Name;
+                }
+                bool isCollection = typeof(ClientObjectCollection).IsAssignableFrom(property.Body.Type);
+
+                if (isCollection)
+                {
+                    try
+                    {
+                        check = clientObject.IsObjectPropertyInstantiated(propName);
+                    }
+                    catch (ServerException) { }
+                }
+                else
+                {
+                    check = clientObject.IsPropertyAvailable(propName);
+                }
+
+                if (!check)
+                {
+                    break;
+                }
+            }
+
+            return check;
         }
 
         public static void LoadProperty<T>(this T clientObject, string propertyName)
             where T : ClientObject
         {
             //clientObject.Initialize();
-            Expression<Func<T, object>>[] expressions = clientObject.GetPropertyExpressions(propertyName);
+            Expression<Func<T, object>>[] expressions = clientObject.GetClientPropertyExpressions(propertyName);
             clientObject.LoadProperty(expressions);
         }
 
         public static void LoadProperty<T>(this T clientObject, string[] propertyNames)
             where T : ClientObject
         {
-            Expression<Func<T, object>>[] expressions = clientObject.GetPropertyExpressions(propertyNames);
+            Expression<Func<T, object>>[] expressions = clientObject.GetClientPropertyExpressions(propertyNames);
             clientObject.LoadProperty(expressions);
         }
 
@@ -92,5 +129,43 @@ namespace MG.SharePoint
                 clientObject.Context.ExecuteQuery();
             }
         }
+
+        public static void TestLoad<T>(this T cliObj, params string[] propNames)
+        {
+
+        }
+        public static void TestLoad<T>(this T cliObj, ClientObject parentObj, ClientObject colObj, string parentPropName, params string[] propNames)
+        {
+            if (propNames == null)
+                throw new ArgumentNullException("PropertyNames");
+
+            Type type = colObj.GetType();
+            if (colObj is ClientObjectCollection)
+                type = type.BaseType.GenericTypeArguments[0];
+
+            Type exprType = typeof(Expression);
+            Type paramExprType = typeof(ParameterExpression).MakeArrayType();
+            MethodInfo lambdaMethod = exprType.GetMethods(BindingFlags.Public | BindingFlags.Static).Where(
+                x => x.Name.Equals("Lambda") &&
+                x.IsGenericMethod &&
+                x.GetParameters().Length == 2 && x.GetParameters().First().ParameterType.Equals(paramExprType)).First();
+
+            MethodInfo makeGenLambda = typeof(ClientObjectExtensions).GetMethod("MakeFunc", BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(type);
+            var lambdaMethodGeneric = (MethodInfo)makeGenLambda.Invoke(null, new object[1] { lambdaMethod });
+
+            var list = new List<Expression<Func<T, object>>>(propNames.Length);
+
+        }
+
+        private static MethodInfo MakeFunc<T>(MethodInfo lambdaMethod)
+        {
+            return lambdaMethod.MakeGenericMethod(typeof(Func<T, object>));
+        }
+
+        //private void AddExpression<T>(ref List<Expression<Func<T, object>>> exprs, Type type, string propName)
+        //{
+        //    var param = Expression.Parameter(type, propName);
+        //    param
+        //}
     }
 }

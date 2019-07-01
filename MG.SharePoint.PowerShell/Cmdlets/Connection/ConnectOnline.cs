@@ -10,7 +10,7 @@ namespace MG.SharePoint.PowerShell
     [Cmdlet(VerbsCommunications.Connect, "Online", DefaultParameterSetName = "ByAzureLogin")]
     [Alias("Login-SharePoint", "loginsp")]
     [CmdletBinding(PositionalBinding = false)]
-    public class ConnectOnline : PSCmdlet
+    public class ConnectOnline : BaseSPCmdlet
     {
         private const string DEFAULT_CLIENT_ID = "9bc3ab49-b65d-410a-85ad-de819febfddc";
         private const string DEFAULT_REDIRECT_URI = "https://oauth.spops.microsoft.com";
@@ -52,12 +52,20 @@ namespace MG.SharePoint.PowerShell
                     break;
             }
             if (!result)
-                throw new Exception("Something went trying to authenticate!");
+                base.WriteError("Something went wrong trying to authenticate!", ErrorCategory.PermissionDenied);
 
             else if (PassThru)
             {
                 Web web = CTX.SP1.Web;
-                web.LoadWeb();
+                try
+                {
+                    web.LoadWeb();
+                }
+                catch (ServerException sex)
+                {
+                    base.WriteError(sex, ErrorCategory.PermissionDenied);
+                }
+
                 base.WriteObject(web);
             }
         }

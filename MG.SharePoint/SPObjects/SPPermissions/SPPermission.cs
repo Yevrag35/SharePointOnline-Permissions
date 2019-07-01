@@ -2,55 +2,52 @@
 using Microsoft.SharePoint.Client.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace MG.SharePoint
 {
-    public class SPPermission : ICloneable, ISPObject
+    public class SPPermission
     {
-        private readonly string _memTit;
-        private readonly int _memLog;
-        private readonly string[] _perms;
-        private readonly RoleAssignment _roleAss;
-        private readonly PrincipalType _prinType;
-
-        public object Id => _memLog;
-        public string Name => _memTit;
-        public object ObjectId { get; }
-        public string ObjectName { get; }
-        public string Permissions => string.Join(", ", _perms);
-        public int PermissionCount => _perms.Length;
-        public PrincipalType Type => _prinType;
-        internal string LoginName { get; }
-
-        #region Constructors
-        internal SPPermission(SPSecurable securable, RoleAssignment ass)
+        #region FIELDS/CONSTANTS
+        private static readonly Expression<Func<RoleAssignment, object>>[] PROPS = new Expression<Func<RoleAssignment, object>>[6]
         {
-            if (!ass.IsPropertyReady(a => a.Member.Title))
+            x => x.Member.Id, x => x.Member.LoginName, x => x.Member.PrincipalType, x => x.Member.Title,
+            x => x.PrincipalId, x => x.RoleDefinitionBindings
+        };
+
+        #endregion
+
+        #region PROPERTIES
+        public object Id { get; }
+        public string LoginName { get; }
+        public string Name { get; }
+        public string[] Permissions { get; }
+        public int PrincipalId { get; }
+        public PrincipalType Type { get; }
+
+        #endregion
+
+        #region CONSTRUCTORS
+        public SPPermission(RoleAssignment ass)
+        {
+            if (!ass.IsPropertyReady(PROPS))
             {
-                CTX.Lae(ass, true, a => a.Member.Title, a => a.Member.PrincipalType, 
-                    a => a.Member.LoginName, a => a.Member.Id, a => a.RoleDefinitionBindings);
+                ass.Context.Load(ass, PROPS);
+                ass.Context.ExecuteQuery();
             }
-            _memTit = ass.Member.Title;
-            _memLog = ass.Member.Id;
-            _perms = ParseBindings(ass.RoleDefinitionBindings);
-            _prinType = ass.Member.PrincipalType;
+            this.Name = ass.Member.Title;
+            this.Id = ass.Member.Id;
             this.LoginName = ass.Member.LoginName;
-            this.ObjectId = securable.Id;
-            this.ObjectName = securable.Name;
-            _roleAss = ass;
+            this.PrincipalId = ass.PrincipalId;
+            this.Type = ass.Member.PrincipalType;
+            this.Permissions = this.ParseBindings(ass.RoleDefinitionBindings);
         }
 
         #endregion
-        public static SPPermission ResolvePermission(RoleAssignment ass, SPSecurable securable) =>
-            new SPPermission(securable, ass);
 
-        public object Clone()
-        {
-            var perm = this.MemberwiseClone() as SPPermission;
-            return perm;
-        }
-        public ClientContext GetContext() => (ClientContext)_roleAss.Context;
-        bool ISPObject.IsObjectPropertyInstantiated(string propertyName) => _roleAss.IsObjectPropertyInstantiated(propertyName);
+        #region METHODS
         private string[] ParseBindings(RoleDefinitionBindingCollection bindingCol)
         {
             string[] strPerms = new string[bindingCol.Count];
@@ -61,7 +58,7 @@ namespace MG.SharePoint
             }
             return strPerms;
         }
-        void ISPObject.RefreshLoad() => _roleAss.RefreshLoad();
-        public ClientObject ShowOriginal() => _roleAss;
+
+        #endregion
     }
 }

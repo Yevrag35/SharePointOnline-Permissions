@@ -70,6 +70,8 @@ namespace MG.SharePoint
 
         public SPPermissionCollection GetPermissions()
         {
+
+            //this.SecObj.
             if (!SecObj.IsPropertyReady(x => x.RoleAssignments))
                 CTX.Lae(SecObj, true, s => s.RoleAssignments);
 

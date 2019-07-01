@@ -1,5 +1,10 @@
-﻿using System;
+﻿using Microsoft.SharePoint.Client;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Management.Automation;
+using System.Reflection;
 
 namespace MG.SharePoint.PowerShell
 {
@@ -31,6 +36,33 @@ namespace MG.SharePoint.PowerShell
         {
             var errRec = new ErrorRecord(baseEx, baseEx.GetType().FullName, cat, obj);
             base.WriteError(errRec);
+        }
+
+        public static bool Test<T>(T cliObj, params string[] propName) where T : ClientObject
+        {
+            object castedObj = GenCast(cliObj);
+            Type coe = typeof(ClientObjectExtensions);
+
+            var genMeth = coe.GetMethod("GetPropertyExpressions", BindingFlags.Public | BindingFlags.Static).MakeGenericMethod(typeof(T));
+            var objs = genMeth.Invoke(null, new object[1] { propName });
+
+            var loadMeth = coe.GetMethod("IsPropertyReady", BindingFlags.Public | BindingFlags.Static).MakeGenericMethod(typeof(T));
+            var answer = (bool)loadMeth.Invoke(null, new object[2] { castedObj, objs });
+            return answer;
+        }
+
+        public static object GenCast(object cliObj)
+        {
+            var genMeth = typeof(BaseSPCmdlet).GetMethod("Cast", BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(cliObj.GetType());
+            return genMeth.Invoke(null, new object[1] { cliObj });
+        }
+
+        private static T Cast<T>(dynamic o) => (T)o;
+
+        public static bool TestThis<T>(T cliObj, Expression<Func<T, object>> exp)
+            where T : ClientObject
+        {
+            return cliObj.IsPropertyReady(exp);
         }
     }
 }

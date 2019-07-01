@@ -20,20 +20,29 @@ namespace MG.SharePoint
         #region PROPERTIES
         public string Name { get; }
         public Guid Id { get; }
+        public bool IsLoaded => _loaded;
         public SearchObjectType Type { get; }
 
         #endregion
 
         #region CONSTRUCTORS
-        public SearchObject(File spFile)
+        public SearchObject(File spFile, bool isLoaded = false)
         {
+            if (!isLoaded && !spFile.IsPropertyReady(x => x.Name, x => x.UniqueId))
+                spFile.LoadProperty(x => x.Name, x => x.UniqueId);
+
+            _loaded = isLoaded;
             this.Name = spFile.Name;
             this.Id = spFile.UniqueId;
             this.Type = SearchObjectType.File;
             _cliObj = spFile;
         }
-        public SearchObject(Folder spFolder)
+        public SearchObject(Folder spFolder, bool isLoaded = false)
         {
+            if (!isLoaded && !spFolder.IsPropertyReady(x => x.Name, x => x.UniqueId))
+                spFolder.LoadProperty(x => x.Name, x => x.UniqueId);
+
+            _loaded = isLoaded;
             this.Name = spFolder.Name;
             this.Id = spFolder.UniqueId;
             this.Type = SearchObjectType.Folder;

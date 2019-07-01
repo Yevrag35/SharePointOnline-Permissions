@@ -122,63 +122,65 @@
     <Compile Include="Extensions\GroupExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="Extensions\ListItemExtensions.cs" />
+    <None Include="Extensions\SecurableExtensions.cs" />
     <Compile Include="Extensions\UserExtensions.cs" />
     <Compile Include="Extensions\WebExtensions.cs" />
     <Compile Include="Interfaces\ISPCredential.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SPObjects\BaseCollection.cs" />
+    <Compile Include="SPObjects\BaseSPCollection.cs" />
     <Compile Include="SPObjects\SearchCollection.cs" />
     <Compile Include="SPObjects\SearchObject.cs" />
     <Compile Include="SPObjects\Query.cs" />
     <Compile Include="SPObjects\SPCredential.cs" />
-    <Compile Include="SPObjects\SPFile\SPFile-OtherProps.cs" />
+    <None Include="SPObjects\SPFile\SPFile-OtherProps.cs" />
     <None Include="Debug.ps1" />
     <Content Include="MethodsProperties.psm1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
     <None Include="SPObjects\SPFile\SPFile-Permissions.cs" />
-    <Compile Include="SPObjects\SPFile\SPFile.cs" />
-    <Compile Include="SPObjects\SPFile\SPFileCollection-Upload.cs" />
-    <Compile Include="SPObjects\SPFolder\SPFolder-OtherProps.cs" />
-    <Compile Include="SPObjects\SPFolder\SPFolder-Upload.cs" />
-    <Compile Include="SPObjects\SPFolder\SPFolderCollection.cs" />
-    <Compile Include="SPObjects\SPGroup\SPGroup.cs" />
-    <Compile Include="SPObjects\SPGroup\SPGroupCollection.cs" />
-    <Compile Include="SPObjects\SPListItem\SPListItem-OtherProps.cs" />
+    <None Include="SPObjects\SPFile\SPFile.cs" />
+    <None Include="SPObjects\SPFile\SPFileCollection-Upload.cs" />
+    <None Include="SPObjects\SPFolder\SPFolder-OtherProps.cs" />
+    <None Include="SPObjects\SPFolder\SPFolder-Upload.cs" />
+    <None Include="SPObjects\SPFolder\SPFolderCollection.cs" />
+    <None Include="SPObjects\SPGroup\SPGroup.cs" />
+    <None Include="SPObjects\SPGroup\SPGroupCollection.cs" />
+    <None Include="SPObjects\SPListItem\SPListItem-OtherProps.cs" />
     <None Include="SPObjects\SPListItem\SPListItem-Permissions.cs" />
-    <Compile Include="SPObjects\SPListItem\SPListItem.cs" />
-    <Compile Include="SPObjects\SPListItem\SPListItemCollection.cs" />
-    <Compile Include="SPObjects\SPList\SPList-Items.cs" />
-    <Compile Include="SPObjects\SPList\SPList-OtherProps.cs" />
-    <Compile Include="SPObjects\SPObject.cs" />
+    <None Include="SPObjects\SPListItem\SPListItem.cs" />
+    <None Include="SPObjects\SPListItem\SPListItemCollection.cs" />
+    <None Include="SPObjects\SPList\SPList-Items.cs" />
+    <None Include="SPObjects\SPList\SPList-OtherProps.cs" />
+    <None Include="SPObjects\SPObject.cs" />
     <Compile Include="SPObjects\SPPermissions\ISPPermissionResolver.cs" />
-    <Compile Include="SPObjects\SPPermissions\ISPPermissions.cs" />
+    <None Include="SPObjects\SPPermissions\ISPPermissions.cs.old" />
     <Compile Include="SPObjects\SPBinding\SPBinding.cs" />
     <Compile Include="SPObjects\SPBinding\SPBindingCollection.cs" />
     <Compile Include="Interfaces\ISPObject.cs" />
-    <Compile Include="SPObjects\SPFolder\SPFolder-AddFolder.cs" />
-    <Compile Include="SPObjects\SPFolder\SPFolder.cs" />
+    <None Include="SPObjects\SPFolder\SPFolder-AddFolder.cs" />
+    <None Include="SPObjects\SPFolder\SPFolder.cs" />
     <None Include="SPObjects\SPList\SPList-Permissions.cs" />
-    <Compile Include="SPObjects\SPList\SPList.cs" />
-    <Compile Include="SPObjects\SPList\SPListCollection.cs" />
+    <None Include="SPObjects\SPList\SPList.cs" />
+    <None Include="SPObjects\SPList\SPListCollection.cs" />
+    <None Include="SPObjects\SPPermissions\SPPermission2.cs" />
+    <None Include="SPObjects\SPPermissions\SPPermissionCollectionold.cs" />
     <Compile Include="SPObjects\SPPermissions\SPPermission.cs" />
-    <Compile Include="SPObjects\SPPermissions\SPPermissionCollection.cs" />
-    <Compile Include="SPObjects\SPSecurable.cs" />
-    <Compile Include="SPObjects\SPUser\SPUserCollection.cs" />
-    <Compile Include="SPObjects\SPUser\SPUser.cs" />
-    <Compile Include="SPObjects\SPWeb\SPWebCollection.cs" />
+    <None Include="SPObjects\SPSecurable.cs" />
+    <None Include="SPObjects\SPUser\SPUserCollection.cs" />
+    <None Include="SPObjects\SPUser\SPUser.cs" />
+    <None Include="SPObjects\SPWeb\SPWebCollection.cs" />
     <None Include="SPObjects\SPWeb\SPWeb-List.cs" />
-    <Compile Include="SPObjects\SPWeb\SPWeb-OtherProps.cs" />
+    <None Include="SPObjects\SPWeb\SPWeb-OtherProps.cs" />
     <None Include="SPObjects\SPWeb\SPWeb-Permissions.cs" />
-    <Compile Include="SPObjects\SPWeb\SPWeb.cs" />
+    <None Include="SPObjects\SPWeb\SPWeb.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Assemblies\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <Compile Include="SPObjects\SPFile\SPFileCollection.cs" />
+    <None Include="SPObjects\SPFile\SPFileCollection.cs" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />

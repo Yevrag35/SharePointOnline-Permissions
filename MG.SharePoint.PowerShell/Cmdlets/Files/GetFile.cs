@@ -63,7 +63,6 @@ namespace MG.SharePoint.PowerShell.Cmdlets.Files
                 if (ParameterSetName == "ByWebInput" && this.Web == null)
                     this.Web = CTX.SP1.Web;
 
-                IQueryable<File> items = null;
                 switch (ParameterSetName)
                 {
                     case "ByWebInput":

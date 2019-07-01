@@ -71,14 +71,14 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="System.Net.Http" />
+    <Reference Include="System.Reflection.Context" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Cmdlets\Bases\PropertyLoadingCmdlet.cs" />
     <Compile Include="Backend\Cache.cs" />
     <Compile Include="Cmdlets\Files\FindFile.cs" />
     <Compile Include="Cmdlets\Folders\GetFolder.cs" />
-    <None Include="Cmdlets\Files\GetFile.cs" />
+    <Compile Include="Cmdlets\Files\GetFile.cs" />
     <Compile Include="Cmdlets\Groups\GetGroup.cs" />
     <None Include="Cmdlets\Permissions\GetPermission.cs" />
     <None Include="Cmdlets\Permissions\RemovePermission.cs" />

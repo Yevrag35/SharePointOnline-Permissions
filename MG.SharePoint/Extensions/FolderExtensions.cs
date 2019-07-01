@@ -21,16 +21,19 @@ namespace MG.SharePoint
             return fol.Files.Select(f => f.Name).ToArray();
         }
 
-        //public static IEnumerable<SearchObject> GetFileSearches(this FolderCollection folCol)
-        //{
-
-        //}
-
         public static string[] GetFolderNames(this FolderCollection folCol)
         {
             folCol.Context.Load(folCol, fc => fc.Include(x => x.Name));
             folCol.Context.ExecuteQuery();
             return folCol.Select(x => x.Name).ToArray();
+        }
+
+        public static bool IsLoaded(this Folder fol)
+        {
+            return fol.IsPropertyReady(x => x.ContentTypeOrder, x => x.Exists, x => x.Files.Include(f => f.Name, f => f.Title, f => f.UniqueId),
+                x => x.Folders.Include(sub => sub.Name, sub => sub.UniqueId, sub => sub.ItemCount), x => x.IsWOPIEnabled, x => x.ItemCount,
+                x => x.Name, x => x.ParentFolder.Name, x => x.ProgID, x => x.ServerRelativeUrl, x => x.StorageMetrics, x => x.TimeCreated,
+                x => x.TimeLastModified, x => x.UniqueContentTypeOrder, x => x.UniqueId, x => x.WelcomePage);
         }
 
         public static void LoadAllFolders(this FolderCollection folCol)
