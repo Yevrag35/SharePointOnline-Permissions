@@ -3,6 +3,18 @@ using System;
 
 namespace MG.SharePoint
 {
+
+    #region CONNECTION EXCEPTIONS
+    public class ContextNotSetException : NullReferenceException
+    {
+        private const string MSG = "No existing connection to SharePoint has been made.  Make a connection first, then retry.";
+
+        public ContextNotSetException(string msg = MSG)
+            : base(msg) { }
+    }
+
+    #endregion
+
     #region Read-Only Exception
 
     public class ReadOnlyCollectionException : NotSupportedException

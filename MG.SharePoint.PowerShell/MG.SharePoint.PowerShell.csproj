@@ -80,7 +80,7 @@
     <Compile Include="Cmdlets\Folders\GetFolder.cs" />
     <Compile Include="Cmdlets\Files\GetFile.cs" />
     <Compile Include="Cmdlets\Groups\GetGroup.cs" />
-    <None Include="Cmdlets\Permissions\GetPermission.cs" />
+    <None Include="Cmdlets\Permissions\GetPermissionold.cs" />
     <None Include="Cmdlets\Permissions\RemovePermission.cs" />
     <None Include="Cmdlets\Permissions\ResetPermission.cs" />
     <None Include="Backend\OAuthSession.cs" />
@@ -90,6 +90,7 @@
     <None Include="Cmdlets\Permissions\GetPermission.cs.old" />
     <Compile Include="Cmdlets\ListItems\GetListItem.cs" />
     <Compile Include="Cmdlets\Lists\GetList.cs" />
+    <Compile Include="Cmdlets\Permissions\GetPermission.cs" />
     <Compile Include="Cmdlets\PropertyLoader\RequestProperty.cs" />
     <Compile Include="Cmdlets\Users\GetUser.cs" />
     <Compile Include="Cmdlets\Webs\GetWeb.cs" />

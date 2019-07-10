@@ -11,11 +11,6 @@ namespace MG.SharePoint
     public class SPPermission
     {
         #region FIELDS/CONSTANTS
-        private static readonly Expression<Func<RoleAssignment, object>>[] PROPS = new Expression<Func<RoleAssignment, object>>[6]
-        {
-            x => x.Member.Id, x => x.Member.LoginName, x => x.Member.PrincipalType, x => x.Member.Title,
-            x => x.PrincipalId, x => x.RoleDefinitionBindings
-        };
 
         #endregion
 
@@ -32,11 +27,12 @@ namespace MG.SharePoint
         #region CONSTRUCTORS
         public SPPermission(RoleAssignment ass)
         {
-            if (!ass.IsPropertyReady(PROPS))
-            {
-                ass.Context.Load(ass, PROPS);
-                ass.Context.ExecuteQuery();
-            }
+            if (!ass.IsPropertyReady(x => x.PrincipalId) || !ass.IsPropertyAvailable("Member") || !ass.Member.IsPropertyReady(x => x.Id, x => x.LoginName, x => x.PrincipalType, x => x.Title))
+                ass.LoadProperty(x => x.PrincipalId, x => x.Member.Id, x => x.Member.LoginName, x => x.Member.PrincipalType, x => x.RoleDefinitionBindings);
+            
+            else
+                ass.LoadProperty(x => x.RoleDefinitionBindings);
+
             this.Name = ass.Member.Title;
             this.Id = ass.Member.Id;
             this.LoginName = ass.Member.LoginName;
@@ -61,4 +57,9 @@ namespace MG.SharePoint
 
         #endregion
     }
+
+    //public class PermissionComparer : IComparer<SPPermission>
+    //{
+    //    public int Compare(SPPermission x, SPPermission y) => x.
+    //}
 }

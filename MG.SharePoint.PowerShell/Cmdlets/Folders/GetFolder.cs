@@ -50,6 +50,9 @@ namespace MG.SharePoint.PowerShell
 
         protected override void ProcessRecord()
         {
+            if (this.Web == null && CTX.Connected)
+                this.Web = CTX.SP1.Web;
+
             if (this.Folder != null)
             {
                 this.Folder.LoadFolderProps();
@@ -58,7 +61,8 @@ namespace MG.SharePoint.PowerShell
             else if (this.FolderCollection != null)
             {
                 this.FolderCollection.LoadAllFolders();
-                base.WriteObject(this.FolderCollection, true);
+                var list = new ClientObjectViewableCollection<Folder>(this.FolderCollection);
+                base.WriteObject(list, false);
             }
             else if (this.List != null)
             {
@@ -67,22 +71,33 @@ namespace MG.SharePoint.PowerShell
             }
             else if (this.Id != null && this.Id.Length > 0)
             {
-                if (this.Web == null)
-                    this.Web = CTX.SP1.Web;
-                
+                var list = new ClientObjectViewableCollection<Folder>(this.Id.Length);
                 for (int i = 0; i < this.Id.Length; i++)
                 {
                     Folder f = this.Web.GetFolderById(this.Id[i]);
-                    f.LoadFolderProps();
-                    base.WriteObject(f);
+                    try
+                    {
+                        f.LoadFolderProps();
+                        list.Add(f);
+                    }
+                    catch (ServerException sex)
+                    {
+                        base.WriteError(sex, ErrorCategory.ObjectNotFound);
+                    }
                 }
+                base.WriteObject(list, false);
             }
             else
             {
                 bool hasUrls = false;
                 if (this.RelativeUrl != null && this.RelativeUrl.Length > 0)
                 {
-                    this.RelativeUrl = this.FormatUrls(this.RelativeUrl);
+                    if (!this.Web.IsPropertyReady(x => x.ServerRelativeUrl))
+                        this.Web.LoadProperty(x => x.ServerRelativeUrl);
+
+                    string webUrl = this.Web.ServerRelativeUrl;
+
+                    this.RelativeUrl = this.FormatUrls(webUrl, this.RelativeUrl);
                     hasUrls = true;
                 }
 
@@ -91,24 +106,36 @@ namespace MG.SharePoint.PowerShell
                 
                 if (hasUrls)
                 {
+                    var list = new ClientObjectViewableCollection<Folder>(this.RelativeUrl.Length);
                     for (int i = 0; i < this.RelativeUrl.Length; i++)
                     {
-                        Folder f = this.Web.GetFolderByServerRelativeUrl(this.RelativeUrl[i]);
-                        f.LoadFolderProps();
-                        base.WriteObject(f);
+                        string relUrl = this.RelativeUrl[i];
+                        Folder f = this.Web.GetFolderByServerRelativeUrl(relUrl);
+                        try
+                        {
+                            f.LoadFolderProps();
+                            list.Add(f);
+                        }
+                        catch (ServerException sex)
+                        {
+                            string msg = string.Format(EX_MSG, relUrl, sex.Message);
+                            base.WriteError(msg, sex, ErrorCategory.ObjectNotFound, f);
+                        }
                     }
+                    base.WriteObject(list, false);
                 }
                 else
                 {
                     this.Web.Folders.Initialize();
                     this.Web.Context.Load(this.Web.Folders, fols => fols.Include(f => f.Name));
                     this.Web.Context.ExecuteQuery();
+                    var list = new ClientObjectViewableCollection<Folder>(this.Web.Folders.Count);
                     foreach (Folder f in this.Web.Folders.Where(x => !x.Name.StartsWith("_")))
                     { 
                         try
                         {
                             f.LoadFolderProps();
-                            base.WriteObject(f);
+                            list.Add(f);
                         }
                         catch (ServerException sex)
                         {
@@ -117,6 +144,7 @@ namespace MG.SharePoint.PowerShell
                             base.WriteError(msg, sex, ErrorCategory.MetadataError, f);
                         }
                     }
+                    base.WriteObject(list, false);
                 }
             }
         }
@@ -124,7 +152,7 @@ namespace MG.SharePoint.PowerShell
         #endregion
 
         #region METHODS
-        private string[] FormatUrls(string[] urls)
+        private string[] FormatUrls(string webUrl, string[] urls)
         {
             string[] retStrs = new string[urls.Length];
             for (int i = 0; i < urls.Length; i++)
@@ -132,6 +160,11 @@ namespace MG.SharePoint.PowerShell
                 string url = urls[i];
                 if (!url.StartsWith("/"))
                     url = "/" + url;
+                
+                if (!url.StartsWith(webUrl, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    url = webUrl + url;
+                }
 
                 retStrs[i] = url;
             }

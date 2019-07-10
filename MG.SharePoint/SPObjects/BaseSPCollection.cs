@@ -17,6 +17,8 @@ namespace MG.SharePoint
 
         public abstract void CopyTo(Array array, int index);
         public abstract IEnumerator GetEnumerator();
+
+        public abstract void Sort();
     }
 
     //public abstract class SPCollection<T> : IEnumerable<T> where 

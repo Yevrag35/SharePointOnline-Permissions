@@ -43,10 +43,10 @@ namespace MG.SharePoint
             col.Context.ExecuteQuery();
         }
 
-        public static bool IsPropertyReady<T>(this T clientObject, Func<T, object> function)
-        {
-
-        }
+        //public static object GetPermissions<T>(this T secureObj) where T : SecurableObject
+        //{
+        //    secureObj.
+        //}
 
         /// <summary>
         /// Determines whether Client Object property is loaded

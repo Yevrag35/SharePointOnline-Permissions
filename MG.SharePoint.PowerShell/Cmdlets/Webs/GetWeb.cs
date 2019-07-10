@@ -28,10 +28,30 @@ namespace MG.SharePoint.PowerShell
         #endregion
 
         #region CMDLET PROCESSING
-        protected override void BeginProcessing() => base.BeginProcessing();
+        protected override void BeginProcessing()
+        {
+        }
 
         protected override void ProcessRecord()
         {
+            if (!CTX.Connected && this.Web == null)
+            {
+                throw new ContextNotSetException();
+            }
+            else if (this.Web == null && this.Url == null)
+            {
+                CTX.SP1.Web.LoadWeb();
+                base.WriteObject(CTX.SP1.Web);
+            }
+            else if (this.Url != null)
+            {
+                base.WriteObject(CTX.GetWebByUrl(this.Url.ToString()));
+            }
+            else if (this.Web != null)
+            {
+                this.Web.LoadWeb();
+                base.WriteObject(this.Web);
+            }
         }
 
         #endregion

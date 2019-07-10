@@ -103,13 +103,13 @@ namespace MG.SharePoint
             }
             return retArr;
         }
-        IEnumerator IEnumerable.GetEnumerator() => _list.GetEnumerator();
-        IEnumerator<SearchObject> IEnumerable<SearchObject>.GetEnumerator() => _list.GetEnumerator();
+        IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_list).GetEnumerator();
+        IEnumerator<SearchObject> IEnumerable<SearchObject>.GetEnumerator() => ((IEnumerable<SearchObject>)_list).GetEnumerator();
         public override IEnumerator GetEnumerator() => _list.GetEnumerator();
 
         public bool Remove(SearchObject item) => _list.Remove(item);
         public void RemoveDuplicates() => _list = _list.Distinct(new SearchEquality()).ToList();
-        public void Sort() => _list.Sort(new SearchComparer());
+        public override void Sort() => _list.Sort(new SearchComparer());
         public void Sort(IComparer<SearchObject> comparer) => _list.Sort(comparer);
         public override object SyncRoot => ((ICollection)_list).SyncRoot;
         public override string ToString() => string.Join(", ", _list.Select(x => x.Name));

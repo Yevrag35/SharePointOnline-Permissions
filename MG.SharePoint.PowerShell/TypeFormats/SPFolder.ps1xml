@@ -12,6 +12,9 @@
 						<ListItems>
 							<ListItem>
 								<PropertyName>ContentTypeOrder</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.ContentTypeOrder -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>Exists</PropertyName>
@@ -62,6 +65,9 @@
 							</ListItem>
 							<ListItem>
 								<PropertyName>UniqueContentTypeOrder</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.UniqueContentTypeOrder -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
 							</ListItem>
 							<ListItem>
 								<PropertyName>UniqueId</PropertyName>

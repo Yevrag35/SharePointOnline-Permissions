@@ -1,6 +1,8 @@
 ﻿using Microsoft.IdentityModel.Clients.ActiveDirectory;
 using Microsoft.SharePoint.Client;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Management.Automation;
 
 namespace MG.SharePoint
@@ -12,6 +14,18 @@ namespace MG.SharePoint
         private const string COMMON_AUTH_URL = "https://login.microsoftonline.com/common";
 
         public static IServiceHelper Helper;
+
+        public static Web GetWebByUrl(string relativeUrl)
+        {
+            if (relativeUrl.StartsWith("/") && relativeUrl != "/")
+                relativeUrl = string.Join("/", relativeUrl.Split(
+                    new string[1] { "/" }, StringSplitOptions.RemoveEmptyEntries).ToArray());
+
+            Login(SpecifiedTenantName, relativeUrl, PromptBehavior.Auto);
+            Web tempWeb = SP1.Web;
+            tempWeb.LoadWeb();
+            return tempWeb;
+        }
 
         #region Re-Login Method
 
