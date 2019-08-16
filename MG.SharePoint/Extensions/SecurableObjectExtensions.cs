@@ -10,7 +10,7 @@ namespace MG.SharePoint
 {
     public static class SecurableObjectExtensions
     {
-        public static object GetPermissions(this SecurableObject secObj, string nameProperty, string idProperty)
+        public static SPPermissionCollection GetPermissions(this SecurableObject secObj, string nameProperty, string idProperty)
         {
             secObj.Context.Load(secObj, s => s.HasUniqueRoleAssignments, s => s.RoleAssignments);
             bool canSet = true;
@@ -34,12 +34,19 @@ namespace MG.SharePoint
             }
 
             Type secType = secObj.GetType();
-            Expression<Func<SecurableObject, object>>[] expressions = secObj.GetClientPropertyExpressions(nameProperty, idProperty);
+            MethodInfo genMeth = typeof(ClientObjectExtensions).GetMethod(
+                "GetPropertyExpressions", BindingFlags.Public | BindingFlags.Static).MakeGenericMethod(secType);
+
+            object expressions = genMeth.Invoke(null, new object[1] { new string[2] { nameProperty, idProperty } });
+
             MethodInfo specLae = typeof(CTX).GetMethod("SpecialLae", BindingFlags.NonPublic | BindingFlags.Static).MakeGenericMethod(secType);
             specLae.Invoke(null, new object[3] { secObj, true, expressions });
 
-            Console.WriteLine(secObj);
-            return secObj;
+            //Console.WriteLine(secObj);
+            //return secObj;
+
+            var permissions = SPPermissionCollection.ResolvePermissions(secObj);
+            return permissions;
         }
 
 #if DEBUG

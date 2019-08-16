@@ -29,11 +29,7 @@ namespace MG.SharePoint
         {
             if (andLoad)
             {
-                if (!ass.IsPropertyReady(x => x.PrincipalId) || !ass.IsPropertyAvailable("Member") || !ass.Member.IsPropertyReady(x => x.Id, x => x.LoginName, x => x.PrincipalType, x => x.Title))
-                    ass.LoadProperty(x => x.PrincipalId, x => x.Member.Id, x => x.Member.LoginName, x => x.Member.PrincipalType, x => x.RoleDefinitionBindings);
-
-                else
-                    ass.LoadProperty(x => x.RoleDefinitionBindings);
+                ass.LoadAssignment();
             }
 
             this.Name = ass.Member.Title;

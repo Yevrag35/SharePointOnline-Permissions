@@ -161,11 +161,5 @@ namespace MG.SharePoint
         {
             return lambdaMethod.MakeGenericMethod(typeof(Func<T, object>));
         }
-
-        //private void AddExpression<T>(ref List<Expression<Func<T, object>>> exprs, Type type, string propName)
-        //{
-        //    var param = Expression.Parameter(type, propName);
-        //    param
-        //}
     }
 }
