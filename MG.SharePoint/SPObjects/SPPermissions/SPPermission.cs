@@ -15,9 +15,11 @@ namespace MG.SharePoint
         #endregion
 
         #region PROPERTIES
-        public object Id { get; }
         public string LoginName { get; }
-        public string Name { get; }
+        public object MemberId { get; }
+        public string MemberName { get; }
+        public string Object { get; internal set; }
+        public object ObjectId { get; internal set; }
         public string[] Permissions { get; }
         public int PrincipalId { get; }
         public PrincipalType Type { get; }
@@ -32,8 +34,8 @@ namespace MG.SharePoint
                 ass.LoadAssignment();
             }
 
-            this.Name = ass.Member.Title;
-            this.Id = ass.Member.Id;
+            this.MemberName = ass.Member.Title;
+            this.MemberId = ass.Member.Id;
             this.LoginName = ass.Member.LoginName;
             this.PrincipalId = ass.PrincipalId;
             this.Type = ass.Member.PrincipalType;

@@ -46,7 +46,14 @@ namespace MG.SharePoint
             //return secObj;
 
             var permissions = SPPermissionCollection.ResolvePermissions(secObj);
-            return permissions;
+            
+
+        }
+
+        private static KeyValuePair<string, string> GetNameAndIdFromObject<T>(T securableObject, string nameProp, string idProp)
+            where T : SecurableObject
+        {
+            
         }
 
 #if DEBUG

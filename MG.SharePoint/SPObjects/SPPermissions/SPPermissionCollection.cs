@@ -68,6 +68,17 @@ namespace MG.SharePoint
         #endregion
 
         #region CUSTOM METHODS
+        internal void AddObjectNameAndId(string name, object id)
+        {
+            if (_list.Count > 0)
+            {
+                _list.ForEach((a) =>
+                {
+                    a.Object = name;
+                    a.ObjectId = id;
+                });
+            }
+        }
 
         public static SPPermissionCollection ResolvePermissions(SecurableObject securableObject)
         {
