@@ -46,14 +46,21 @@ namespace MG.SharePoint
             //return secObj;
 
             var permissions = SPPermissionCollection.ResolvePermissions(secObj);
-            
-
+            var kvp = GetNameAndIdFromObject(secObj, nameProperty, idProperty);
+            permissions.AddObjectNameAndId(kvp.Value, kvp.Key);
+            return permissions;
         }
 
-        private static KeyValuePair<string, string> GetNameAndIdFromObject<T>(T securableObject, string nameProp, string idProp)
-            where T : SecurableObject
+        private static KeyValuePair<object, string> GetNameAndIdFromObject(ClientObject clientObject, string nameProp, string idProp)
         {
-            
+            Type objType = clientObject.GetType();
+            string[] names = new string[2] { nameProp, idProp };
+            //IEnumerable<PropertyInfo> nameAndIdProps = objType.GetProperties().Where(x => names.Contains(x.Name));
+            PropertyInfo namePi = objType.GetProperty(nameProp, BindingFlags.Public | BindingFlags.Instance);
+            PropertyInfo idPi = objType.GetProperty(idProp, BindingFlags.Public | BindingFlags.Instance);
+            string nameVal = namePi.GetValue(clientObject) as string;
+            object idVal = idPi.GetValue(clientObject);
+            return new KeyValuePair<object, string>(idVal, nameVal);
         }
 
 #if DEBUG

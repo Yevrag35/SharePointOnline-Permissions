@@ -31,13 +31,28 @@ namespace MG.SharePoint.PowerShell
 
         protected override void ProcessRecord()
         {
-
+            string nameProp = this.GetNameAndIdProperty(this.InputObject.GetType().FullName);
+            base.WriteObject(this.InputObject.GetPermissions(nameProp, "Id"), true);
         }
 
         #endregion
 
         #region METHODS
+        private string GetNameAndIdProperty(string typeName)
+        {
+            switch (typeName)
+            {
+                case "Microsoft.SharePoint.Client.ListItem":
+                {
+                    return "DisplayName";
+                }
 
+                default:
+                {
+                    return "Title";
+                }
+            }
+        }
 
         #endregion
     }

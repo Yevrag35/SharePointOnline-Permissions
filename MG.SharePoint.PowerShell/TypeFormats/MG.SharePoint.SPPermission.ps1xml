@@ -18,6 +18,7 @@
 						<Alignment>Left</Alignment>
 					</TableColumnHeader>
 					<TableColumnHeader>
+						<Label>Permissions</Label>
 						<Alignment>Left</Alignment>
 					</TableColumnHeader>
 					<!--<TableColumnHeader>
@@ -37,7 +38,7 @@
 								<PropertyName>MemberName</PropertyName>
 							</TableColumnItem>
 							<TableColumnItem>
-								<PropertyName>Permissions</PropertyName>
+								<ScriptBlock>$_.Permissions -join ', '</ScriptBlock>
 							</TableColumnItem>
 						</TableColumnItems>
 					</TableRowEntry>
