@@ -122,6 +122,7 @@
     <Compile Include="Extensions\GroupExtensions.cs" />
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="Extensions\ListItemExtensions.cs" />
+    <Compile Include="Extensions\SecurableObjectExtensions.cs" />
     <Compile Include="SPObjects\SPObjectViewableCollection.cs" />
     <Compile Include="SPObjects\SPPermissions\SPPermissionCollection.cs" />
     <None Include="Extensions\SecurableExtensions.cs" />

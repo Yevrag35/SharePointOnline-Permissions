@@ -77,7 +77,7 @@ namespace MG.SharePoint
                     if (ret is PSObject psObj && psObj.ImmediateBaseObject is bool well && well)
                         list.Add(item);
                 }
-                return lis
+                return list;
             }
         }
 

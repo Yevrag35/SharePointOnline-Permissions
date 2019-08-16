@@ -25,13 +25,16 @@ namespace MG.SharePoint
         #endregion
 
         #region CONSTRUCTORS
-        public SPPermission(RoleAssignment ass)
+        public SPPermission(RoleAssignment ass, bool andLoad = true)
         {
-            if (!ass.IsPropertyReady(x => x.PrincipalId) || !ass.IsPropertyAvailable("Member") || !ass.Member.IsPropertyReady(x => x.Id, x => x.LoginName, x => x.PrincipalType, x => x.Title))
-                ass.LoadProperty(x => x.PrincipalId, x => x.Member.Id, x => x.Member.LoginName, x => x.Member.PrincipalType, x => x.RoleDefinitionBindings);
-            
-            else
-                ass.LoadProperty(x => x.RoleDefinitionBindings);
+            if (andLoad)
+            {
+                if (!ass.IsPropertyReady(x => x.PrincipalId) || !ass.IsPropertyAvailable("Member") || !ass.Member.IsPropertyReady(x => x.Id, x => x.LoginName, x => x.PrincipalType, x => x.Title))
+                    ass.LoadProperty(x => x.PrincipalId, x => x.Member.Id, x => x.Member.LoginName, x => x.Member.PrincipalType, x => x.RoleDefinitionBindings);
+
+                else
+                    ass.LoadProperty(x => x.RoleDefinitionBindings);
+            }
 
             this.Name = ass.Member.Title;
             this.Id = ass.Member.Id;
