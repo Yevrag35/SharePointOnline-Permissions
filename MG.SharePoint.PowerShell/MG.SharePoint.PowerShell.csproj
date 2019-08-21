@@ -85,11 +85,12 @@
     <None Include="Cmdlets\Permissions\ResetPermission.cs" />
     <None Include="Backend\OAuthSession.cs" />
     <None Include="Backend\PSCtxHelper.cs" />
-    <None Include="Cmdlets\Permissions\AddPermission.cs" />
+    <None Include="Cmdlets\Permissions\AddPermissionold.cs" />
     <Compile Include="Cmdlets\Bases\BaseSPCmdlet.cs" />
     <None Include="Cmdlets\Permissions\GetPermission.cs.old" />
     <Compile Include="Cmdlets\ListItems\GetListItem.cs" />
     <Compile Include="Cmdlets\Lists\GetList.cs" />
+    <Compile Include="Cmdlets\Permissions\AddPermission.cs" />
     <Compile Include="Cmdlets\Permissions\GetPermission.cs" />
     <Compile Include="Cmdlets\PropertyLoader\RequestProperty.cs" />
     <Compile Include="Cmdlets\Users\GetUser.cs" />
@@ -97,6 +98,7 @@
     <None Include="Objects\Identity.cs.old" />
     <Compile Include="Cmdlets\Connection\ConnectOnline.cs" />
     <Compile Include="Objects\Identity.cs" />
+    <Compile Include="Objects\PrincipalIdentity.cs" />
     <Compile Include="Objects\UserIdentity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Content Include="DebugScript.ps1">

@@ -23,7 +23,7 @@ namespace MG.SharePoint
         {
         }
         public SPBindingCollection(SPBinding spBind)
-            : this(((IEnumerable<SPBinding>)spBind).Cast<SPBinding>().ToArray())
+            : this(new SPBinding[1] { spBind })
         {
         }
         public SPBindingCollection(IEnumerable<SPBinding> items) => 

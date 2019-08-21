@@ -58,6 +58,7 @@ namespace MG.SharePoint
         public static bool IsPropertyReady<T>(this T clientObject, params Expression<Func<T, object>>[] properties)
             where T : ClientObject
         {
+
             if (properties == null)
                 return false;
 

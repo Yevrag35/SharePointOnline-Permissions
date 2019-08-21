@@ -1,5 +1,4 @@
 ﻿using Microsoft.SharePoint.Client;
-using Microsoft.SharePoint.Client.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +9,100 @@ namespace MG.SharePoint
 {
     public static class SecurableObjectExtensions
     {
+        public static void AddPermission(this SecurableObject secObj, string principal, string roleDefinition, bool forceBreak, bool applyRecursively)
+        {
+            if (CTX.AllRoles == null)
+                CTX.AllRoles = ((ClientContext)secObj.Context).Web.RoleDefinitions;
+
+            User user = ((ClientContext)secObj.Context).Web.EnsureUser(principal);
+            user.LoadUserProps();
+
+            RoleDefinition realDef;
+            try
+            {
+                realDef = CTX.AllRoles.GetByName(roleDefinition);
+                realDef.LoadDefinition();
+            }
+            catch (Exception)
+            {
+                throw new ArgumentException(roleDefinition + " is not the name of a valid RoleDefinition in this site collection.");
+            }
+
+            secObj.AddPermission(new SPBindingCollection(user, realDef), forceBreak, applyRecursively);
+        }
+
+        public static void AddPermission(this SecurableObject secObj, SPBindingCollection bindingCol, bool forceBreak, bool applyRecursively)
+        {
+            MethodInfo upMeth = null;
+            try
+            {
+                upMeth = secObj.GetType().GetMethod("Update", BindingFlags.Public | BindingFlags.Instance);
+            }
+            catch (AmbiguousMatchException)
+            {
+            }
+
+            if (upMeth == null)
+                throw new InvalidOperationException("This specified SecurableObject does not have a method called \"Update\".");
+
+            if (secObj.CanSetPermissions())
+            {
+                if (!secObj.IsPropertyReady(x => x.HasUniqueRoleAssignments))
+                {
+                    secObj.LoadProperty("HasUniqueRoleAssignments");
+                }
+                if (!secObj.HasUniqueRoleAssignments && !forceBreak)
+                    throw new InvalidOperationException("You must first break inheritance on this object to apply custom permissions.");
+
+                else if (!secObj.HasUniqueRoleAssignments && forceBreak)
+                    secObj.BreakRoleInheritance(true, true);
+
+                for (int i = 0; i < bindingCol.Count; i++)
+                {
+                    SPBinding binding = bindingCol[i];
+                    var bCol = new RoleDefinitionBindingCollection(secObj.Context)
+                    {
+                        binding.Definition
+                    };
+                    RoleAssignment roleAss = secObj.RoleAssignments.Add(binding.Principal, bCol);
+                    secObj.Context.Load(roleAss);
+                    upMeth.Invoke(secObj, null);
+                    secObj.Context.ExecuteQuery();
+                }
+            }
+        }
+
+#if DEBUG
+
+        public static void AddPermissionTest(SecurableObject secObj, string principal, string roleDefinition, bool forceBreak, bool applyRecursively)
+        {
+            if (CTX.AllRoles == null)
+                CTX.AllRoles = ((ClientContext)secObj.Context).Web.RoleDefinitions;
+
+            User user = ((ClientContext)secObj.Context).Web.EnsureUser(principal);
+            user.LoadUserProps();
+
+            RoleDefinition realDef;
+            try
+            {
+                realDef = CTX.AllRoles.GetByName(roleDefinition);
+                realDef.LoadDefinition();
+            }
+            catch (Exception)
+            {
+                throw new ArgumentException(roleDefinition + " is not the name of a valid RoleDefinition in this site collection.");
+            }
+
+            secObj.AddPermission(new SPBindingCollection(user, realDef), forceBreak, applyRecursively);
+        }
+
+#endif
+
+        public static bool CanSetPermissions(this SecurableObject secObj)
+        {
+            return secObj.IsPropertyAvailable("HasUniqueRoleAssignments");
+        }
+
         public static SPPermissionCollection GetPermissions(this SecurableObject secObj, string nameProperty, string idProperty)
         {
             secObj.Context.Load(secObj, s => s.HasUniqueRoleAssignments, s => s.RoleAssignments);

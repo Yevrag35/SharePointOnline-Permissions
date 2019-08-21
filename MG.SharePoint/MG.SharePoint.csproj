@@ -123,6 +123,7 @@
     <Compile Include="Extensions\ListExtensions.cs" />
     <Compile Include="Extensions\ListItemExtensions.cs" />
     <Compile Include="Extensions\RoleAssignmentExtensions.cs" />
+    <Compile Include="Extensions\RoleDefinitionExtensions.cs" />
     <Compile Include="Extensions\SecurableObjectExtensions.cs" />
     <Compile Include="SPObjects\SPObjectViewableCollection.cs" />
     <Compile Include="SPObjects\SPPermissions\SPPermissionCollection.cs" />

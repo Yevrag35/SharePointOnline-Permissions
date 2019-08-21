@@ -1,143 +1,147 @@
 ﻿using Microsoft.SharePoint.Client;
+using Microsoft.SharePoint.Client.Utilities;
 using System;
 using System.Collections;
-using System.Collections.ObjectModel;
+using System.Collections.Generic;
 using System.Linq;
 using System.Management.Automation;
+using System.Reflection;
+using System.Security;
 
-namespace MG.SharePoint.PowerShell
+namespace MG.SharePoint.PowerShell.Cmdlets.Permissions
 {
-    [Cmdlet(VerbsCommon.Add, "Permission", SupportsShouldProcess = true,
-        DefaultParameterSetName = "ByStringPrincipal")]
+    [Cmdlet(VerbsCommon.Add, "Permission", ConfirmImpact = ConfirmImpact.High, SupportsShouldProcess = true, DefaultParameterSetName = "ByRoleDefinitionName")]
     [CmdletBinding(PositionalBinding = false)]
     [OutputType(typeof(SPPermission))]
-    public class AddPermission : GetPermission, IDynamicParameters
+    public class AddPermission : PSCmdlet
     {
-        private protected Collection<Attribute> colAtt = new Collection<Attribute>()
-        {
-            new ParameterAttribute()
-            {
-                Mandatory = true,
-                Position = 1,
-                ParameterSetName = "ByPrincipalObject"
-            },
-            new AliasAttribute("Permission", "perm"),
-            new AllowNullAttribute()
-        };
-
-        private protected string[] _roleNames;
-        internal const string pName = "Role";
-
-        private protected RuntimeDefinedParameterDictionary rtDict;
-
-        [Parameter(Mandatory = false, Position = 0, ParameterSetName = "ByPrincipalObject")]
-        public string Principal { get; set; }
-
-        [Parameter(Mandatory = true, ParameterSetName = "ByPrincipalObject")]
-        public Principal SPPrincipal { get; set; }
-
-        [Parameter(Mandatory = true, Position = 0, ParameterSetName = "ByPermissionHashtable")]
-        public IDictionary ApplyPermissionSet { get; set; }
-
-        [Parameter(Mandatory = false)]
-        public SwitchParameter Recurse { get; set; }
-
+        #region FIELDS/CONSTANTS
+        private RoleDefinitionCollection _roleCol;
+        private SPBindingCollection _bindings;
+        private List<SecurableObject> _secObjs;
+        private bool _bi;
         private bool _force;
+        private bool _passThru;
+        private bool _recurse;
+
+        #endregion
+
+        #region PARAMETERS
+        [Parameter(Mandatory = true, ValueFromPipeline = true, ValueFromPipelineByPropertyName = true)]
+        public SecurableObject InputObject { get; set; }
+
+        [Parameter(Mandatory = true, Position = 0, ParameterSetName = "ByRoleDefinitionName")]
+        [Parameter(Mandatory = true, Position = 0, ParameterSetName = "ByRoleDefinitionObject")]
+        public PrincipalIdentity Principal { get; set; }
+
+        [Parameter(Mandatory = true, Position = 0, ParameterSetName = "ByInputHashtable")]
+        public IDictionary PermissionsTable { get; set; }
+
+        [Parameter(Mandatory = true, Position = 1, ParameterSetName = "ByRoleDefinitionName")]
+        public string RoleName { get; set; }
+
+        [Parameter(Mandatory = true, Position = 1, ParameterSetName = "ByRoleDefinitionObject")]
+        public RoleDefinition RoleDefinition { get; set; }
+
         [Parameter(Mandatory = false)]
+        public SwitchParameter BreakInheritance
+        {
+            get => _bi;
+            set => _bi = value;
+        }
+
+        [Parameter(Mandatory = false)]
+        public SwitchParameter Recurse
+        {
+            get => _recurse;
+            set => _recurse = value;
+        }
+
+        [Parameter(Mandatory = false)]
+        public SwitchParameter PassThru
+        {
+            get => _passThru;
+            set => _passThru = value;
+        }
+
+        [Parameter(Mandatory = false, DontShow = true)]
         public SwitchParameter Force
         {
             get => _force;
             set => _force = value;
         }
 
-        public object GetDynamicParameters() => DoDynamic();
+        #endregion
 
+        #region CMDLET PROCESSING
         protected override void BeginProcessing()
         {
             base.BeginProcessing();
-            DoDynamic();
+            _secObjs = new List<SecurableObject>();
+            if (this.ParameterSetName == "ByInputHashtable")
+                _bindings = new SPBindingCollection(this.PermissionsTable);
 
-            if (ParameterSetName == "ByPrincipalObject")
-            {
-                if (string.IsNullOrEmpty(Principal) && SPPrincipal == null)
-                    throw new ArgumentNullException("Either Principal or SPPrincipal must be specified!");
-
-                if (MyInvocation.BoundParameters.ContainsKey("Principal"))
-                    SPPrincipal = CTX.SP1.Web.EnsureUser(Principal);
-
-                CTX.Lae(SPPrincipal, true);
-            }
+            else
+                _bindings = new SPBindingCollection(2);
         }
 
         protected override void ProcessRecord()
         {
-            base.CheckParameters();
+            if (!this.InputObject.CanSetPermissions())
+                throw new ArgumentException("This SecurableObject cannot have custom permissions defined.");
 
-            if (SPObject.HasUniquePermissions.HasValue && (SPObject.HasUniquePermissions.Value || !SPObject.HasUniquePermissions.Value &&
-                (_force || ShouldContinue(SPObject.Id.ToString(), "Break Inheritance"))))
+            if (!this.MyInvocation.BoundParameters.ContainsKey("PermissionsTable"))
             {
-                switch (ParameterSetName)
+                if (this.MyInvocation.BoundParameters.ContainsKey("RoleName") && this.RoleDefinition == null)
                 {
-                    case "ByPermissionHashtable":
-                        SPObject.AddPermission(ApplyPermissionSet, true, Recurse.ToBool());
-                        break;
-                    default:
-                        // Get the chosen role
-                        RoleDefinition _role = CTX.AllRoles.Single(x => x.Name.Equals((string)rtDict[pName].Value, StringComparison.InvariantCultureIgnoreCase));
+                    if (_roleCol == null)
+                        _roleCol = ((ClientContext)this.InputObject.Context).Web.RoleDefinitions;
 
-                        SPObject.AddPermission(SPPrincipal, _role, true, Recurse.ToBool());
-                        break;
+                    try
+                    {
+                        this.RoleDefinition = _roleCol.GetByName(this.RoleName);
+                        this.RoleDefinition.LoadDefinition();
+                    }
+                    catch (ServerException sex)
+                    {
+                        throw new ArgumentException(string.Format("No role definition named \"{0}\" was found in this site collection.", this.RoleName), sex);
+                    }
                 }
-            }
-                
-            else
-                throw new InvalidOperationException("I wouldn't do that if I were you...");
 
-            SPObject.GetPermissions();
-            WriteObject(SPObject.Permissions, true);
+                Principal spPrin = null;
+                if (this.Principal.IsLogonName)
+                {
+                    spPrin = ((ClientContext)this.InputObject.Context).Web.EnsureUser(this.Principal.LogonName);
+                    spPrin.LoadProperty(x => x.Id, x => x.IsHiddenInUI, x => x.LoginName, x => x.PrincipalType, x => x.Title);
+                }
+                else
+                    spPrin = this.Principal.Principal;
+
+                _bindings.Add(spPrin, this.RoleDefinition);
+            }
         }
 
-        private RuntimeDefinedParameterDictionary DoDynamic()
+        protected override void EndProcessing()
         {
-            if (rtDict == null)
+            for (int i = 0; i < _secObjs.Count; i++)
             {
-                GetAllRoles();
-                colAtt.Add(new ValidateSetAttribute(_roleNames));
-                var rtp = new RuntimeDefinedParameter(pName, typeof(string), colAtt);
-                rtDict = new RuntimeDefinedParameterDictionary()
+                SecurableObject secObj = _secObjs[i];
+                if (_force || base.ShouldProcess("SecurableObject", "Add Permissions"))
                 {
-                    { pName, rtp }
-                };
-            }
-            return rtDict;
-        }
-
-        private string[] GetAllRoles()
-        {
-            if (_roleNames == null)
-            {
-                if (CTX.AllRoles == null)
-                {
-                    CTX.AllRoles = CTX.SP1.Web.RoleDefinitions;
-                    CTX.Lae(CTX.AllRoles, true,
-                        ar => ar.Include(
-                            r => r.Name
-                        )
-                    );
-                }
-                _roleNames = new string[CTX.AllRoles.Count];
-                for (int i = 0; i < CTX.AllRoles.Count; i++)
-                {
-                    var role = CTX.AllRoles[i];
-                    _roleNames[i] = role.Name;
+                    secObj.AddPermission(_bindings, _bi, _recurse);
+                    if (_passThru)
+                    {
+                        base.WriteObject(secObj.GetPermissions("Title", "Id"), true);
+                    }
                 }
             }
-            return _roleNames;
         }
 
-        //private void SetRecursivePermissions()
-        //{
-        //    SPObject
-        //}
+        #endregion
+
+        #region METHODS
+
+
+        #endregion
     }
 }
