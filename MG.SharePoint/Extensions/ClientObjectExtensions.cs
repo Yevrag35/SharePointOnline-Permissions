@@ -130,6 +130,7 @@ namespace MG.SharePoint
             }
         }
 
+#if DEBUG
         public static void TestLoad<T>(this T cliObj, params string[] propNames)
         {
 
@@ -156,6 +157,7 @@ namespace MG.SharePoint
             var list = new List<Expression<Func<T, object>>>(propNames.Length);
 
         }
+#endif
 
         private static MethodInfo MakeFunc<T>(MethodInfo lambdaMethod)
         {
