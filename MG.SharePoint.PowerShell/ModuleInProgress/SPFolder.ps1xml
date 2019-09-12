@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+	<ViewDefinitions>
+		<View>
+			<Name>SPFolder ListView</Name>
+			<ViewSelectedBy>
+				<TypeName>Microsoft.SharePoint.Client.Folder</TypeName>
+			</ViewSelectedBy>
+			<ListControl>
+				<ListEntries>
+					<ListEntry>
+						<ListItems>
+							<ListItem>
+								<PropertyName>ContentTypeOrder</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.ContentTypeOrder -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
+							</ListItem>
+							<ListItem>
+								<PropertyName>Exists</PropertyName>
+							</ListItem>
+							<ListItem>
+								<Label>Files</Label>
+								<ScriptBlock>$_.Files.Name</ScriptBlock>
+							</ListItem>
+							<ListItem>
+								<Label>Folders</Label>
+								<ScriptBlock>$_.Folders.Name</ScriptBlock>
+							</ListItem>
+							<ListItem>
+								<PropertyName>IsWOPIEnabled</PropertyName>
+							</ListItem>
+							<ListItem>
+								<PropertyName>ItemCount</PropertyName>
+							</ListItem>
+							<ListItem>
+								<PropertyName>Name</PropertyName>
+							</ListItem>
+							<ListItem>
+								<Label>ParentFolder</Label>
+								<ScriptBlock>$_.ParentFolder.Name</ScriptBlock>
+							</ListItem>
+							<ListItem>
+								<PropertyName>ProgID</PropertyName>
+							</ListItem>
+							<ListItem>
+								<PropertyName>ServerRelativeUrl</PropertyName>
+							</ListItem>
+							<ListItem>
+								<Label>StorageMetrics</Label>
+								<ScriptBlock>
+								@{
+									LastModified = $_.StorageMetrics.LastModified
+									TotalFileCount = $_.StorageMetrics.TotalFileCount
+									TotalFileStreamSize = $_.StorageMetrics.TotalFileStreamSize
+									TotalSize = $_.StorageMetrics.TotalSize
+								}
+								</ScriptBlock>
+							</ListItem>
+							<ListItem>
+								<PropertyName>TimeCreated</PropertyName>
+							</ListItem>
+							<ListItem>
+								<PropertyName>TimeLastModified</PropertyName>
+							</ListItem>
+							<ListItem>
+								<PropertyName>UniqueContentTypeOrder</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.UniqueContentTypeOrder -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
+							</ListItem>
+							<ListItem>
+								<PropertyName>UniqueId</PropertyName>
+							</ListItem>
+						</ListItems>
+					</ListEntry>
+				</ListEntries>
+			</ListControl>
+		</View>
+	</ViewDefinitions>
+</Configuration>

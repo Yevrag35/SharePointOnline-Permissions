@@ -107,6 +107,7 @@
     <Compile Include="Backend\BindingEquality.cs" />
     <Compile Include="Backend\CmdletContext.cs" />
     <Compile Include="Backend\CmdletPipeBind.cs" />
+    <Compile Include="Backend\Test.cs" />
     <Compile Include="Context\Context.cs" />
     <Compile Include="Context\IServiceHelper.cs" />
     <Compile Include="Context\Logins.cs" />
@@ -137,7 +138,9 @@
     <Compile Include="SPObjects\Query.cs" />
     <Compile Include="SPObjects\SPCredential.cs" />
     <None Include="SPObjects\SPFile\SPFile-OtherProps.cs" />
-    <None Include="Debug.ps1" />
+    <Content Include="Debug.ps1">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="MethodsProperties.psm1">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

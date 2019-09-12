@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+	<ViewDefinitions>
+		<View>
+			<Name>SPListItem ListView</Name>
+			<ViewSelectedBy>
+				<TypeName>Microsoft.SharePoint.Client.ListItem</TypeName>
+			</ViewSelectedBy>
+			<ListControl>
+				<ListEntries>
+					<ListEntry>
+						<ListItems>
+							<!--<ListItem>
+								<Label>AttachmentFiles</Label>
+								<ScriptBlock>$_.AttachmentFiles.FileName</ScriptBlock>
+							</ListItem>-->
+							<ListItem>
+								<PropertyName>CommentsDisabled</PropertyName>
+							</ListItem>
+							<ListItem>
+								<PropertyName>CommentsDisabledScope</PropertyName>
+							</ListItem>
+							<!--<ListItem>
+								<PropertyName>ComplianceInfo</PropertyName>
+							</ListItem>-->
+							<!--<ListItem>
+								<PropertyName>ContentType</PropertyName>
+							</ListItem>-->
+							<!--<ListItem>
+								<PropertyName>EffectiveBasePermissions</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.EffectiveBasePermissions -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
+							</ListItem>
+							<ListItem>
+								<PropertyName>EffectiveBasePermissionsForUI</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.EffectiveBasePermissionsForUI -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
+							</ListItem>-->
+							<!--<ListItem>
+								<PropertyName>FieldValues</PropertyName>
+								<ItemSelectionCondition>
+									<ScriptBlock>$_.FieldsValue -ne $null</ScriptBlock>
+								</ItemSelectionCondition>
+							</ListItem>-->
+							<ListItem>
+								<Label>File</Label>
+								<ScriptBlock>$_.File.Name</ScriptBlock>
+							</ListItem>
+							<ListItem>
+								<PropertyName>FileSystemObjectType</PropertyName>
+							</ListItem>
+							<ListItem>
+								<Label>Folder</Label>
+								<ScriptBlock>$_.Folder.Name</ScriptBlock>
+							</ListItem>
+							<ListItem>
+								<PropertyName>GetDlpPolicyTip</PropertyName>
+							</ListItem>
+							<ListItem>
+								<PropertyName>HasUniquePermissions</PropertyName>
+							</ListItem>
+							<ListItem>
+								<PropertyName>Id</PropertyName>
+							</ListItem>
+							<ListItem>
+								<Label>Name</Label>
+								<PropertyName>Title</PropertyName>
+							</ListItem>
+							<ListItem>
+								<Label>ParentList</Label>
+								<ScriptBlock>$_.ParentList.Title</ScriptBlock>
+							</ListItem>
+							<ListItem>
+								<Label>Versions</Label>
+								<ScriptBlock>$_.Versions.VersionLabel</ScriptBlock>
+							</ListItem>
+						</ListItems>
+					</ListEntry>
+				</ListEntries>
+			</ListControl>
+		</View>
+	</ViewDefinitions>
+</Configuration>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Configuration>
+	<ViewDefinitions>
+		<View>
+			<Name>SPPermission</Name>
+			<ViewSelectedBy>
+				<TypeName>MG.SharePoint.SPPermission</TypeName>
+			</ViewSelectedBy>
+			<TableControl>
+				<TableHeaders>
+					<TableColumnHeader>
+						<Alignment>Left</Alignment>
+					</TableColumnHeader>
+					<TableColumnHeader>
+						<Alignment>Left</Alignment>
+					</TableColumnHeader>
+					<TableColumnHeader>
+						<Alignment>Left</Alignment>
+					</TableColumnHeader>
+					<TableColumnHeader>
+						<Label>Permissions</Label>
+						<Alignment>Left</Alignment>
+					</TableColumnHeader>
+					<!--<TableColumnHeader>
+						<Alignment>Center</Alignment>
+					</TableColumnHeader>-->
+				</TableHeaders>
+				<TableRowEntries>
+					<TableRowEntry>
+						<TableColumnItems>
+							<TableColumnItem>
+								<PropertyName>ObjectId</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>Object</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<PropertyName>MemberName</PropertyName>
+							</TableColumnItem>
+							<TableColumnItem>
+								<ScriptBlock>$_.Permissions -join ', '</ScriptBlock>
+							</TableColumnItem>
+						</TableColumnItems>
+					</TableRowEntry>
+				</TableRowEntries>
+			</TableControl>
+		</View>
+	</ViewDefinitions>
+</Configuration>
